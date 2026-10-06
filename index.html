@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Linkai's personal website" />
-  <title>Linkai</title>
+  <meta name="description" content="Linkai's personal website, projects, and notes." />
+  <title>Linkai | Personal site</title>
 
   <style>
     :root {
@@ -14,7 +14,9 @@
       --muted: #737373;
       --border: #e5e5e5;
       --button: #171717;
-      --button-text: white;
+      --button-text: #ffffff;
+      --focus: #525252;
+      color-scheme: light;
     }
 
     body.dark {
@@ -25,6 +27,8 @@
       --border: #2d2d2d;
       --button: #f5f5f5;
       --button-text: #111111;
+      --focus: #d4d4d4;
+      color-scheme: dark;
     }
 
     * {
@@ -37,7 +41,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text);
-      transition: background 0.3s, color 0.3s;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     a {
@@ -45,13 +49,19 @@
       text-decoration: none;
     }
 
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 4px;
+    }
+
     .container {
-      width: min(1100px, 90%);
+      width: min(1120px, calc(100% - 48px));
       margin: auto;
     }
 
     nav {
-      height: 72px;
+      min-height: 72px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -61,6 +71,7 @@
     .logo {
       font-size: 20px;
       font-weight: 700;
+      letter-spacing: -0.03em;
     }
 
     .nav-links {
@@ -71,7 +82,16 @@
       color: var(--muted);
     }
 
-    .nav-links a:hover {
+    .nav-links a,
+    .theme-btn,
+    .btn,
+    .card-link {
+      transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
       color: var(--text);
     }
 
@@ -80,46 +100,66 @@
       background: var(--card);
       color: var(--text);
       border-radius: 999px;
-      padding: 8px 12px;
+      width: 38px;
+      height: 34px;
       cursor: pointer;
       font-size: 16px;
+      line-height: 1;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--muted);
+      transform: translateY(-1px);
     }
 
     .hero {
-      min-height: 70vh;
+      min-height: min(680px, 76vh);
       display: flex;
       align-items: center;
+      padding: 96px 0 88px;
     }
 
     .hero-content {
-      max-width: 760px;
+      max-width: 780px;
+    }
+
+    .eyebrow,
+    .section-title,
+    .card-label {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
     .eyebrow {
-      color: var(--muted);
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+      text-transform: none;
       font-size: 15px;
-      margin-bottom: 18px;
     }
 
     h1 {
-      font-size: clamp(52px, 9vw, 96px);
-      letter-spacing: -0.055em;
-      margin: 0 0 20px;
-      line-height: 0.95;
+      max-width: 760px;
+      font-size: clamp(54px, 9vw, 104px);
+      letter-spacing: -0.065em;
+      margin: 0 0 26px;
+      line-height: 0.94;
     }
 
     .hero p {
-      max-width: 650px;
-      font-size: 21px;
-      line-height: 1.6;
+      max-width: 620px;
+      font-size: clamp(18px, 2.2vw, 22px);
+      line-height: 1.55;
       color: var(--muted);
+      margin: 0;
     }
 
     .buttons {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      margin-top: 30px;
+      margin-top: 34px;
     }
 
     .btn {
@@ -130,88 +170,172 @@
       border: 1px solid var(--border);
     }
 
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
     .primary {
       background: var(--button);
       color: var(--button-text);
       border-color: var(--button);
     }
 
+    .primary:hover {
+      opacity: 0.86;
+    }
+
     .secondary {
       background: var(--card);
     }
 
+    .secondary:hover {
+      border-color: var(--muted);
+    }
+
     section {
-      padding: 80px 0;
+      padding: 84px 0;
     }
 
     .section-title {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      margin-bottom: 24px;
+      margin-bottom: 26px;
     }
 
     .about-text {
-      font-size: clamp(28px, 4vw, 44px);
       max-width: 900px;
-      line-height: 1.25;
-      letter-spacing: -0.03em;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1.22;
+      letter-spacing: -0.04em;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      gap: 16px;
     }
 
     .card {
+      display: flex;
+      min-height: 270px;
+      flex-direction: column;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 26px;
-      min-height: 210px;
-      transition: transform 0.2s, border 0.2s;
+      transition: transform 0.2s ease, border-color 0.2s ease,
+        box-shadow 0.2s ease;
     }
 
     .card:hover {
+      border-color: var(--muted);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
       transform: translateY(-4px);
     }
 
+    body.dark .card:hover {
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+    }
+
     .card-label {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 34px;
+      margin-bottom: 44px;
+      font-size: 11px;
     }
 
     .card h3 {
       margin: 0 0 10px;
       font-size: 22px;
+      letter-spacing: -0.03em;
     }
 
     .card p {
+      margin: 0;
       color: var(--muted);
       line-height: 1.6;
       font-size: 15px;
     }
 
-    .cc {
+    .card-link {
+      width: fit-content;
+      margin-top: auto;
+      padding-top: 24px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .card-link:hover {
+      color: var(--muted);
+      transform: translateX(3px);
+    }
+
+    .exploring {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    .exploring .section-title {
+      margin-top: 4px;
+    }
+
+    .exploring-list {
+      display: grid;
+      gap: 0;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .exploring-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .exploring-list strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .cc,
+    .contact {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 50px;
+      padding: clamp(30px, 6vw, 56px);
     }
 
-    .cc h2 {
+    .cc h2,
+    .contact h2 {
+      max-width: 700px;
       font-size: clamp(38px, 6vw, 70px);
       margin: 0 0 16px;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.055em;
+      line-height: 1;
     }
 
-    .cc p {
+    .cc p,
+    .contact p {
+      max-width: 560px;
       color: var(--muted);
       font-size: 18px;
+      line-height: 1.6;
       margin: 0;
+    }
+
+    .contact {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .contact .btn {
+      flex-shrink: 0;
     }
 
     footer {
@@ -227,80 +351,94 @@
       gap: 20px;
     }
 
-    @media (max-width: 750px) {
+    @media (max-width: 760px) {
+      .container {
+        width: min(100% - 32px, 600px);
+      }
+
+      .nav-links {
+        gap: 12px;
+      }
+
       .nav-links a {
         display: none;
       }
 
       .hero {
         min-height: 75vh;
+        padding: 72px 0;
       }
 
-      .hero p {
-        font-size: 18px;
+      section {
+        padding: 64px 0;
       }
 
-      .grid {
+      .grid,
+      .exploring {
         grid-template-columns: 1fr;
+        gap: 16px;
       }
 
-      .cc {
-        padding: 30px;
+      .exploring {
+        gap: 28px;
+      }
+
+      .card {
+        min-height: 230px;
+      }
+
+      .contact {
+        align-items: start;
+        flex-direction: column;
       }
 
       .footer-inner {
         flex-direction: column;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 
 <body>
-
   <div class="container">
-
-    <nav>
-      <div class="logo">Linkai.</div>
+    <nav aria-label="Main navigation">
+      <a class="logo" href="#" aria-label="Linkai home">Linkai.</a>
 
       <div class="nav-links">
         <a href="#about">About</a>
         <a href="#projects">Projects</a>
-        <a href="#cc">CC × Linkai</a>
-
-        <button class="theme-btn" onclick="toggleTheme()" id="themeButton">
+        <a href="#exploring">Exploring</a>
+        <a href="#contact">Contact</a>
+        <button class="theme-btn" type="button" onclick="toggleTheme()" id="themeButton" aria-label="Switch to dark mode">
           ☾
         </button>
       </div>
     </nav>
 
     <main>
-
       <section class="hero">
         <div class="hero-content">
-          <div class="eyebrow">
-            Hello, I'm Linkai 👋
-          </div>
+          <div class="eyebrow">Hello, I'm Linkai.</div>
 
-          <h1>
-            Linking ideas,<br>
-            people & AI.
-          </h1>
+          <h1>Building small things with curiosity and AI.</h1>
 
           <p>
-            A small place on the internet where I share what I build,
-            what I learn, and things I care about.
+            I make simple tools, try out ideas, and keep notes on what I learn.
+            This is where I collect the projects that are worth sharing.
           </p>
 
           <div class="buttons">
-            <a class="btn primary" href="#projects">
-              Explore my projects
-            </a>
-
-            <a
-              class="btn secondary"
-              href="https://github.com/liulinkai523-prog"
-              target="_blank"
-            >
+            <a class="btn primary" href="#projects">See what I'm building</a>
+            <a class="btn secondary" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
               GitHub ↗
             </a>
           </div>
@@ -308,144 +446,110 @@
       </section>
 
       <section id="about">
-
-        <div class="section-title">
-          About
-        </div>
-
+        <div class="section-title">About</div>
         <div class="about-text">
-          I'm Linkai. I enjoy experimenting with technology,
-          learning new things and building small ideas into
+          I'm interested in the space between an idea and a useful little
+          product. I enjoy learning in public and turning experiments into
           something real.
         </div>
-
       </section>
 
       <section id="projects">
-
-        <div class="section-title">
-          Things I'm building
-        </div>
+        <div class="section-title">Selected projects</div>
 
         <div class="grid">
-
-          <div class="card">
-            <div class="card-label">01 / PROJECT</div>
-
+          <article class="card">
+            <div class="card-label">01 / Project</div>
             <h3>Roundtable</h3>
+            <p>A mobile-friendly companion for playing Avalon with friends.</p>
+            <a class="card-link" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
+              View on GitHub <span aria-hidden="true">↗</span>
+            </a>
+          </article>
 
-            <p>
-              A mobile-friendly companion for playing Avalon
-              with friends.
-            </p>
-          </div>
-
-
-          <div class="card">
-            <div class="card-label">02 / LEARNING</div>
-
+          <article class="card">
+            <div class="card-label">02 / Learning</div>
             <h3>IELTS Lab</h3>
+            <p>Experiments, tools, and notes for learning English in a way that works for me.</p>
+            <a class="card-link" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
+              View on GitHub <span aria-hidden="true">↗</span>
+            </a>
+          </article>
 
-            <p>
-              My experiments, tools and notes for learning
-              English in a way that actually works for me.
-            </p>
-          </div>
-
-
-          <div class="card">
-            <div class="card-label">03 / EXPERIMENTS</div>
-
+          <article class="card">
+            <div class="card-label">03 / Experiments</div>
             <h3>Link AI</h3>
-
-            <p>
-              Small projects built with AI, curiosity and
-              probably too many browser tabs.
-            </p>
-          </div>
-
+            <p>Small projects built with AI, curiosity, and probably too many browser tabs.</p>
+            <a class="card-link" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
+              View on GitHub <span aria-hidden="true">↗</span>
+            </a>
+          </article>
         </div>
       </section>
 
+      <section id="exploring" class="exploring">
+        <div class="section-title">Currently exploring</div>
+        <ul class="exploring-list">
+          <li><strong>AI-assisted building</strong><span>Small, practical experiments</span></li>
+          <li><strong>English learning</strong><span>Notes and tools for the IELTS Lab</span></li>
+          <li><strong>Web projects</strong><span>Ideas that are useful enough to ship</span></li>
+        </ul>
+      </section>
 
       <section id="cc">
-
         <div class="cc">
-
-          <div class="section-title">
-            A little more personal
-          </div>
-
+          <div class="section-title">A little more personal</div>
           <h2>CC × Linkai</h2>
-
-          <p>
-            Our little corner of the internet.
-          </p>
-
+          <p>Our little corner of the internet.</p>
         </div>
-
       </section>
 
+      <section id="contact">
+        <div class="contact">
+          <div>
+            <div class="section-title">Contact</div>
+            <h2>Say hello on GitHub.</h2>
+            <p>GitHub is the best place to find my work and get in touch.</p>
+          </div>
+          <a class="btn primary" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
+            Open GitHub ↗
+          </a>
+        </div>
+      </section>
     </main>
 
-
     <footer>
-
       <div class="footer-inner">
-
-        <div>
-          © <span id="year"></span> Linkai
-        </div>
-
-        <div>
-          linkai.codes
-        </div>
-
+        <div>© <span id="year"></span> Linkai</div>
+        <div>linkai.codes</div>
       </div>
-
     </footer>
-
   </div>
 
-
   <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-    // 自动显示年份
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
+    function updateThemeButton(isDark) {
+      const button = document.getElementById("themeButton");
+      button.textContent = isDark ? "☀" : "☾";
+      button.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+    }
 
-
-    // 深色模式
     function toggleTheme() {
-
-      document.body.classList.toggle("dark");
-
-      const isDark =
-        document.body.classList.contains("dark");
-
-      localStorage.setItem(
-        "theme",
-        isDark ? "dark" : "light"
-      );
-
-      document.getElementById("themeButton").textContent =
-        isDark ? "☀" : "☾";
+      const isDark = document.body.classList.toggle("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+      updateThemeButton(isDark);
     }
 
+    const savedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initialDark = savedTheme ? savedTheme === "dark" : prefersDark;
 
-    // 记住用户的深色模式
-    const savedTheme =
-      localStorage.getItem("theme");
-
-    if (savedTheme === "dark") {
-
+    if (initialDark) {
       document.body.classList.add("dark");
-
-      document.getElementById("themeButton").textContent =
-        "☀";
     }
 
+    updateThemeButton(initialDark);
   </script>
-
 </body>
 </html>
