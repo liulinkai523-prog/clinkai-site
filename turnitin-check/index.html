@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Turnitin report forensic checker. Local-only PDF metadata, timeline and structure analysis." />
+  <title>Turnitin Report Forensics | Linkai</title>
+  <style>
+    :root {
+      --bg:#f7f7f5; --card:#fff; --text:#171717; --muted:#737373; --border:#e5e5e5;
+      --button:#171717; --buttonText:#fff; --good:#177245; --warn:#9a6700; --bad:#b42318;
+      --goodBg:#ecfdf3; --warnBg:#fffaeb; --badBg:#fef3f2; --soft:#f1f1ef;
+      color-scheme: light;
+    }
+    body.dark {
+      --bg:#111; --card:#1a1a1a; --text:#f5f5f5; --muted:#a3a3a3; --border:#2d2d2d;
+      --button:#f5f5f5; --buttonText:#111; --goodBg:#10261b; --warnBg:#2b2110; --badBg:#2b1715; --soft:#202020;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+    a{color:inherit;text-decoration:none}.container{width:min(1120px,calc(100% - 32px));margin:auto}
+    nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+    .logo{font-size:20px;font-weight:700;letter-spacing:-.03em}.nav-right{display:flex;align-items:center;gap:12px}
+    .back{font-size:14px;color:var(--muted)}.theme-btn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:999px;width:38px;height:34px;cursor:pointer}
+    main{padding:72px 0 96px}.eyebrow,.section-title{color:var(--muted);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+    h1{font-size:clamp(44px,7vw,78px);line-height:.98;letter-spacing:-.055em;margin:14px 0 20px;max-width:900px}
+    .intro{max-width:800px;color:var(--muted);font-size:18px;line-height:1.65;margin-bottom:34px}
+    .notice{font-size:14px;line-height:1.55;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin:18px 0 28px}
+    .dropzone{background:var(--card);border:1.5px dashed var(--border);border-radius:22px;padding:46px 24px;text-align:center;cursor:pointer;transition:.2s}
+    .dropzone.drag,.dropzone:hover{border-color:var(--muted);transform:translateY(-1px)}.dropzone strong{display:block;font-size:20px;margin-bottom:8px}.dropzone span{color:var(--muted);font-size:14px}
+    input[type=file]{display:none}.privacy{margin-top:12px;color:var(--muted);font-size:12px;text-align:center}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.btn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}.btn.primary{background:var(--button);color:var(--buttonText);border-color:var(--button)}
+    #status{margin:22px 0;color:var(--muted);font-size:14px}.results{display:grid;gap:18px}.report{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:22px}
+    .report-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.report-name{font-size:20px;font-weight:700;word-break:break-all}.score{min-width:130px;text-align:right}.score strong{font-size:30px;letter-spacing:-.04em}.score small{display:block;color:var(--muted)}
+    .label{display:inline-flex;align-items:center;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700;margin-top:8px}.label.good{background:var(--goodBg);color:var(--good)}.label.warn{background:var(--warnBg);color:var(--warn)}.label.bad{background:var(--badBg);color:var(--bad)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.panel{border:1px solid var(--border);border-radius:14px;padding:15px;background:var(--bg)}.panel h3{font-size:13px;margin:0 0 10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.kv{display:grid;grid-template-columns:120px 1fr;gap:8px 10px;font-size:13px}.kv div:nth-child(odd){color:var(--muted)}.kv div:nth-child(even){word-break:break-word}
+    .timeline{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px}.timebox{background:var(--soft);border-radius:10px;padding:10px 12px}.arrow{color:var(--muted)}
+    .checks{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:9px}.check{display:flex;gap:10px;align-items:flex-start;border-top:1px solid var(--border);padding-top:10px;font-size:14px;line-height:1.45}.dot{width:10px;height:10px;border-radius:999px;margin-top:5px;flex:0 0 10px}.dot.good{background:var(--good)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}
+    .comparison{margin-top:28px}.compare-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}.compare-table th,.compare-table td{padding:12px;border-bottom:1px solid var(--border);font-size:13px;text-align:left}.compare-table th{color:var(--muted);font-weight:600}
+    .footer-note{margin-top:38px;color:var(--muted);font-size:13px;line-height:1.6}.hidden{display:none}
+    @media(max-width:850px){.grid{grid-template-columns:1fr}.report-head{flex-direction:column}.score{text-align:left}.kv{grid-template-columns:105px 1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a class="logo" href="../">Linkai.</a>
+      <div class="nav-right"><a class="back" href="../">← Back home</a><button class="theme-btn" id="themeButton" aria-label="Switch theme">☾</button></div>
+    </nav>
+
+    <main>
+      <div class="eyebrow">Local PDF forensic tool</div>
+      <h1>Turnitin Report Forensics</h1>
+      <p class="intro">拖入一份或多份 Turnitin AI Writing Report PDF，检查报告时间链、PDF 元数据、Submission ID、页数、字体和内部对象结构。所有分析都在浏览器本地完成。</p>
+
+      <div class="notice"><strong>Important:</strong> 这个工具只能识别“技术一致性/异常”，不能仅凭 PDF 证明报告一定真实或一定伪造。最强验证方式仍然是查看 Turnitin 在线 submission 页面。</div>
+
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <strong>Drop Turnitin report PDFs here</strong>
+        <span>或点击选择文件 · 支持多选</span>
+      </label>
+      <input id="fileInput" type="file" accept="application/pdf,.pdf" multiple />
+      <div class="privacy">🔒 Files stay on your device. Nothing is uploaded to a server.</div>
+      <div class="toolbar"><button class="btn primary" id="chooseBtn">Choose PDFs</button><button class="btn" id="clearBtn">Clear</button></div>
+      <div id="status"></div>
+      <div id="results" class="results"></div>
+      <section id="comparison" class="comparison hidden"><div class="section-title">Fingerprint comparison</div><div id="comparisonBody"></div></section>
+      <div class="footer-note">Heuristic reference rules are based on recurring patterns seen in genuine-looking Turnitin exports. Different LMS integrations, report versions and export paths may legitimately produce different PDFs. Treat the result as forensic triage, not a final authenticity verdict.</div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+    const $ = s => document.querySelector(s);
+    const fileInput = $('#fileInput'), dropzone = $('#dropzone'), resultsEl = $('#results'), statusEl = $('#status');
+    const reports = [];
+
+    $('#chooseBtn').onclick = () => fileInput.click();
+    $('#clearBtn').onclick = () => { reports.length = 0; resultsEl.innerHTML=''; statusEl.textContent=''; $('#comparison').classList.add('hidden'); fileInput.value=''; };
+    fileInput.onchange = e => handleFiles([...e.target.files]);
+    ['dragenter','dragover'].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add('drag'); }));
+    ['dragleave','drop'].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove('drag'); }));
+    dropzone.addEventListener('drop', e => handleFiles([...e.dataTransfer.files].filter(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'))));
+
+    function esc(v=''){ return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function uniq(a){ return [...new Set(a.filter(Boolean))]; }
+    function fmtDate(ms){ if(!Number.isFinite(ms)) return '—'; return new Date(ms).toISOString().replace('T',' ').replace('.000Z',' UTC'); }
+    function mins(a,b){ return (a-b)/60000; }
+
+    function parseTurnitinDate(s){
+      if(!s) return NaN;
+      const m=s.match(/([A-Z][a-z]{2})\s+(\d{1,2}),\s+(\d{4}),\s+(\d{1,2}):(\d{2})\s+(AM|PM)\s+GMT(?:([+-])(\d{1,2})(?::?(\d{2}))?)?/i);
+      if(!m) return NaN;
+      const months={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+      let h=+m[4]; if(m[6].toUpperCase()==='PM'&&h!==12)h+=12; if(m[6].toUpperCase()==='AM'&&h===12)h=0;
+      const offset=((m[8]?+m[8]:0)*60+(m[9]?+m[9]:0))*(m[7]==='-'?-1:1);
+      return Date.UTC(+m[3],months[m[1]],+m[2],h,+m[5])-offset*60000;
+    }
+
+    function parsePdfDate(s){
+      if(!s) return NaN;
+      const m=String(s).match(/D:?(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})?(?:([Zz])|([+-])(\d{2})'?((?:\d{2})?)'?)?/);
+      if(!m) return Date.parse(s);
+      let utc=Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+(m[6]||0));
+      if(m[8]){ const off=(+m[9]*60 + +(m[10]||0))*(m[8]==='-'?-1:1); utc -= off*60000; }
+      return utc;
+    }
+
+    function extractAfter(text,label,nextLabels){
+      const clean=text.replace(/\s+/g,' ').trim();
+      const idx=clean.indexOf(label); if(idx<0) return '';
+      let s=clean.slice(idx+label.length).trim(); let end=s.length;
+      for(const n of nextLabels){ const i=s.indexOf(n); if(i>=0&&i<end) end=i; }
+      return s.slice(0,end).trim();
+    }
+
+    async function extractText(pdf){
+      let all='';
+      for(let p=1;p<=pdf.numPages;p++){
+        const page=await pdf.getPage(p); const tc=await page.getTextContent();
+        all += '\n' + tc.items.map(i=>i.str).join(' ');
+      }
+      return all.replace(/\u0000/g,' ');
+    }
+
+    async function analyze(file){
+      const buffer=await file.arrayBuffer();
+      const bytes=new Uint8Array(buffer);
+      const raw=new TextDecoder('latin1').decode(bytes);
+      const pdf=await pdfjsLib.getDocument({data:bytes.slice()}).promise;
+      const meta=await pdf.getMetadata().catch(()=>({info:{},metadata:null}));
+      const text=await extractText(pdf);
+      const normalized=text.replace(/\s+/g,' ').trim();
+
+      const ids=uniq(normalized.match(/trn:oid:::[0-9]+:[0-9]+/g)||[]);
+      const subDateStr=(normalized.match(/Submission Date\s+([A-Z][a-z]{2}\s+\d{1,2},\s+\d{4},\s+\d{1,2}:\d{2}\s+(?:AM|PM)\s+GMT(?:[+-]\d{1,2}(?::?\d{2})?)?)/i)||[])[1]||'';
+      const downDateStr=(normalized.match(/Download Date\s+([A-Z][a-z]{2}\s+\d{1,2},\s+\d{4},\s+\d{1,2}:\d{2}\s+(?:AM|PM)\s+GMT(?:[+-]\d{1,2}(?::?\d{2})?)?)/i)||[])[1]||'';
+      const originalName=extractAfter(normalized,'File Name',['File Size','Pages','Words','Characters']).split(' File Size')[0].trim();
+      const pagesMatch=normalized.match(/File Size\s+[^ ]+(?:\s+[KMG]?B)?\s+(\d+)\s+Pages/i);
+      const submittedPages=pagesMatch?+pagesMatch[1]:NaN;
+      const ai=(normalized.match(/(\*|\d+)%\s+detected as AI/i)||[])[1]||'';
+      const info=meta.info||{};
+      const creation=parsePdfDate(info.CreationDate||info.CreationDateRaw||'');
+      const mod=parsePdfDate(info.ModDate||info.ModificationDate||'');
+      const submission=parseTurnitinDate(subDateStr), download=parseTurnitinDate(downDateStr);
+      const objectCount=(raw.match(/\b\d+\s+0\s+obj\b/g)||[]).length;
+      const formCount=(raw.match(/\/Subtype\s*\/Form\b/g)||[]).length;
+      const fonts=uniq([...raw.matchAll(/\/BaseFont\s*\/([^\s\/<>\[\]\(\)]+)/g)].map(m=>m[1])).slice(0,40);
+      const hasTrailerId=/\/ID\s*\[\s*<[^>]+>\s*<[^>]+>\s*\]/.test(raw);
+      const fileExt=(originalName.match(/\.([A-Za-z0-9]+)$/)||[])[1]?.toLowerCase()||'';
+      const title=info.Title||'', creator=info.Creator||'', producer=info.Producer||'';
+
+      const checks=[]; let score=0;
+      const add=(level,points,title,detail)=>{ score+=points; checks.push({level,points,title,detail}); };
+      if(ids.length===0) add('warn',8,'No Turnitin Submission ID found','Could not extract a trn:oid value from the report text.');
+      else if(ids.length>1) add('bad',40,'Submission ID mismatch',`Multiple IDs found: ${ids.join(', ')}`);
+      else checks.push({level:'good',points:0,title:'Submission ID internally consistent',detail:ids[0]});
+
+      if(Number.isFinite(submission)&&Number.isFinite(download)){
+        const d=mins(download,submission);
+        if(d < -0.1) add('bad',35,'Download time precedes submission time',`${d.toFixed(1)} minutes.`);
+        else checks.push({level:'good',points:0,title:'Report timeline order is valid',detail:`Download is ${d.toFixed(1)} min after submission.`});
+      } else add('warn',6,'Could not fully parse report timeline','Submission or download timestamp was not extracted.');
+
+      if(fileExt==='docx' && Number.isFinite(download) && Number.isFinite(creation)){
+        const delta=mins(creation,download);
+        if(delta>2) add('bad',40,'PDF created after its reported download time',`Creation is ${delta.toFixed(1)} min after the report says it was downloaded.`);
+        else if(delta>=-10) checks.push({level:'good',points:0,title:'PDF creation time fits the reported timeline',detail:`Creation vs download: ${delta.toFixed(1)} min.`});
+      }
+
+      if(Number.isFinite(creation)&&Number.isFinite(mod)){
+        if(mod < creation-1000) add('warn',12,'Modification time predates creation time','Metadata timeline is unusual.');
+        if(fileExt==='docx' && Math.abs(mod-creation)<1500 && Number.isFinite(submission)&&Number.isFinite(download) && mins(download,submission)>1){
+          add('warn',10,'Creation and modification timestamps are identical', 'For a DOCX-origin report with a multi-minute submit/download gap, this differs from the common reference pattern.');
+        }
+      }
+
+      if(fileExt==='docx'){
+        if(/^Microsoft Word - Document1$/i.test(title)) checks.push({level:'good',points:0,title:'DOCX title matches common reference pattern',detail:title});
+        else if(title && title.toLowerCase().endsWith('.docx')) add('warn',8,'DOCX filename copied into PDF Title',`Title is “${title}”; common reference exports often use “Microsoft Word - Document1”.`);
+      }
+
+      if(Number.isFinite(submittedPages)){
+        const expected=submittedPages+2;
+        if(pdf.numPages===expected) checks.push({level:'good',points:0,title:'Page count relationship is consistent',detail:`${submittedPages} submitted pages + 2 report pages = ${pdf.numPages}.`});
+        else add('warn',8,'Unexpected report page count',`Submitted document says ${submittedPages} pages; report PDF has ${pdf.numPages}.`);
+      }
+
+      if(fileExt==='docx' && Number.isFinite(submittedPages) && formCount>=submittedPages){
+        add('warn',15,'Heavy Form XObject wrapping detected',`${formCount} Form XObjects for a ${submittedPages}-page DOCX submission. This differs from the common direct-page pattern in the current reference set.`);
+      } else checks.push({level:'good',points:0,title:'No unusual page-wrapper signal',detail:`Form XObjects: ${formCount}.`});
+
+      const hasTurnitinFonts=fonts.some(f=>/LexendDeca|NotoSans/i.test(f));
+      if(hasTurnitinFonts) checks.push({level:'good',points:0,title:'Turnitin-like UI fonts found',detail:fonts.filter(f=>/LexendDeca|NotoSans/i.test(f)).join(', ')});
+      else add('warn',4,'Common Turnitin UI fonts not detected','This is a weak signal and may vary by report version or export path.');
+
+      if(/pdf-lib/i.test(producer||creator)) checks.push({level:'good',points:0,title:'pdf-lib producer detected',detail:'This is common in both normal-looking Turnitin exports and third-party generators, so it is neutral evidence.'});
+
+      score=Math.min(100,score);
+      let label='No significant anomaly / 未发现明显异常', cls='good';
+      if(score>=60){label='Strong technical inconsistencies / 存在强烈技术异常';cls='bad'}
+      else if(score>=35){label='Significant anomalies / 存在明显异常';cls='bad'}
+      else if(score>=15){label='Some anomalies / 发现部分异常';cls='warn'}
+
+      return {fileName:file.name,size:file.size,pdfPages:pdf.numPages,originalName,submittedPages,ai,ids,subDateStr,downDateStr,submission,download,creation,mod,title,creator,producer,objectCount,formCount,fonts,hasTrailerId,fileExt,score,label,cls,checks};
+    }
+
+    function renderReport(r){
+      const metaRows=[['Original file',r.originalName||'—'],['AI score',r.ai?`${r.ai}%`:'—'],['PDF pages',r.pdfPages],['Submitted pages',Number.isFinite(r.submittedPages)?r.submittedPages:'—'],['Submission ID',r.ids.join(', ')||'—']];
+      const pdfRows=[['Title',r.title||'—'],['Creator',r.creator||'—'],['Producer',r.producer||'—'],['Objects',r.objectCount],['Form XObjects',r.formCount],['Trailer /ID',r.hasTrailerId?'Yes':'No']];
+      const fontText=r.fonts.length?r.fonts.slice(0,10).join(', '):'—';
+      return `<article class="report">
+        <div class="report-head"><div><div class="report-name">${esc(r.fileName)}</div><div style="font-size:12px;color:var(--muted);margin:7px 0 5px">Conclusion / 结论</div><div class="label ${r.cls}">${esc(r.label)}</div></div><div class="score"><strong>${r.score}</strong><small>Anomaly score / 异常分数 · 100</small></div></div>
+        <div class="grid">
+          <div class="panel"><h3>Report fields</h3><div class="kv">${metaRows.map(([a,b])=>`<div>${esc(a)}</div><div>${esc(b)}</div>`).join('')}</div></div>
+          <div class="panel"><h3>PDF metadata</h3><div class="kv">${pdfRows.map(([a,b])=>`<div>${esc(a)}</div><div>${esc(b)}</div>`).join('')}</div></div>
+          <div class="panel"><h3>Fonts</h3><div style="font-size:13px;line-height:1.55;word-break:break-word">${esc(fontText)}</div></div>
+        </div>
+        <div class="panel" style="margin-top:12px"><h3>Timeline (UTC)</h3><div class="timeline"><div class="timebox">Submission<br><strong>${esc(fmtDate(r.submission))}</strong></div><span class="arrow">→</span><div class="timebox">PDF Creation<br><strong>${esc(fmtDate(r.creation))}</strong></div><span class="arrow">→</span><div class="timebox">Download<br><strong>${esc(fmtDate(r.download))}</strong></div><span class="arrow">→</span><div class="timebox">PDF Modified<br><strong>${esc(fmtDate(r.mod))}</strong></div></div></div>
+        <ul class="checks">${r.checks.map(c=>`<li class="check"><span class="dot ${c.level}"></span><div><strong>${esc(c.title)}</strong><br><span style="color:var(--muted)">${esc(c.detail||'')}</span></div></li>`).join('')}</ul>
+      </article>`;
+    }
+
+    function similarity(a,b){
+      let got=0,total=0; const w=(n,ok)=>{total+=n;if(ok)got+=n};
+      w(20,(a.producer||'')===(b.producer||''));
+      w(10,(a.creator||'')===(b.creator||''));
+      const cat=x=>/^Microsoft Word - Document1$/i.test(x.title)?'word':(x.title||'').toLowerCase().endsWith('.docx')?'docx-title':'other';
+      w(10,cat(a)===cat(b));
+      const A=new Set(a.fonts.map(x=>x.replace(/^[A-Z]{6}\+/,'').replace(/-\d+$/,''))), B=new Set(b.fonts.map(x=>x.replace(/^[A-Z]{6}\+/,'').replace(/-\d+$/,'')));
+      const inter=[...A].filter(x=>B.has(x)).length, union=new Set([...A,...B]).size||1; w(25,inter/union>.65); got += 25*Math.max(0,(inter/union)-.65)/.35;
+      w(15,Math.abs((a.formCount/a.pdfPages)-(b.formCount/b.pdfPages))<.2);
+      w(10,Math.abs((a.objectCount/a.pdfPages)-(b.objectCount/b.pdfPages))<2);
+      w(10,a.hasTrailerId===b.hasTrailerId);
+      return Math.min(100,Math.round(got/total*100));
+    }
+
+    function renderComparison(){
+      if(reports.length<2){$('#comparison').classList.add('hidden');return}
+      const rows=[]; for(let i=0;i<reports.length;i++) for(let j=i+1;j<reports.length;j++) rows.push([reports[i].fileName,reports[j].fileName,similarity(reports[i],reports[j])]);
+      $('#comparisonBody').innerHTML=`<table class="compare-table"><thead><tr><th>Report A</th><th>Report B</th><th>Fingerprint similarity</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td><strong>${r[2]}%</strong></td></tr>`).join('')}</tbody></table>`;
+      $('#comparison').classList.remove('hidden');
+    }
+
+    async function handleFiles(files){
+      if(!files.length)return;
+      statusEl.textContent=`Analyzing ${files.length} file${files.length>1?'s':''} locally…`;
+      for(const f of files){
+        try{ const r=await analyze(f); reports.push(r); resultsEl.insertAdjacentHTML('beforeend',renderReport(r)); }
+        catch(err){ resultsEl.insertAdjacentHTML('beforeend',`<article class="report"><div class="report-name">${esc(f.name)}</div><div class="label bad">Could not analyze</div><p style="color:var(--muted)">${esc(err.message||err)}</p></article>`); }
+      }
+      statusEl.textContent=`Done. ${reports.length} report${reports.length!==1?'s':''} analyzed.`; renderComparison();
+    }
+
+    function updateThemeButton(){ const d=document.body.classList.contains('dark'); $('#themeButton').textContent=d?'☀':'☾'; }
+    $('#themeButton').onclick=()=>{document.body.classList.toggle('dark');localStorage.setItem('theme',document.body.classList.contains('dark')?'dark':'light');updateThemeButton()};
+    const saved=localStorage.getItem('theme'); if(saved==='dark'||(!saved&&matchMedia('(prefers-color-scheme: dark)').matches))document.body.classList.add('dark'); updateThemeButton();
+  </script>
+</body>
+</html>
