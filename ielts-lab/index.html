@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IELTS Dictation Lab — Linkai</title>
+  <meta name="description" content="Intelligent IELTS listening answer words dictation engine with real exam pacing, instant phonetic diff, and Anki export." />
+  <meta name="theme-color" content="#08090b" />
+  <link rel="canonical" href="https://linkai.codes/ielts-lab/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://linkai.codes/ielts-lab/" />
+  <meta property="og:title" content="IELTS Dictation Lab — Linkai" />
+  <meta property="og:description" content="Intelligent IELTS listening answer words dictation engine with real exam pacing, instant phonetic diff, and Anki export." />
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2308090b'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial,sans-serif' font-weight='700' font-size='38' fill='%23eef2f5'%3EL%3C/text%3E%3Ccircle cx='47' cy='44' r='5' fill='%234cc4ea'/%3E%3C/svg%3E" />
+
+  <!-- Fonts: Geist & Geist Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Ambient Backdrop -->
+  <div class="ambient" aria-hidden="true">
+    <div class="shaft"></div>
+    <div class="glow"></div>
+    <div class="grid-bg"></div>
+  </div>
+
+  <!-- Floating Pill Navigation -->
+  <header class="nav">
+    <div class="nav-left">
+      <a href="../" class="logo">Linkai<span class="dot">.</span></a>
+    </div>
+
+    <div class="nav-right">
+      <a class="nav-back" href="../">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <span data-i18n="nav.back">Back home</span>
+      </a>
+      <div class="lang-switch" role="group" aria-label="Language / 语言">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="zh" aria-pressed="false" lang="zh-CN">中</button>
+      </div>
+      <!-- Hidden Theme Button for JS compatibility -->
+      <button id="theme-btn" aria-hidden="true" tabindex="-1"></button>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="container main-wrapper">
+    <!-- Hero Header -->
+    <section class="hero">
+      <div class="kicker">
+        <span class="pulse-dot-cyan"></span>
+        <span data-i18n="hero.badge">IELTS Listening Lab</span>
+      </div>
+      <h1 data-i18n="hero.title">IELTS Answer Words Dictation System</h1>
+      <p class="lead" data-i18n="hero.subtitle">
+        1,925 core exam vocabularies · Deduplicated corpus · Intelligent typo diff · Real-exam timed pace &amp; Anki export.
+      </p>
+      <div class="hero-stats-strip">
+        <span><strong>1,612</strong> <span data-i18n="hero.strip_words">Core Words</span></span>
+        <span>·</span>
+        <span><strong>313</strong> <span data-i18n="hero.strip_phrases">Phrases</span></span>
+        <span>·</span>
+        <span><strong>23</strong> <span data-i18n="hero.strip_groups">Curated Groups</span></span>
+        <span>·</span>
+        <span data-i18n="hero.strip_offline">100% In-Browser &amp; Offline Audio</span>
+      </div>
+
+      <!-- Hidden compatibility anchors for app.js updateHeaderUI -->
+      <span id="logo-badge" style="display:none;" aria-hidden="true"></span>
+      <span id="logo-title" style="display:none;" aria-hidden="true"></span>
+      <span id="logo-subtitle" style="display:none;" aria-hidden="true"></span>
+    </section>
+
+    <!-- Controls Ribbon Strip -->
+    <section class="controls-panel" aria-label="Dictation controls">
+      <div class="controls-left">
+        <!-- Book Selection -->
+        <select id="book-select" class="select-ctrl book-select" title="Switch Corpus">
+          <option value="all_words" selected>📘 全核心单词总库 (1,612词 · 23组 · 已去重)</option>
+          <option value="phrase">📙 短语答案词 (313词 · 6单元 · 连读特训)</option>
+          <optgroup label="── 原版分库 (按需参考) ──">
+            <option value="c1_high_frequency">📘 高频答案词 (985词 · C1)</option>
+            <option value="basic">📗 基础答案词 (597词 · A1~B2)</option>
+            <option value="advanced">📕 进阶答案词 (197词 · C1~C2)</option>
+          </optgroup>
+        </select>
+
+        <!-- Unit Selection (Populated by JS) -->
+        <select id="unit-select" class="select-ctrl" title="Select Unit">
+          <!-- Populated by app.js -->
+        </select>
+
+        <!-- Mode Segmented Pills -->
+        <div class="mode-pills" role="radiogroup" aria-label="Practice Mode">
+          <button class="mode-pill active" data-mode="practice" title="Listen -> Type -> Instant Diff -> Advance">
+            <span data-i18n="mode.practice">🎯 逐词精练</span>
+          </button>
+          <button class="mode-pill" data-mode="timed" title="Listen -> Countdown -> Auto Advance">
+            <span data-i18n="mode.timed">⏱️ 机考限时</span>
+          </button>
+          <button class="mode-pill" data-mode="review" title="Target previously wrong or skipped words">
+            <span data-i18n="mode.review">🔥 错题攻坚</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="controls-right">
+        <!-- Playback Speed -->
+        <select id="speed-select" class="select-ctrl" title="Playback Speed">
+          <option value="0.8" data-i18n="speed.08">0.8x 慢速</option>
+          <option value="1.0" selected data-i18n="speed.10">1.0x 原速</option>
+          <option value="1.2" data-i18n="speed.12">1.2x 提速</option>
+          <option value="1.4" data-i18n="speed.14">1.4x 冲刺</option>
+        </select>
+
+        <!-- Interval Mode -->
+        <select id="interval-select" class="select-ctrl" title="Interval Rhythm">
+          <option value="manual" selected data-i18n="interval.manual">稳健作答 (回车确认后切下一词)</option>
+          <option value="4.0" data-i18n="interval.40">限时 4.0s (官方原版机考节奏)</option>
+          <option value="2.5" data-i18n="interval.25">限时 2.5s (极速高压冲刺)</option>
+          <option value="6.0" data-i18n="interval.60">限时 6.0s (基础充裕缓冲)</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Progress & Target Card -->
+    <section class="progress-card">
+      <div class="progress-header">
+        <span id="progress-text" class="mono">正在加载单元词库...</span>
+        <div class="progress-meta">
+          <span id="accuracy-preview">正确率: 0% (目标 95%+)</span>
+          <button id="btn-reset-unit" class="btn btn-ghost" style="padding: 3px 10px; font-size: 12px;" title="清空本单元做题记录重新开始">
+            <span data-i18n="progress.reset">🔄 重练本单元</span>
+          </button>
+        </div>
+      </div>
+      <div class="progress-bar-bg">
+        <div id="progress-bar" class="progress-bar-fill"></div>
+      </div>
+    </section>
+
+    <!-- Question Grid Card (答题卡) -->
+    <section class="grid-card">
+      <div class="grid-header">
+        <div>
+          <strong data-i18n="grid.title">📋 单元答题卡</strong>
+          <span style="color: var(--text-3); font-size: 12px; margin-left: 6px;" data-i18n="grid.sub">（点击任意题号随时跳转重听与修改）</span>
+        </div>
+        <span id="grid-status-text">已答 0 / 70 词</span>
+      </div>
+      <div id="question-grid" class="grid-container">
+        <!-- populated dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- Dictation Stage Arena -->
+    <section class="dictation-card">
+      <div class="audio-indicator" id="audio-status">
+        <span class="pulse-dot"></span>
+        <span id="audio-status-text" data-i18n="dictation.ready">准备就绪，按空格键开始播放</span>
+      </div>
+
+      <!-- Timed Mode Countdown Bar -->
+      <div id="countdown-container" class="countdown-container" style="display: none;">
+        <div id="countdown-bar" class="countdown-bar"></div>
+      </div>
+
+      <!-- Monospace Typing Input -->
+      <div class="word-input-container">
+        <input 
+          type="text" 
+          id="word-input" 
+          class="word-input" 
+          placeholder="戴好耳机，在此输入听到的单词..." 
+          data-i18n-ph="dictation.placeholder"
+          autocomplete="off" 
+          autocorrect="off" 
+          autocapitalize="off" 
+          spellcheck="false"
+          autofocus
+        />
+      </div>
+
+      <!-- Feedback / Answer Reveal Panel -->
+      <div id="feedback-box" class="feedback-box">
+        <div class="feedback-word">
+          <span id="fb-target-word">--</span>
+          <span id="fb-phonetic" class="feedback-phonetic"></span>
+        </div>
+        <div id="fb-meaning" class="feedback-meaning" data-i18n="feedback.initial">点击或按键开始听写练习</div>
+        <div id="fb-diff" class="feedback-diff"></div>
+      </div>
+
+      <!-- Shortcut Action Bar -->
+      <div class="action-bar">
+        <button id="btn-replay" class="btn">
+          <span class="key-badge">Space</span> <span data-i18n="btn.replay">重播当前词</span>
+        </button>
+        <button id="btn-submit" class="btn btn-primary">
+          <span class="key-badge">Enter</span> <span data-i18n="btn.submit">确认 / 下一词</span>
+        </button>
+        <button id="btn-skip" class="btn">
+          <span class="key-badge">Tab</span> <span data-i18n="btn.skip">不会 / 跳过</span>
+        </button>
+        <button id="btn-prev" class="btn">
+          <span class="key-badge">Ctrl+←</span> <span data-i18n="btn.prev">上一词</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Real-time Stats Grid -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label" data-i18n="stat.tested">已练单词</div>
+        <div id="stat-tested" class="stat-value" style="color: var(--accent);">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" data-i18n="stat.correct">正确拼写</div>
+        <div id="stat-correct" class="stat-value" style="color: var(--success);">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" data-i18n="stat.wrong">拼写错误 / 遗漏</div>
+        <div id="stat-wrong" class="stat-value" style="color: var(--error);">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" data-i18n="stat.verdict">达标判定 (刘夏来 95% 标准)</div>
+        <div id="stat-verdict" class="stat-value" style="font-size: 1.25rem;">未达标</div>
+      </div>
+    </section>
+
+    <!-- Mistakes & Anki Export Panel -->
+    <section class="mistakes-drawer">
+      <div class="mistakes-header">
+        <div>
+          <div class="tab-pills">
+            <button id="tab-unit-mistakes" class="tab-pill active">
+              <span data-i18n="tab.unit">当前单元错词</span> (<span id="mistake-count">0</span>)
+            </button>
+            <button id="tab-global-mistakes" class="tab-pill">
+              <span data-i18n="tab.global">🔥 全库错题总库</span> (<span id="global-mistake-count">0</span>)
+            </button>
+          </div>
+          <p id="mistakes-subtext" data-i18n="mistakes.subtext_unit">
+            自动记录当前单元拼错或跳过的单词与短语，支持针对性循环重练
+          </p>
+        </div>
+
+        <div class="mistakes-actions">
+          <button id="btn-retry-mistakes" class="btn btn-accent" style="display: none;">
+            <span data-i18n="btn.retry_unit">🔥 本单元错题重练</span>
+          </button>
+          <button id="btn-retry-all-mistakes" class="btn btn-primary" style="display: none;">
+            <span data-i18n="btn.retry_all">🎯 全库错题大冲关</span>
+          </button>
+          <a href="IELTS_全库错题总库_去重纯音听写包.apkg" download="IELTS_全库错题总库_去重纯音听写包.apkg" class="btn btn-accent" title="直接下载已去重打包音频的全库 Anki 牌组 (.apkg)">
+            ⚡ <span data-i18n="btn.full_apkg">全库纯音 Anki 牌组 (.apkg)</span>
+          </a>
+          <button id="btn-sync-global-anki" class="btn btn-accent" style="display: none;" title="打包 Anki">
+            ⚡ 一键全库查重打包
+          </button>
+          <button id="btn-export-anki" class="btn" title="导出当前视图的去重版 Anki 牌组 TSV">
+            📥 <span data-i18n="btn.export_tsv">导出 Anki 牌组 (.tsv)</span>
+          </button>
+          <a href="IELTS_听写样卡_5Cards.apkg" download="IELTS_听写样卡_5Cards.apkg" class="btn" title="下载包含音频的 5 张听写样卡 (.apkg)">
+            ✨ <span data-i18n="btn.sample_apkg">5 张听写样卡 (.apkg)</span>
+          </a>
+          <button id="btn-export-csv" class="btn">
+            📊 <span data-i18n="btn.export_csv">导出错题清单 (CSV)</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="mistake-list" class="mistake-list">
+        <div style="color: var(--text-3); padding: 1.5rem; text-align: center; font-size: 0.9rem;" data-i18n="mistakes.empty_unit">
+          暂无错词，加油保持全对！
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>
+        © 2026 <a href="../">Linkai</a> · IELTS Dictation Lab · Crafted for listening mastery &amp; spaced repetition.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Hidden Audio Element -->
+  <audio id="audio-player" preload="auto"></audio>
+
+  <!-- Corpus Data Bundle -->
+  <script src="dictation_data.js"></script>
+  <!-- Core App Logic -->
+  <script src="app.js"></script>
+
+  <!-- Bilingual Switching Script -->
+  <script>
+    const I18N = {
+      en: {
+        "nav.brand": "Linkai.",
+        "nav.back": "Back home",
+        "hero.badge": "IELTS LISTENING LAB",
+        "hero.title": "IELTS Answer Words Dictation System",
+        "hero.subtitle": "1,925 core exam vocabularies · Deduplicated corpus · Intelligent typo diff · Real-exam timed pace & Anki export.",
+        "hero.strip_words": "Core Words",
+        "hero.strip_phrases": "Phrases",
+        "hero.strip_groups": "Curated Groups",
+        "hero.strip_offline": "100% In-Browser & Offline Audio",
+        "stat.tested": "Words Tested",
+        "stat.correct": "Correct Spelling",
+        "stat.wrong": "Spelling Errors / Missed",
+        "stat.verdict": "Target Verdict (95% standard)",
+        "mode.practice": "🎯 Word Practice",
+        "mode.timed": "⏱️ Real Timed Exam",
+        "mode.review": "🔥 Mistake Drill",
+        "speed.08": "0.8x Slow",
+        "speed.10": "1.0x Normal",
+        "speed.12": "1.2x Fast",
+        "speed.14": "1.4x Sprint",
+        "interval.manual": "Manual (Enter to advance)",
+        "interval.40": "Timed 4.0s (Official exam pace)",
+        "interval.25": "Timed 2.5s (High-pressure sprint)",
+        "interval.60": "Timed 6.0s (Relaxed buffer)",
+        "progress.reset": "🔄 Reset Unit",
+        "grid.title": "📋 Question Matrix",
+        "grid.sub": "(Click any number to jump, listen & revise)",
+        "dictation.placeholder": "Headphones on, type the word you hear...",
+        "dictation.ready": "Ready, press Space to play audio",
+        "feedback.initial": "Click or press Space to start dictation",
+        "btn.replay": "Replay",
+        "btn.submit": "Submit / Next",
+        "btn.skip": "Skip / Pass",
+        "btn.prev": "Previous",
+        "tab.unit": "Current Unit Mistakes",
+        "tab.global": "🔥 Global Mistakes Pool",
+        "btn.retry_unit": "🔥 Retry Unit Mistakes",
+        "btn.retry_all": "🎯 Challenge All Mistakes",
+        "btn.full_apkg": "Full Corpus Audio Anki (.apkg)",
+        "btn.export_tsv": "Export Anki Deck (.tsv)",
+        "btn.sample_apkg": "5 Sample Cards (.apkg)",
+        "btn.export_csv": "Export Word List (CSV)",
+        "mistakes.empty_unit": "No mistakes yet! Keep up the perfect streak.",
+        "mistakes.empty_global": "🎉 Excellent! Zero mistakes in the entire corpus.",
+        "mistakes.subtext_unit": "Automatically tracks mistakes and skipped words in this unit for focused revision.",
+        "mistakes.subtext_global": "Aggregates mistakes across all 4 book sets for cross-unit mastery."
+      },
+      zh: {
+        "nav.brand": "Linkai.",
+        "nav.back": "返回主页",
+        "hero.badge": "雅思听力语料库 · 实战靶场",
+        "hero.title": "雅思听力答案词全能听写系统",
+        "hero.subtitle": "1,925 核心真题答案词 (1,612 单字总库 + 313 重点短语) · 深度去重 · 智能错词对比 · 官方机考节奏与 Anki 导出。",
+        "hero.strip_words": "核心单词",
+        "hero.strip_phrases": "重点短语",
+        "hero.strip_groups": "分类题组",
+        "hero.strip_offline": "纯前端本地解析 · 离线发音",
+        "stat.tested": "已练单词",
+        "stat.correct": "正确拼写",
+        "stat.wrong": "拼写错误 / 遗漏",
+        "stat.verdict": "达标判定 (刘夏来 95% 标准)",
+        "mode.practice": "🎯 逐词精练",
+        "mode.timed": "⏱️ 机考限时",
+        "mode.review": "🔥 错题攻坚",
+        "speed.08": "0.8x 慢速磨耳朵",
+        "speed.10": "1.0x 原速标准音",
+        "speed.12": "1.2x 提速强化",
+        "speed.14": "1.4x 极速冲刺",
+        "interval.manual": "稳健作答 (回车确认后切下一词)",
+        "interval.40": "限时 4.0s (官方原版机考节奏)",
+        "interval.25": "限时 2.5s (高压极速特训)",
+        "interval.60": "限时 6.0s (充裕缓冲思考)",
+        "progress.reset": "🔄 重练本单元",
+        "grid.title": "📋 单元答题卡",
+        "grid.sub": "（点击任意题号随时跳转重听与修改）",
+        "dictation.placeholder": "戴好耳机，在此输入听到的单词...",
+        "dictation.ready": "准备就绪，按空格键开始播放",
+        "feedback.initial": "点击或按键开始听写练习",
+        "btn.replay": "重播当前词",
+        "btn.submit": "确认 / 下一词",
+        "btn.skip": "不会 / 跳过",
+        "btn.prev": "上一词",
+        "tab.unit": "当前单元错词",
+        "tab.global": "🔥 全库错题总库",
+        "btn.retry_unit": "🔥 本单元错题重练",
+        "btn.retry_all": "🎯 全库错题大冲关",
+        "btn.full_apkg": "全库纯音 Anki 牌组 (.apkg)",
+        "btn.export_tsv": "导出 Anki 牌组 (.tsv)",
+        "btn.sample_apkg": "5 张听写样卡 (.apkg)",
+        "btn.export_csv": "导出错题清单 (CSV)",
+        "mistakes.empty_unit": "暂无错词，加油保持全对！",
+        "mistakes.empty_global": "🎉 太棒了！全库暂无错词，全部通关！",
+        "mistakes.subtext_unit": "自动记录当前单元拼错或跳过的单词与短语，支持针对性循环重练",
+        "mistakes.subtext_global": "自动汇总全库4大词书所有错题与短语，支持一键跨库专项大冲关"
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const dict = lang === 'zh' ? I18N.zh : I18N.en;
+
+      // Update static text elements
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) {
+          el.textContent = dict[key];
+        }
+      });
+
+      // Update placeholders
+      document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+        const key = el.getAttribute("data-i18n-ph");
+        if (dict[key]) {
+          el.placeholder = dict[key];
+        }
+      });
+
+      // Update html lang attribute
+      document.documentElement.lang = (lang === 'zh') ? 'zh-CN' : 'en';
+
+      // Update book-select options
+      const bookTitles = {
+        en: {
+          "all_words": "📘 Complete Core Words (1,612 words · 23 groups · Deduplicated)",
+          "phrase": "📙 Essential Phrases (313 phrases · 6 units · Collocation drill)",
+          "c1_high_frequency": "📘 High-Frequency Words (985 words · C1)",
+          "basic": "📗 Foundation Words (597 words · A1~B2)",
+          "advanced": "📕 Advanced Words (197 words · C1~C2)"
+        },
+        zh: {
+          "all_words": "📘 全核心单词总库 (1,612词 · 23组 · 已去重)",
+          "phrase": "📙 短语答案词 (313词 · 6单元 · 连读特训)",
+          "c1_high_frequency": "📘 高频答案词 (985词 · C1)",
+          "basic": "📗 基础答案词 (597词 · A1~B2)",
+          "advanced": "📕 进阶答案词 (197词 · C1~C2)"
+        }
+      };
+      const bDict = bookTitles[lang] || bookTitles.en;
+      document.querySelectorAll("#book-select option").forEach(opt => {
+        if (bDict[opt.value]) {
+          opt.textContent = bDict[opt.value];
+        }
+      });
+      const bookOptgroup = document.querySelector("#book-select optgroup");
+      if (bookOptgroup) {
+        bookOptgroup.label = (lang === "zh") ? "── 原版分库 (按需参考) ──" : "── Sub-Corpora Reference ──";
+      }
+
+      // Update button toggle states
+      document.querySelectorAll(".lang-switch button").forEach(btn => {
+        btn.setAttribute("aria-pressed", String(btn.dataset.lang === lang));
+      });
+
+      // Store in localStorage for site-wide sync
+      try {
+        localStorage.setItem("lang", lang);
+      } catch (e) {}
+
+      // Inform app.js if initialized
+      if (window.app && typeof window.app.onLanguageChanged === 'function') {
+        window.app.onLanguageChanged(lang);
+      }
+    }
+
+    // Initialize from localStorage or navigator
+    const savedLang = (() => {
+      try { return localStorage.getItem("lang"); } catch(e) { return null; }
+    })();
+    const initialLang = savedLang || ((navigator.language || "").toLowerCase().startsWith("zh") ? "zh" : "en");
+    setLanguage(initialLang);
+
+    // Bind click events on switcher buttons
+    document.querySelectorAll(".lang-switch button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        setLanguage(btn.dataset.lang);
+      });
+    });
+  </script>
+</body>
+</html>
