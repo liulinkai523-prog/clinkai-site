@@ -3,562 +3,1334 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Linkai's personal website, projects, and notes." />
-  <title>Linkai | Personal site</title>
+  <title>Linkai — Building small things with curiosity and AI</title>
+  <meta name="description" content="Linkai's personal website — small tools, AI experiments, and notes on what I learn." />
+  <meta name="theme-color" content="#08090b" />
+  <link rel="canonical" href="https://linkai.codes/" />
+
+  <!-- Open Graph / social preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://linkai.codes/" />
+  <meta property="og:title" content="Linkai — Building small things with curiosity and AI" />
+  <meta property="og:description" content="Small tools, AI experiments, and notes on what I learn." />
+  <meta name="twitter:card" content="summary" />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2308090b'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial,sans-serif' font-weight='700' font-size='38' fill='%23eef2f5'%3EL%3C/text%3E%3Ccircle cx='47' cy='44' r='5' fill='%234cc4ea'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
+    /* ============ Tokens ============ */
     :root {
-      --bg: #f7f7f5;
-      --card: #ffffff;
-      --text: #171717;
-      --muted: #737373;
-      --border: #e5e5e5;
-      --button: #171717;
-      --button-text: #ffffff;
-      --focus: #525252;
-      color-scheme: light;
-    }
-
-    body.dark {
-      --bg: #111111;
-      --card: #1a1a1a;
-      --text: #f5f5f5;
-      --muted: #a3a3a3;
-      --border: #2d2d2d;
-      --button: #f5f5f5;
-      --button-text: #111111;
-      --focus: #d4d4d4;
       color-scheme: dark;
+
+      --bg: #08090b;
+      --bg-raise: #0b0d10;
+      --surface: #0f1216;
+      --surface-2: #14181d;
+      --surface-3: #1a1f25;
+
+      --line-subtle: rgba(226, 236, 245, 0.05);
+      --line: rgba(226, 236, 245, 0.075);
+      --line-strong: rgba(226, 236, 245, 0.15);
+
+      --text: #eef2f5;
+      --text-2: #a9b3bc;
+      --text-3: #78838d;
+
+      --accent: #4cc4ea;
+      --accent-hi: #6fd2f1;
+      --accent-text: #8fdcf5;
+      --accent-ink: #031219;
+      --accent-soft: rgba(76, 196, 234, 0.1);
+      --accent-line: rgba(76, 196, 234, 0.35);
+
+      --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+      --r-xs: 6px;
+      --r-sm: 10px;
+      --r-md: 14px;
+      --r-lg: 18px;
+      --r-xl: 26px;
+      --r-pill: 9999px;
+
+      --inner-hi: inset 0 1px 0 rgba(255, 255, 255, 0.06), inset 0 0 12px rgba(255, 255, 255, 0.02);
+      --shadow-card: 0 18px 40px -18px rgba(0, 0, 0, 0.8), 0 4px 12px -4px rgba(0, 0, 0, 0.5);
+
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-snap: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+
+      --container: 1120px;
+      --gutter: clamp(16px, 4vw, 40px);
+      --section-gap: clamp(96px, 12vw, 160px);
     }
 
-    * {
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+    /* ============ Base ============ */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 96px; }
 
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text);
-      transition: background 0.3s ease, color 0.3s ease;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    a { color: inherit; text-decoration: none; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: var(--r-xs);
     }
 
-    a:focus-visible,
-    button:focus-visible {
-      outline: 2px solid var(--focus);
-      outline-offset: 4px;
-    }
+    ::selection { background: var(--accent-soft); color: var(--accent-text); }
 
     .container {
-      width: min(1120px, calc(100% - 48px));
-      margin: auto;
+      width: min(var(--container), 100% - var(--gutter) * 2);
+      margin-inline: auto;
     }
 
-    nav {
-      min-height: 72px;
+    .mono {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-3);
+    }
+
+    .text-gradient {
+      background: linear-gradient(180deg, #78838d 0%, #c6ced5 35%, #f4f7f9 70%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* ============ Ambient light ============ */
+    .ambient {
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 900px;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .ambient .shaft {
+      position: absolute;
+      top: -260px;
+      left: 50%;
+      width: 520px;
+      height: 1100px;
+      transform: translateX(-30%) rotate(24deg);
+      background: linear-gradient(180deg, rgba(76, 196, 234, 0.28) 0%, rgba(76, 196, 234, 0.06) 45%, transparent 75%);
+      filter: blur(70px);
+    }
+
+    .ambient .glow {
+      position: absolute;
+      top: -180px;
+      left: 50%;
+      width: 760px;
+      height: 440px;
+      transform: translateX(-50%);
+      background: radial-gradient(50% 50% at 50% 50%, rgba(76, 196, 234, 0.14) 0%, rgba(76, 196, 234, 0.03) 60%, transparent 100%);
+      filter: blur(60px);
+    }
+
+    .ambient .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--line-subtle) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line-subtle) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 30%, transparent 80%);
+    }
+
+    /* ============ Nav ============ */
+    .nav {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      width: min(100% - 32px, 640px);
+      height: 56px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--border);
+      gap: 16px;
+      padding: 0 8px 0 20px;
+      border-radius: var(--r-pill);
+      background: rgba(15, 18, 22, 0.72);
+      border: 1px solid var(--line);
+      box-shadow: var(--inner-hi), 0 16px 40px -18px rgba(0, 0, 0, 0.8);
+      -webkit-backdrop-filter: blur(16px) saturate(150%);
+      backdrop-filter: blur(16px) saturate(150%);
     }
 
     .logo {
-      font-size: 20px;
-      font-weight: 700;
+      font-weight: 600;
+      font-size: 17px;
       letter-spacing: -0.03em;
     }
+
+    .logo span { color: var(--accent); }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 4px;
       font-size: 14px;
-      color: var(--muted);
     }
 
-    .nav-links a,
-    .theme-btn,
-    .btn,
-    .card-link {
-      transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease,
-        transform 0.2s ease;
+    .nav-links a {
+      padding: 8px 14px;
+      border-radius: var(--r-pill);
+      color: var(--text-2);
+      transition: color 180ms ease, background-color 180ms ease;
     }
 
-    .nav-links a:hover,
-    .nav-links a:focus-visible {
-      color: var(--text);
+    .nav-links a:hover { color: var(--text); background: var(--surface-2); }
+
+    .nav-links a.nav-cta {
+      color: var(--accent-ink);
+      background: var(--accent);
+      font-weight: 500;
+      margin-left: 4px;
     }
 
-    .theme-btn {
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      border-radius: 999px;
-      width: 38px;
-      height: 34px;
-      cursor: pointer;
-      font-size: 16px;
-      line-height: 1;
-    }
+    .nav-links a.nav-cta:hover { background: var(--accent-hi); }
 
-    .theme-btn:hover {
-      border-color: var(--muted);
-      transform: translateY(-1px);
-    }
-
-    .hero {
-      min-height: min(680px, 76vh);
+    .nav-right {
       display: flex;
       align-items: center;
-      padding: 96px 0 88px;
+      gap: 8px;
     }
 
-    .hero-content {
-      max-width: 780px;
-    }
-
-    .eyebrow,
-    .section-title,
-    .card-label {
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow {
-      margin-bottom: 20px;
-      letter-spacing: 0.02em;
-      text-transform: none;
-      font-size: 15px;
-    }
-
-    h1 {
-      max-width: 760px;
-      font-size: clamp(54px, 9vw, 104px);
-      letter-spacing: -0.065em;
-      margin: 0 0 26px;
-      line-height: 0.94;
-    }
-
-    .hero p {
-      max-width: 620px;
-      font-size: clamp(18px, 2.2vw, 22px);
-      line-height: 1.55;
-      color: var(--muted);
-      margin: 0;
-    }
-
-    .buttons {
+    /* Language switch: EN / 中 segmented pill */
+    .lang-switch {
       display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 34px;
+      padding: 3px;
+      border-radius: var(--r-pill);
+      background: var(--bg-raise);
+      border: 1px solid var(--line);
     }
 
-    .btn {
-      padding: 13px 20px;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 14px;
-      border: 1px solid var(--border);
+    .lang-switch button {
+      min-width: 34px;
+      height: 30px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: var(--r-pill);
+      background: transparent;
+      color: var(--text-3);
+      font: 500 12px/1 var(--font-sans);
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: color 180ms ease, background-color 180ms ease, transform 140ms var(--ease-snap);
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
+    .lang-switch button:hover { color: var(--text); }
+    .lang-switch button:active { transform: scale(0.94); }
+
+    .lang-switch button[aria-pressed="true"] {
+      background: var(--surface-3);
+      color: var(--text);
+      box-shadow: var(--inner-hi), 0 1px 2px rgba(0, 0, 0, 0.4);
     }
 
-    .primary {
-      background: var(--button);
-      color: var(--button-text);
-      border-color: var(--button);
-    }
-
-    .primary:hover {
-      opacity: 0.86;
-    }
-
-    .secondary {
-      background: var(--card);
-    }
-
-    .secondary:hover {
-      border-color: var(--muted);
-    }
-
-    section {
-      padding: 84px 0;
-    }
-
-    .section-title {
-      margin-bottom: 26px;
-    }
-
-    .about-text {
-      max-width: 900px;
-      font-size: clamp(28px, 4vw, 46px);
+    /* Chinese typography: CJK needs looser tracking & taller leading than tight Latin display type */
+    html:lang(zh-CN) .hero h1,
+    html:lang(zh-CN) .section-head h2,
+    html:lang(zh-CN) .contact h2,
+    html:lang(zh-CN) .about-text {
+      letter-spacing: -0.01em;
       line-height: 1.22;
-      letter-spacing: -0.04em;
     }
 
-    .grid {
+    html:lang(zh-CN) .hero h1 { max-width: none; font-size: clamp(2.4rem, 7vw, 5rem); }
+    html:lang(zh-CN) .contact h2 { max-width: none; }
+    html:lang(zh-CN) .about-text { line-height: 1.5; }
+    html:lang(zh-CN) .mono,
+    html:lang(zh-CN) .status { letter-spacing: 0.04em; }
+    html:lang(zh-CN) body { line-height: 1.75; }
+
+    .menu-btn {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: var(--r-pill);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .menu-btn span,
+    .menu-btn span::before,
+    .menu-btn span::after {
+      display: block;
+      width: 16px;
+      height: 1.5px;
+      margin: auto;
+      background: currentColor;
+      border-radius: 2px;
+      position: relative;
+      transition: transform 240ms var(--ease-out), opacity 180ms ease;
+    }
+
+    .menu-btn span::before,
+    .menu-btn span::after { content: ""; position: absolute; left: 0; }
+    .menu-btn span::before { top: -5px; }
+    .menu-btn span::after { top: 5px; }
+
+    .nav.open .menu-btn span { background: transparent; }
+    .nav.open .menu-btn span::before { transform: translateY(5px) rotate(45deg); }
+    .nav.open .menu-btn span::after { transform: translateY(-5px) rotate(-45deg); }
+
+    /* ============ Buttons ============ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 46px;
+      padding: 0 22px;
+      border-radius: var(--r-pill);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 140ms var(--ease-snap), background-color 180ms ease,
+        box-shadow 180ms ease, border-color 180ms ease, color 180ms ease;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--accent-ink);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 28px -8px rgba(76, 196, 234, 0.75);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hi);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 12px 36px -8px rgba(76, 196, 234, 0.9);
+    }
+
+    .btn-ghost {
+      background: rgba(15, 18, 22, 0.6);
+      color: var(--text);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--inner-hi);
+    }
+
+    .btn-ghost:hover { border-color: rgba(226, 236, 245, 0.3); background: var(--surface-2); }
+
+    .btn .arrow { transition: transform 180ms var(--ease-snap); }
+    .btn:hover .arrow { transform: translate(2px, -2px); }
+
+    /* ============ Hero ============ */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: min(860px, 100svh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 160px 0 96px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px 6px 10px;
+      margin-bottom: 32px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--line-strong);
+      background: rgba(15, 18, 22, 0.6);
+      box-shadow: var(--inner-hi);
+      font-size: 13px;
+      color: var(--text-2);
+    }
+
+    .badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft), 0 0 12px var(--accent);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+
+    .hero h1 {
+      margin: 0 auto 24px;
+      max-width: 15ch;
+      font-size: clamp(2.75rem, 8vw, 5.75rem);
+      font-weight: 600;
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+      text-wrap: balance;
+    }
+
+    .hero .lead {
+      margin: 0 auto;
+      max-width: 34rem;
+      font-size: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
+      color: var(--text-2);
+      text-wrap: pretty;
+    }
+
+    .hero .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 40px;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .scroll-hint i {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(180deg, var(--accent), transparent);
+      animation: drip 2.2s var(--ease-out) infinite;
+      transform-origin: top;
+    }
+
+    @keyframes drip {
+      0% { transform: scaleY(0); opacity: 1; }
+      70% { transform: scaleY(1); opacity: 1; }
+      100% { transform: scaleY(1); opacity: 0; }
+    }
+
+    /* ============ Sections ============ */
+    section { position: relative; z-index: 1; }
+
+    .section { padding-block: calc(var(--section-gap) / 2); }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .section-head h2 {
+      margin: 12px 0 0;
+      font-size: clamp(1.9rem, 1.2rem + 2.5vw, 3rem);
+      font-weight: 550;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 22rem;
+      color: var(--text-3);
+      font-size: 15px;
+      text-wrap: pretty;
+    }
+
+    /* ============ Bento projects ============ */
+    .bento {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: minmax(260px, auto);
       gap: 16px;
     }
 
     .card {
+      position: relative;
       display: flex;
-      min-height: 270px;
       flex-direction: column;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 26px;
-      transition: transform 0.2s ease, border-color 0.2s ease,
-        box-shadow 0.2s ease;
+      overflow: hidden;
+      padding: 8px;
+      border-radius: var(--r-lg);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--inner-hi), var(--shadow-card);
+      transition: border-color 240ms ease, transform 320ms var(--ease-out), box-shadow 320ms ease;
+      isolation: isolate;
     }
 
-    .card:hover {
-      border-color: var(--muted);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
-      transform: translateY(-4px);
+    /* cursor-following spotlight */
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(76, 196, 234, 0.09), transparent 60%);
+      opacity: 0;
+      transition: opacity 300ms ease;
     }
 
-    body.dark .card:hover {
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+    .card:hover { border-color: var(--accent-line); transform: translateY(-3px); }
+    .card:hover::before { opacity: 1; }
+
+    a.card:active { transform: translateY(-1px) scale(0.995); }
+
+    .card-visual {
+      position: relative;
+      flex: 1;
+      min-height: 150px;
+      /* concentric: outer 18 - padding 8 = 10 */
+      border-radius: var(--r-sm);
+      background: var(--bg-raise);
+      border: 1px solid var(--line-subtle);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
     }
 
-    .card-label {
-      margin-bottom: 44px;
-      font-size: 11px;
+    .card-body {
+      padding: 18px 14px 12px;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
     }
 
     .card h3 {
-      margin: 0 0 10px;
-      font-size: 22px;
-      letter-spacing: -0.03em;
+      margin: 0 0 6px;
+      font-size: clamp(1.15rem, 1.05rem + 0.4vw, 1.4rem);
+      font-weight: 550;
+      line-height: 1.25;
+      letter-spacing: -0.018em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
+
+    .card h3 .arrow {
+      color: var(--text-3);
+      font-size: 0.9em;
+      transition: transform 180ms var(--ease-snap), color 180ms ease;
+    }
+
+    a.card:hover h3 .arrow { color: var(--accent); transform: translate(2px, -2px); }
 
     .card p {
       margin: 0;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 15px;
+      color: var(--text-2);
+      font-size: 14.5px;
+      line-height: 1.55;
+      text-wrap: pretty;
     }
 
-    .card-link {
-      width: fit-content;
-      margin-top: auto;
-      padding-top: 24px;
-      color: var(--text);
-      font-size: 14px;
+    .card p .zh { display: block; color: var(--text-3); font-size: 13px; margin-top: 2px; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 3px 8px;
+      border-radius: var(--r-xs);
+      border: 1px solid var(--line);
+      background: var(--bg-raise);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--line);
+      color: var(--text-3);
+    }
+
+    .status::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status.live { color: var(--accent-text); border-color: var(--accent-line); background: var(--accent-soft); }
+    .status.wip { color: #d8b064; border-color: rgba(216, 176, 100, 0.3); }
+
+    .span-2 { grid-column: span 2; }
+    .row-2 { grid-row: span 2; }
+
+    /* --- Visual: Roundtable (phone + table) --- */
+    .phone {
+      width: 172px;
+      height: 300px;
+      border-radius: 30px;
+      padding: 8px;
+      background: linear-gradient(180deg, #1d232a, #101317);
+      border: 1px solid var(--line-strong);
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.9), 0 0 60px -20px rgba(76, 196, 234, 0.35);
+      transform: translateY(24px);
+      transition: transform 500ms var(--ease-out);
+    }
+
+    .card:hover .phone { transform: translateY(12px); }
+
+    .phone-screen {
+      position: relative;
+      height: 100%;
+      border-radius: 22px;
+      background: radial-gradient(circle at 50% 40%, #13242c 0%, #0a0d10 70%);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 18px;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 6px;
+      width: 52px;
+      height: 14px;
+      border-radius: 10px;
+      background: #000;
+    }
+
+    .phone-title {
+      margin-top: 14px;
+      font-size: 11px;
       font-weight: 600;
+      letter-spacing: 0.24em;
+      color: var(--accent-text);
     }
 
-    .card-link:hover {
-      color: var(--muted);
-      transform: translateX(3px);
+    .table {
+      position: relative;
+      width: 128px;
+      height: 128px;
+      margin-top: 22px;
+      border-radius: 50%;
+      border: 1px solid var(--accent-line);
+      background: radial-gradient(circle, rgba(76, 196, 234, 0.12), transparent 70%);
+      animation: spin 40s linear infinite;
     }
 
-    .exploring {
-      display: grid;
-      grid-template-columns: 0.8fr 1.2fr;
-      gap: 48px;
-      border-top: 1px solid var(--border);
+    .table::after {
+      content: "";
+      position: absolute;
+      inset: 34px;
+      border-radius: 50%;
+      border: 1px dashed var(--line-strong);
     }
 
-    .exploring .section-title {
-      margin-top: 4px;
+    .seat {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 22px;
+      height: 22px;
+      margin: -11px;
+      border-radius: 50%;
+      background: var(--surface-3);
+      border: 1px solid var(--line-strong);
+      transform: rotate(var(--a)) translateY(-64px);
     }
 
-    .exploring-list {
-      display: grid;
-      gap: 0;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      border-top: 1px solid var(--border);
-    }
+    .seat.on { background: var(--accent); border-color: var(--accent-hi); box-shadow: 0 0 14px var(--accent); }
 
-    .exploring-list li {
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .phone-bar {
       display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 18px 0;
-      border-bottom: 1px solid var(--border);
-      color: var(--muted);
+      gap: 6px;
+      margin-top: auto;
+      margin-bottom: 18px;
     }
 
-    .exploring-list strong {
-      color: var(--text);
+    .phone-bar i {
+      width: 38px;
+      height: 22px;
+      border-radius: 6px;
+      background: var(--surface-3);
+      border: 1px solid var(--line);
+    }
+
+    .phone-bar i:last-child { background: var(--accent); border-color: transparent; }
+
+    /* --- Visual: chart / graph / timeline (SVG) --- */
+    .card-visual svg { width: 100%; height: 100%; display: block; }
+
+    .chart-line { stroke-dasharray: 400; stroke-dashoffset: 400; transition: stroke-dashoffset 1.6s var(--ease-reveal); }
+    .in .chart-line { stroke-dashoffset: 0; }
+
+    .node { transition: transform 500ms var(--ease-out); transform-box: fill-box; transform-origin: center; }
+    .card:hover .node.n1 { transform: translate(-4px, -3px); }
+    .card:hover .node.n2 { transform: translate(4px, -4px); }
+    .card:hover .node.n3 { transform: translate(5px, 3px); }
+    .card:hover .node.n4 { transform: translate(-5px, 4px); }
+
+    .tl-bar { transform-box: fill-box; transform-origin: left; transform: scaleX(0); transition: transform 900ms var(--ease-reveal); }
+    .in .tl-bar { transform: scaleX(1); }
+    .in .tl-bar:nth-of-type(2) { transition-delay: 120ms; }
+    .in .tl-bar:nth-of-type(3) { transition-delay: 240ms; }
+    .in .tl-bar:nth-of-type(4) { transition-delay: 360ms; }
+
+    /* ============ About / Now ============ */
+    .about {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(32px, 6vw, 80px);
+      align-items: start;
+    }
+
+    .about-text {
+      margin: 16px 0 0;
+      font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
       font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+      color: var(--text-3);
+      text-wrap: pretty;
     }
 
-    .cc,
-    .contact {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: clamp(30px, 6vw, 56px);
+    .about-text strong { color: var(--text); font-weight: 500; }
+
+    .now {
+      border-radius: var(--r-lg);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--inner-hi);
+      padding: 8px;
     }
 
-    .cc h2,
-    .contact h2 {
-      max-width: 700px;
-      font-size: clamp(38px, 6vw, 70px);
-      margin: 0 0 16px;
-      letter-spacing: -0.055em;
-      line-height: 1;
-    }
-
-    .cc p,
-    .contact p {
-      max-width: 560px;
-      color: var(--muted);
-      font-size: 18px;
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    .contact {
+    .now-head {
       display: flex;
-      align-items: end;
       justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+    }
+
+    .now ul { list-style: none; margin: 0; padding: 0; }
+
+    .now li {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 14px;
+      border-radius: var(--r-sm);
+      transition: background-color 180ms ease;
+    }
+
+    .now li:hover { background: var(--surface-2); }
+
+    .now li .icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--r-sm);
+      background: var(--bg-raise);
+      border: 1px solid var(--line);
+      color: var(--accent-text);
+    }
+
+    .now li strong { display: block; font-weight: 500; font-size: 15px; }
+    .now li span { color: var(--text-3); font-size: 14px; }
+
+    /* ============ CC ============ */
+    .cc {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--r-xl);
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(600px 300px at 85% 120%, rgba(76, 196, 234, 0.16), transparent 70%),
+        var(--surface);
+      box-shadow: var(--inner-hi), var(--shadow-card);
+      padding: clamp(32px, 6vw, 64px);
+      display: grid;
+      grid-template-columns: 1fr auto;
       gap: 32px;
+      align-items: center;
     }
 
-    .contact .btn {
-      flex-shrink: 0;
+    .cc h2 {
+      margin: 12px 0 12px;
+      font-size: clamp(2.25rem, 1.4rem + 4vw, 4.25rem);
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.045em;
     }
 
+    .cc h2 .x { color: var(--accent); font-weight: 400; padding-inline: 0.08em; }
+
+    .cc p { margin: 0; color: var(--text-2); font-size: 17px; max-width: 30rem; }
+
+    .orbit {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
+
+    .orbit .ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid var(--line-strong);
+    }
+
+    .orbit .ring.r2 { inset: 30px; border-style: dashed; border-color: var(--accent-line); animation: spin 30s linear infinite reverse; }
+
+    .orbit .planet {
+      position: absolute;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+      background: var(--surface-3);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--inner-hi);
+    }
+
+    .orbit .p1 { top: 12px; left: 12px; }
+    .orbit .p2 { bottom: 12px; right: 12px; background: var(--accent); color: var(--accent-ink); border-color: transparent; box-shadow: 0 0 30px -4px var(--accent); }
+
+    .orbit .heart {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      font-size: 20px;
+    }
+
+    /* ============ Contact ============ */
+    .contact {
+      text-align: center;
+      padding-block: calc(var(--section-gap) * 0.75);
+    }
+
+    .contact h2 {
+      margin: 16px auto 16px;
+      max-width: 14ch;
+      font-size: clamp(2.5rem, 1.5rem + 4.5vw, 4.75rem);
+      font-weight: 600;
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+      text-wrap: balance;
+    }
+
+    .contact p { margin: 0 auto 36px; max-width: 28rem; color: var(--text-2); }
+
+    /* ============ Footer ============ */
     footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 0;
-      color: var(--muted);
-      font-size: 14px;
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--line);
+      padding: 28px 0 40px;
     }
 
     .footer-inner {
       display: flex;
       justify-content: space-between;
-      gap: 20px;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
     }
 
-    @media (max-width: 760px) {
-      .container {
-        width: min(100% - 32px, 600px);
-      }
+    .footer-inner a:hover { color: var(--text); }
+
+    /* ============ Reveal ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 700ms var(--ease-reveal), transform 700ms var(--ease-reveal);
+    }
+
+    .reveal.in { opacity: 1; transform: none; }
+
+    .no-js .reveal { opacity: 1; transform: none; }
+
+    /* ============ Responsive ============ */
+    @media (max-width: 960px) {
+      .bento { grid-template-columns: repeat(2, 1fr); }
+      .bento .row-2 { grid-row: span 1; }
+      .bento .span-2.row-2 { grid-column: span 2; }
+      .about { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .nav { padding-right: 8px; }
+
+      .menu-btn { display: grid; place-items: center; }
 
       .nav-links {
-        gap: 12px;
-      }
-
-      .nav-links a {
-        display: none;
-      }
-
-      .hero {
-        min-height: 75vh;
-        padding: 72px 0;
-      }
-
-      section {
-        padding: 64px 0;
-      }
-
-      .grid,
-      .exploring {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-
-      .exploring {
-        gap: 28px;
-      }
-
-      .card {
-        min-height: 230px;
-      }
-
-      .contact {
-        align-items: start;
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
         flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+        padding: 8px;
+        border-radius: var(--r-lg);
+        background: rgba(15, 18, 22, 0.94);
+        border: 1px solid var(--line);
+        box-shadow: var(--inner-hi), 0 24px 48px -16px rgba(0, 0, 0, 0.9);
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+        opacity: 0;
+        transform: translateY(-6px) scale(0.98);
+        pointer-events: none;
+        transition: opacity 200ms ease, transform 240ms var(--ease-out);
       }
 
-      .footer-inner {
-        flex-direction: column;
-      }
+      .nav.open .nav-links { opacity: 1; transform: none; pointer-events: auto; }
+
+      .nav-links a { padding: 12px 14px; border-radius: var(--r-sm); }
+      .nav-links a.nav-cta { margin: 4px 0 0; text-align: center; }
+
+      .bento { grid-template-columns: 1fr; }
+      .span-2, .bento .span-2.row-2 { grid-column: span 1; }
+
+      .section-head { flex-direction: column; align-items: start; }
+
+      .cc { grid-template-columns: 1fr; }
+      .orbit { width: 140px; height: 140px; }
+      .orbit .planet { width: 46px; height: 46px; font-size: 13px; }
+
+      .scroll-hint { display: none; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
+      *, *::before, *::after {
+        animation: none !important;
         transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
       }
+      .reveal { opacity: 1; transform: none; }
     }
   </style>
 </head>
 
-<body>
-  <div class="container">
-    <nav aria-label="Main navigation">
-      <a class="logo" href="#" aria-label="Linkai home">Linkai.</a>
-
-      <div class="nav-links">
-        <a href="#about">About</a>
-        <a href="#projects">Projects</a>
-        <a href="#exploring">Exploring</a>
-        <a href="#contact">Contact</a>
-        <button class="theme-btn" type="button" onclick="toggleTheme()" id="themeButton" aria-label="Switch to dark mode">
-          ☾
-        </button>
-      </div>
-    </nav>
-
-    <main>
-      <section class="hero">
-        <div class="hero-content">
-          <div class="eyebrow">Hello, I'm Linkai.</div>
-
-          <h1>Building small things with curiosity and AI.</h1>
-
-          <p>
-            I make simple tools, try out ideas, and keep notes on what I learn.
-            This is where I collect the projects that are worth sharing.
-          </p>
-
-          <div class="buttons">
-            <a class="btn primary" href="#projects">See what I'm building</a>
-            <a class="btn secondary" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
-              GitHub ↗
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section id="about">
-        <div class="section-title">About</div>
-        <div class="about-text">
-          I'm interested in the space between an idea and a useful little
-          product. I enjoy learning in public and turning experiments into
-          something real.
-        </div>
-      </section>
-
-      <section id="projects">
-        <div class="section-title">Selected projects</div>
-
-        <div class="grid">
-          <article class="card">
-            <div class="card-label">01 / Project</div>
-            <h3>Roundtable</h3>
-            <p>A mobile-friendly companion for playing Avalon with friends.</p>
-            <a class="card-link" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
-              View on GitHub <span aria-hidden="true">↗</span>
-            </a>
-          </article>
-
-          <article class="card">
-            <div class="card-label">02 / Learning</div>
-            <h3>IELTS Lab</h3>
-            <p>Experiments, tools, and notes for learning English in a way that works for me.</p>
-            <a class="card-link" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
-              View on GitHub <span aria-hidden="true">↗</span>
-            </a>
-          </article>
-
-          <article class="card">
-            <div class="card-label">03 / Experiments</div>
-            <h3>Link AI</h3>
-            <p>Small projects built with AI, curiosity, and probably too many browser tabs.</p>
-            <a class="card-link" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
-              View on GitHub <span aria-hidden="true">↗</span>
-            </a>
-          </article>
-
-          <article class="card">
-            <div class="card-label">04 / Tool</div>
-            <h3>Turnitin 报告特征核验</h3>
-            <p>本地 PDF 元数据、时间链与底层结构取证分析工具。<br><span style="font-size:13px;color:var(--muted)">Local PDF metadata & timeline forensic check.</span></p>
-            <a class="card-link" href="./turnitin-check/">
-              打开核验工具 / Open checker <span aria-hidden="true">→</span>
-            </a>
-          </article>
-        </div>
-      </section>
-
-      <section id="exploring" class="exploring">
-        <div class="section-title">Currently exploring</div>
-        <ul class="exploring-list">
-          <li><strong>AI-assisted building</strong><span>Small, practical experiments</span></li>
-          <li><strong>English learning</strong><span>Notes and tools for the IELTS Lab</span></li>
-          <li><strong>Web projects</strong><span>Ideas that are useful enough to ship</span></li>
-        </ul>
-      </section>
-
-      <section id="cc">
-        <div class="cc">
-          <div class="section-title">A little more personal</div>
-          <h2>CC × Linkai</h2>
-          <p>Our little corner of the internet.</p>
-        </div>
-      </section>
-
-      <section id="contact">
-        <div class="contact">
-          <div>
-            <div class="section-title">Contact</div>
-            <h2>Say hello on GitHub.</h2>
-            <p>GitHub is the best place to find my work and get in touch.</p>
-          </div>
-          <a class="btn primary" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
-            Open GitHub ↗
-          </a>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="footer-inner">
-        <div>© <span id="year"></span> Linkai</div>
-        <div>linkai.codes</div>
-      </div>
-    </footer>
+<body class="no-js">
+  <div class="ambient" aria-hidden="true">
+    <div class="grid-bg"></div>
+    <div class="glow"></div>
+    <div class="shaft"></div>
   </div>
 
+  <nav class="nav" id="nav" aria-label="Main navigation">
+    <a class="logo" href="#top" aria-label="Linkai home">Linkai<span>.</span></a>
+    <div class="nav-right">
+      <div class="nav-links" id="navLinks">
+        <a href="#projects" data-i18n="nav.projects">Projects</a>
+        <a href="#about" data-i18n="nav.about">About</a>
+        <a href="#cc" data-i18n="nav.cc">CC</a>
+        <a class="nav-cta" href="#contact" data-i18n="nav.cta">Say hi</a>
+      </div>
+      <div class="lang-switch" role="group" aria-label="Language / 语言">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="zh" aria-pressed="false" lang="zh-CN">中</button>
+      </div>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main id="top">
+    <!-- ============ Hero ============ -->
+    <section class="hero">
+      <div class="container">
+        <div class="badge reveal"><span class="dot"></span><span data-i18n="hero.badge">Currently building with AI</span></div>
+        <h1 class="reveal"><span class="text-gradient" data-i18n="hero.title">Building small things with curiosity and AI.</span></h1>
+        <p class="lead reveal" data-i18n="hero.lead">
+          Hi, I'm Linkai. I make simple tools, try out ideas, and keep notes on what I learn —
+          this is where the ones worth sharing end up.
+        </p>
+        <div class="actions reveal">
+          <a class="btn btn-primary" href="#projects" data-i18n="hero.cta">See projects</a>
+          <a class="btn btn-ghost" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
+            GitHub <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+      <div class="scroll-hint" aria-hidden="true">
+        <span class="mono" data-i18n="hero.scroll">Scroll</span>
+        <i></i>
+      </div>
+    </section>
+
+    <!-- ============ Projects ============ -->
+    <section id="projects" class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="mono" data-i18n="projects.kicker">01 — Selected work</div>
+            <h2 data-i18n="projects.title">Things I've been building.</h2>
+          </div>
+          <p data-i18n="projects.desc">Small, practical experiments. Some are shipped, some are still on the workbench.</p>
+        </div>
+
+        <div class="bento">
+          <!-- Roundtable -->
+          <article class="card span-2 row-2 reveal">
+            <div class="card-visual" aria-hidden="true">
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="phone-notch"></div>
+                  <div class="phone-title">AVALON</div>
+                  <div class="table">
+                    <i class="seat on" style="--a:0deg"></i>
+                    <i class="seat" style="--a:72deg"></i>
+                    <i class="seat on" style="--a:144deg"></i>
+                    <i class="seat" style="--a:216deg"></i>
+                    <i class="seat" style="--a:288deg"></i>
+                  </div>
+                  <div class="phone-bar"><i></i><i></i><i></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="mono" data-i18n="rt.kicker">Game companion</span>
+                <span class="status wip" data-i18n="status.wip">WIP</span>
+              </div>
+              <h3>Roundtable</h3>
+              <p data-i18n="rt.desc">A mobile-friendly companion for playing Avalon with friends — roles, rounds and votes, all on one phone.</p>
+              <div class="tags"><span class="tag" data-i18n="rt.tag">Mobile web</span><span class="tag">HTML</span><span class="tag">JS</span></div>
+            </div>
+          </article>
+
+          <!-- Turnitin -->
+          <a class="card span-2 reveal" href="./turnitin-check/">
+            <div class="card-visual" aria-hidden="true">
+              <svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet">
+                <g stroke="rgba(226,236,245,0.06)">
+                  <line x1="40" y1="20" x2="40" y2="130" /><line x1="120" y1="20" x2="120" y2="130" />
+                  <line x1="200" y1="20" x2="200" y2="130" /><line x1="280" y1="20" x2="280" y2="130" />
+                  <line x1="360" y1="20" x2="360" y2="130" />
+                </g>
+                <rect class="tl-bar" x="40" y="30" width="110" height="14" rx="4" fill="rgba(226,236,245,0.14)" />
+                <rect class="tl-bar" x="110" y="56" width="120" height="14" rx="4" fill="rgba(76,196,234,0.45)" />
+                <rect class="tl-bar" x="190" y="82" width="90" height="14" rx="4" fill="rgba(76,196,234,0.7)" />
+                <rect class="tl-bar" x="250" y="108" width="110" height="14" rx="4" fill="#4cc4ea" />
+                <g font-family="Geist Mono, monospace" font-size="9" fill="#78838d">
+                  <text x="46" y="41">CreationDate</text><text x="116" y="67">ModDate</text>
+                  <text x="196" y="93" fill="#031219">XMP</text><text x="256" y="119" fill="#031219">Producer</text>
+                </g>
+              </svg>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="mono" data-i18n="tt.kicker">Tool</span>
+                <span class="status live" data-i18n="status.live">Live</span>
+              </div>
+              <h3><span data-i18n="tt.title">Turnitin Check</span> <span class="arrow" aria-hidden="true">↗</span></h3>
+              <p data-i18n="tt.desc">Local PDF metadata &amp; timeline forensic check.</p>
+            </div>
+          </a>
+
+          <!-- IELTS Lab -->
+          <article class="card reveal">
+            <div class="card-visual" aria-hidden="true">
+              <svg viewBox="0 0 200 120" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#4cc4ea" stop-opacity="0.35" />
+                    <stop offset="1" stop-color="#4cc4ea" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <g stroke="rgba(226,236,245,0.06)">
+                  <line x1="0" y1="30" x2="200" y2="30" /><line x1="0" y1="60" x2="200" y2="60" /><line x1="0" y1="90" x2="200" y2="90" />
+                </g>
+                <path d="M0 100 L30 92 L60 95 L90 74 L120 70 L150 48 L180 40 L200 26 L200 120 L0 120 Z" fill="url(#area)" />
+                <path class="chart-line" d="M0 100 L30 92 L60 95 L90 74 L120 70 L150 48 L180 40 L200 26" fill="none" stroke="#4cc4ea" stroke-width="2" vector-effect="non-scaling-stroke" />
+              </svg>
+            </div>
+            <div class="card-body">
+              <div class="card-meta"><span class="mono" data-i18n="ielts.kicker">Learning</span><span class="status wip" data-i18n="status.wip">WIP</span></div>
+              <h3>IELTS Lab</h3>
+              <p data-i18n="ielts.desc">Tools and notes for learning English in a way that actually works for me.</p>
+            </div>
+          </article>
+
+          <!-- Link AI -->
+          <article class="card reveal">
+            <div class="card-visual" aria-hidden="true">
+              <svg viewBox="0 0 200 120">
+                <g stroke="rgba(76,196,234,0.35)" stroke-width="1">
+                  <line x1="100" y1="60" x2="48" y2="32" /><line x1="100" y1="60" x2="158" y2="28" />
+                  <line x1="100" y1="60" x2="160" y2="92" /><line x1="100" y1="60" x2="44" y2="94" />
+                  <line x1="48" y1="32" x2="44" y2="94" stroke-dasharray="3 4" />
+                </g>
+                <circle class="node n1" cx="48" cy="32" r="7" fill="#14181d" stroke="rgba(226,236,245,0.2)" />
+                <circle class="node n2" cx="158" cy="28" r="9" fill="#14181d" stroke="rgba(226,236,245,0.2)" />
+                <circle class="node n3" cx="160" cy="92" r="6" fill="#14181d" stroke="rgba(226,236,245,0.2)" />
+                <circle class="node n4" cx="44" cy="94" r="8" fill="#14181d" stroke="rgba(226,236,245,0.2)" />
+                <circle cx="100" cy="60" r="18" fill="rgba(76,196,234,0.12)" />
+                <circle cx="100" cy="60" r="11" fill="#4cc4ea" />
+              </svg>
+            </div>
+            <div class="card-body">
+              <div class="card-meta"><span class="mono" data-i18n="lai.kicker">Experiments</span><span class="status wip" data-i18n="status.wip">WIP</span></div>
+              <h3>Link AI</h3>
+              <p data-i18n="lai.desc">Small projects built with AI, curiosity, and probably too many browser tabs.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ About ============ -->
+    <section id="about" class="section">
+      <div class="container about">
+        <div class="reveal">
+          <div class="mono" data-i18n="about.kicker">02 — About</div>
+          <p class="about-text" data-i18n="about.text">
+            I'm interested in the space <strong>between an idea and a useful little product.</strong>
+            I enjoy learning in public and <strong>turning experiments into something real.</strong>
+          </p>
+        </div>
+
+        <div class="now reveal">
+          <div class="now-head">
+            <span class="mono" data-i18n="now.label">Now</span>
+            <span class="mono" id="nowDate"></span>
+          </div>
+          <ul>
+            <li>
+              <span class="icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>
+              </span>
+              <div><strong data-i18n="now.1t">AI-assisted building</strong><span data-i18n="now.1d">Small, practical experiments</span></div>
+            </li>
+            <li>
+              <span class="icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>
+              </span>
+              <div><strong data-i18n="now.2t">English learning</strong><span data-i18n="now.2d">Notes and tools for the IELTS Lab</span></div>
+            </li>
+            <li>
+              <span class="icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16"/></svg>
+              </span>
+              <div><strong data-i18n="now.3t">Web projects</strong><span data-i18n="now.3d">Ideas useful enough to ship</span></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CC ============ -->
+    <section id="cc" class="section">
+      <div class="container">
+        <div class="cc reveal">
+          <div>
+            <div class="mono" data-i18n="cc.kicker">03 — A little more personal</div>
+            <h2>CC<span class="x">×</span>Linkai</h2>
+            <p data-i18n="cc.desc">Our little corner of the internet.</p>
+          </div>
+          <div class="orbit" aria-hidden="true">
+            <div class="ring"></div>
+            <div class="ring r2"></div>
+            <div class="planet p1">CC</div>
+            <div class="planet p2">LK</div>
+            <div class="heart">♥</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Contact ============ -->
+    <section id="contact" class="contact">
+      <div class="container reveal">
+        <div class="mono" data-i18n="contact.kicker">04 — Contact</div>
+        <h2><span class="text-gradient" data-i18n="contact.title">Let's build something small.</span></h2>
+        <p data-i18n="contact.desc">GitHub is the best place to find my work and get in touch.</p>
+        <a class="btn btn-primary" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
+          <span data-i18n="contact.cta">Say hello on GitHub</span> <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span class="mono">© <span id="year"></span> Linkai</span>
+      <a class="mono" href="https://linkai.codes">linkai.codes</a>
+    </div>
+  </footer>
+
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    document.body.classList.remove("no-js");
 
-    function updateThemeButton(isDark) {
-      const button = document.getElementById("themeButton");
-      button.textContent = isDark ? "☀" : "☾";
-      button.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+    const now = new Date();
+    document.getElementById("year").textContent = now.getFullYear();
+
+    // ============ i18n (English is the HTML default; Chinese lives here) ============
+    const ZH = {
+      "meta.title": "Linkai — 抱持好奇，借力 AI，打磨微小而实用的创造",
+      "meta.desc": "Linkai 的个人小站：探索顺手的小工具、AI 实验，以及持续学习的行路笔记。",
+      "nav.projects": "作品",
+      "nav.about": "关于",
+      "nav.cc": "CC",
+      "nav.cta": "打个招呼",
+      "hero.badge": "借力 AI · 持续探索构建中",
+      "hero.title": "抱持好奇，与 AI 同行，<br />打磨微小而顺手的作品。",
+      "hero.lead": "你好，我是 Linkai。我喜欢做些顺手好用的小工具，动手验证灵感，并随手记录研习所得——凡是觉得值得分享的，都留在了这里。",
+      "hero.cta": "浏览作品",
+      "hero.scroll": "下滑探索",
+      "projects.kicker": "01 — 精选作品",
+      "projects.title": "近期打磨的作品。",
+      "projects.desc": "微小而实在的探索：有的已发布可用，有的仍在工坊中迭代。",
+      "status.wip": "迭代中",
+      "status.live": "已上线",
+      "rt.kicker": "桌游伴侣",
+      "rt.desc": "朋友聚会玩《阿瓦隆》时的轻量手机助手——暗牌身份、出征轮次与表决投票，单机即可顺畅流转。",
+      "rt.tag": "移动 Web",
+      "tt.kicker": "取证工具",
+      "tt.title": "Turnitin 报告特征核验",
+      "tt.desc": "本地 PDF 取证分析：深入解析元数据链条、修改时序与底层文档结构。",
+      "ielts.kicker": "语言研习",
+      "ielts.desc": "探索真正契合自身节奏的英语研习路径——自研辅助工具与实战学习笔记。",
+      "lai.kicker": "AI 实验场",
+      "lai.desc": "以好奇心为墨、借力 AI 探索，伴随着无数开着的浏览器标签页，一点点敲出来的小项目。",
+      "about.kicker": "02 — 关于我",
+      "about.text": "我始终着迷于<strong>从灵光一现到一件顺手小产品</strong>之间的距离。乐于公开分享研习所得，<strong>把每一次动手实验，都变成切实可用的现实。</strong>",
+      "now.label": "近况",
+      "now.1t": "AI 辅助构建",
+      "now.1d": "开展微小而实用的实践",
+      "now.2t": "英语深度研习",
+      "now.2d": "持续沉淀 IELTS Lab 的工具与心得",
+      "now.3t": "Web 独立创造",
+      "now.3d": "将有价值的想法打磨并发布",
+      "cc.kicker": "03 — 幕后一隅",
+      "cc.desc": "我们在浩瀚网络里的一方小小自留地。",
+      "contact.kicker": "04 — 联络",
+      "contact.title": "不如一起，<br />做点好玩的小创造。",
+      "contact.desc": "若想探看我的代码仓库，或是打声招呼，GitHub 永远是最好的入口。",
+      "contact.cta": "去 GitHub 打个招呼",
+    };
+
+    const i18nEls = document.querySelectorAll("[data-i18n]");
+    const EN = {};
+    i18nEls.forEach((el) => { EN[el.dataset.i18n] = el.innerHTML; });
+    const metaDesc = document.querySelector('meta[name="description"]');
+    EN["meta.title"] = document.title;
+    EN["meta.desc"] = metaDesc.content;
+
+    const langBtns = document.querySelectorAll(".lang-switch button");
+
+    function setLang(lang) {
+      const dict = lang === "zh" ? ZH : EN;
+      i18nEls.forEach((el) => {
+        const v = dict[el.dataset.i18n];
+        if (v !== undefined) el.innerHTML = v;
+      });
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+      document.title = dict["meta.title"];
+      metaDesc.content = dict["meta.desc"];
+      document.getElementById("nowDate").textContent = lang === "zh"
+        ? `${now.getFullYear()} 年 ${now.getMonth() + 1} 月`
+        : now.toLocaleDateString("en", { month: "short", year: "numeric" });
+      langBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
     }
 
-    function toggleTheme() {
-      const isDark = document.body.classList.toggle("dark");
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-      updateThemeButton(isDark);
+    const savedLang = (() => { try { return localStorage.getItem("lang"); } catch (e) { return null; } })();
+    const initialLang = savedLang || ((navigator.language || "").toLowerCase().startsWith("zh") ? "zh" : "en");
+    setLang(initialLang);
+
+    langBtns.forEach((b) => b.addEventListener("click", () => {
+      setLang(b.dataset.lang);
+      try { localStorage.setItem("lang", b.dataset.lang); } catch (e) {}
+    }));
+
+    // Mobile menu
+    const nav = document.getElementById("nav");
+    const menuBtn = document.getElementById("menuBtn");
+    const setMenu = (open) => {
+      nav.classList.toggle("open", open);
+      menuBtn.setAttribute("aria-expanded", String(open));
+      menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    };
+    menuBtn.addEventListener("click", () => setMenu(!nav.classList.contains("open")));
+    document.querySelectorAll("#navLinks a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll(".reveal");
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in");
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+      reveals.forEach((el, i) => {
+        el.style.transitionDelay = el.closest(".hero") ? `${i * 80}ms` : "0ms";
+        io.observe(el);
+      });
+    } else {
+      reveals.forEach((el) => el.classList.add("in"));
     }
 
-    const savedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialDark = savedTheme ? savedTheme === "dark" : prefersDark;
-
-    if (initialDark) {
-      document.body.classList.add("dark");
-    }
-
-    updateThemeButton(initialDark);
+    // Card spotlight follows cursor
+    document.querySelectorAll(".card").forEach((card) => {
+      card.addEventListener("pointermove", (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        card.style.setProperty("--my", `${e.clientY - r.top}px`);
+      });
+    });
   </script>
 </body>
 </html>
