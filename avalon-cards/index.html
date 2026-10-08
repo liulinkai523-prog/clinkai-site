@@ -1,0 +1,1616 @@
+<!doctype html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#08090b" />
+  <title>Avalon Card Vault · 阿瓦隆实体卡牌设计工坊 — Linkai</title>
+  <meta name="description" content="鬼灭之刃与火影忍者阿瓦隆定制卡牌设计展厅。300 DPI 印刷级母版，完整角色隐喻叙事与 3D 拟真物理交互。" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b0f14' stroke='rgba(76,196,234,0.35)' stroke-width='2'/%3E%3Cpath d='M18 16v32h32' stroke='%234cc4ea' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M31 35L47 19' stroke='%234cc4ea' stroke-width='5.5' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='47' cy='19' r='5' fill='%234cc4ea'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #08090b;
+      --bg-card: #0f1216;
+      --bg-panel: #14181d;
+      --bg-hover: #1b2027;
+      --line: rgba(226, 236, 245, 0.08);
+      --line-strong: rgba(226, 236, 245, 0.16);
+      --text: #f0f4f8;
+      --text-muted: #9baec2;
+      --text-sub: #627384;
+      --accent: #4cc4ea;
+      --accent-glow: rgba(76, 196, 234, 0.35);
+      --good-color: #38bdf8;
+      --good-glow: rgba(56, 189, 248, 0.35);
+      --evil-color: #f43f5e;
+      --evil-glow: rgba(244, 63, 94, 0.35);
+      --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body[data-theme="demon_slayer"] {
+      --accent: #c084fc;
+      --accent-glow: rgba(192, 132, 252, 0.4);
+      --theme-bg-glow: radial-gradient(circle at 50% -10%, rgba(147, 51, 234, 0.18), transparent 60%);
+    }
+
+    body[data-theme="naruto"] {
+      --accent: #fb923c;
+      --accent-glow: rgba(251, 146, 60, 0.4);
+      --theme-bg-glow: radial-gradient(circle at 50% -10%, rgba(234, 88, 12, 0.18), transparent 60%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      selection-background-color: var(--accent);
+      selection-color: #031219;
+    }
+
+    .ambient-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: var(--theme-bg-glow);
+      transition: background 600ms var(--ease);
+    }
+
+    .ambient-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: linear-gradient(to right, rgba(226, 236, 245, 0.02) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(226, 236, 245, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .wrap {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Top Bar */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 9999px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      transition: all 200ms var(--ease);
+    }
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--line-strong);
+      background: var(--bg-hover);
+    }
+
+    .vault-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border-radius: 9999px;
+      background: rgba(226, 236, 245, 0.04);
+      border: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+    }
+    .vault-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .spec-pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-sub);
+      background: var(--bg-card);
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 44px 0 32px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .hero-kicker {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 4.5vw, 46px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: clamp(14px, 1.8vw, 16px);
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Theme Switcher Segmented Control */
+    .theme-switcher-box {
+      display: flex;
+      justify-content: center;
+      margin: 32px 0 24px;
+    }
+
+    .theme-tabs {
+      display: inline-flex;
+      background: var(--bg-card);
+      border: 1px solid var(--line-strong);
+      padding: 4px;
+      border-radius: 16px;
+      gap: 4px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .theme-tab-btn {
+      padding: 10px 22px;
+      border-radius: 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 250ms var(--ease);
+    }
+
+    .theme-tab-btn .badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      background: rgba(226, 236, 245, 0.08);
+      color: var(--text-sub);
+    }
+
+    .theme-tab-btn.active {
+      background: var(--bg-panel);
+      color: #fff;
+      border: 1px solid var(--line-strong);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 16px var(--accent-glow);
+    }
+    .theme-tab-btn.active .badge {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 36px;
+    }
+
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 9999px;
+      border: 1px solid var(--line);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 180ms var(--ease);
+    }
+    .filter-btn:hover {
+      color: var(--text);
+      border-color: var(--line-strong);
+      background: var(--bg-hover);
+    }
+    .filter-btn.active {
+      background: rgba(226, 236, 245, 0.12);
+      color: #fff;
+      border-color: var(--text-muted);
+    }
+    .filter-btn .count {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      opacity: 0.7;
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 24px;
+      perspective: 1400px;
+    }
+
+    /* 3D Interactive Card Container */
+    .card-item {
+      position: relative;
+      border-radius: 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      padding: 12px;
+      transition: border-color 300ms var(--ease), box-shadow 300ms var(--ease);
+      display: flex;
+      flex-direction: column;
+    }
+    .card-item:hover {
+      border-color: var(--line-strong);
+      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.7);
+    }
+
+    .card-3d-wrap {
+      width: 100%;
+      aspect-ratio: 54 / 85.5;
+      perspective: 1200px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card-flipper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      border-radius: 12px;
+      box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.6);
+    }
+
+    .card-flipper.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-face.back {
+      transform: rotateY(180deg);
+    }
+
+    .card-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Holographic sheen layer on hover */
+    .card-sheen {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 12px;
+      opacity: 0;
+      background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.08) 40%, transparent 70%);
+      mix-blend-mode: overlay;
+      transition: opacity 250ms ease;
+    }
+    .card-3d-wrap:hover .card-sheen {
+      opacity: 1;
+    }
+
+    /* Flip Action Button */
+    .flip-btn-overlay {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 20;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: all 200ms ease;
+    }
+    .card-3d-wrap:hover .flip-btn-overlay {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    /* Card Info */
+    .card-info {
+      padding: 12px 2px 2px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .card-header-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .char-name {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .role-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .role-badge.good {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--good-color);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .role-badge.evil {
+      background: rgba(244, 63, 94, 0.15);
+      color: var(--evil-color);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    .role-badge.neutral {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .card-role-title {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .card-quote {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.45;
+      font-style: italic;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-inspect-hint {
+      margin-top: auto;
+      padding-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px dashed rgba(226, 236, 245, 0.06);
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--text-sub);
+    }
+    .card-inspect-hint:hover {
+      color: var(--accent);
+    }
+
+    /* Section Accessories */
+    .section-title-wrap {
+      margin: 64px 0 24px;
+      padding-top: 32px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .section-sub {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    /* Scoreboards Grid */
+    .boards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .board-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 250ms var(--ease);
+    }
+    .board-card:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5);
+    }
+    .board-img-wrap {
+      width: 100%;
+      aspect-ratio: 108 / 85.5;
+      background: #050608;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .board-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Tokens & Other Accessories */
+    .tokens-flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .token-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 200ms ease;
+      flex: 1;
+      min-width: 220px;
+    }
+    .token-card:hover {
+      border-color: var(--line-strong);
+      background: var(--bg-hover);
+    }
+    .token-preview {
+      width: 52px;
+      height: 52px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+    }
+    .token-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Modal / Lightbox */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(4, 5, 7, 0.88);
+      backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 250ms ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      max-width: 880px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--bg-card);
+      border: 1px solid var(--line-strong);
+      border-radius: 24px;
+      box-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.8), 0 0 40px var(--accent-glow);
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      position: relative;
+    }
+
+    @media (max-width: 768px) {
+      .modal-box {
+        grid-template-columns: 1fr;
+        max-height: 85vh;
+      }
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--line-strong);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 200ms ease;
+    }
+    .modal-close-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.08);
+    }
+
+    .modal-visual-pane {
+      background: #000;
+      border-radius: 24px 0 0 24px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      border-right: 1px solid var(--line);
+    }
+    @media (max-width: 768px) {
+      .modal-visual-pane {
+        border-radius: 24px 24px 0 0;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+    }
+
+    .modal-card-display {
+      width: 230px;
+      aspect-ratio: 54 / 85.5;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      position: relative;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .modal-card-display.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .modal-card-display img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      backface-visibility: hidden;
+    }
+    .modal-card-display img.back {
+      position: absolute;
+      inset: 0;
+      transform: rotateY(180deg);
+    }
+
+    .modal-flip-btn {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 180ms ease;
+    }
+    .modal-flip-btn:hover {
+      color: #fff;
+      border-color: var(--line-strong);
+    }
+
+    .modal-detail-pane {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .modal-header-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .modal-meta-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .modal-role-label {
+      font-size: 14px;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .modal-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .modal-block-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-sub);
+    }
+    .modal-block-content {
+      font-size: 13.5px;
+      color: var(--text);
+      line-height: 1.6;
+      background: var(--bg-panel);
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .modal-nav-actions {
+      margin-top: auto;
+      padding-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--line);
+    }
+    .modal-nav-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: all 180ms ease;
+    }
+    .modal-nav-btn:hover {
+      color: #fff;
+      border-color: var(--line-strong);
+    }
+
+    /* Print Specs Footer Card */
+    .specs-banner {
+      margin-top: 80px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .spec-item h4 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .spec-item p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: center;
+      padding-top: 60px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--text-sub);
+    }
+  </style>
+</head>
+<body data-theme="demon_slayer">
+  <div class="ambient-bg"></div>
+  <div class="ambient-grid"></div>
+
+  <div class="wrap">
+    <!-- Top Bar -->
+    <nav class="top-nav">
+      <a href="../" class="back-btn" title="返回主站">
+        <span>←</span> <span>linkai.codes</span>
+      </a>
+
+      <div class="vault-badge">
+        <span class="dot"></span>
+        <span>Avalon Card Vault · 实体卡牌定制工坊</span>
+      </div>
+
+      <div class="spec-pill">
+        300 DPI · 印刷级母版规范
+      </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <header class="hero">
+      <span class="hero-kicker">01 / Bespoke Tabletop Design</span>
+      <h1>阿瓦隆定制卡牌典藏</h1>
+      <p>
+        以 300 DPI 工业级印刷规范重塑经典社交推演。从全套角色机制隐喻到实体裁切出血位，收录逐张确认的完整联动版本。
+      </p>
+
+      <!-- Theme Switcher -->
+      <div class="theme-switcher-box">
+        <div class="theme-tabs" role="tablist">
+          <button class="theme-tab-btn active" data-theme-target="demon_slayer" id="tab-ds">
+            <span>⚔️ 鬼灭之刃 · 柱灭密令</span>
+            <span class="badge">15 人物 + 配件</span>
+          </button>
+          <button class="theme-tab-btn" data-theme-target="naruto" id="tab-naruto">
+            <span>🍥 火影忍者 · 忍界之暗</span>
+            <span class="badge">V7 确认版 (16 人物)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-btn active" data-filter="all">全部卡面 <span class="count" id="count-all">0</span></button>
+        <button class="filter-btn" data-filter="good">正义阵营 <span class="count" id="count-good">0</span></button>
+        <button class="filter-btn" data-filter="evil">邪恶阵营 <span class="count" id="count-evil">0</span></button>
+        <button class="filter-btn" data-filter="neutral">中立 / 仙女 <span class="count" id="count-neutral">0</span></button>
+        <button class="filter-btn" data-filter="accessories">配件与计分板 <span class="count" id="count-accessories">0</span></button>
+      </div>
+    </header>
+
+    <!-- Character Cards Grid -->
+    <main>
+      <div class="cards-grid" id="cards-container">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Accessories Section -->
+      <section id="accessories-section">
+        <div class="section-title-wrap">
+          <div>
+            <h2 class="section-title">桌游配件与计分轨道</h2>
+            <p class="section-sub">Scoreboards, Mission Cards, Tokens &amp; Boarding Orders</p>
+          </div>
+          <span class="spec-pill">108 × 85.5 mm 计分板 · 25 mm 标准圆形 Token</span>
+        </div>
+
+        <div class="boards-grid" id="boards-container">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <div class="tokens-flex" id="tokens-container" style="margin-top: 24px;">
+          <!-- Injected via JavaScript -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Production Specs Banner -->
+    <section class="specs-banner">
+      <div class="spec-item">
+        <h4>生产尺寸与出血位</h4>
+        <p>卡牌成品尺寸为 54 × 85.5 mm（圆角 R3）；四边预留 3 mm 同画面延展出血，画布尺寸为 60 × 91.5 mm（709 × 1081 px）。</p>
+      </div>
+      <div class="spec-item">
+        <h4>印刷色准与分辨率</h4>
+        <p>采用标准 300 DPI 高精度导出。文字边缘高对比锐化，暗部微阶过渡自然，完全适配专业卡牌冷烫、逆向 UV 或覆哑膜工艺。</p>
+      </div>
+      <div class="spec-item">
+        <h4>机制与叙事映射</h4>
+        <p>摒弃粗暴换皮：每位动漫人物的忍术/呼吸法与心智动机，严格对应阿瓦隆视野盲区、出征表决与终局刺杀逻辑。</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>© Linkai · Avalon Custom Tabletop Vault · 仅供线下朋友聚会体验与个人设计研习</p>
+    </footer>
+  </div>
+
+  <!-- Detail Lightbox Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal-box">
+      <button class="modal-close-btn" id="modal-close" title="关闭 (ESC)">✕</button>
+
+      <!-- Visual Pane -->
+      <div class="modal-visual-pane">
+        <div class="modal-card-display" id="modal-flipper">
+          <img id="modal-img-front" src="" alt="正面卡牌" />
+          <img id="modal-img-back" class="back" src="" alt="统一卡背" />
+        </div>
+        <button class="modal-flip-btn" id="modal-flip-btn">
+          <span>🔄 翻转查看卡背</span>
+        </button>
+      </div>
+
+      <!-- Detail Pane -->
+      <div class="modal-detail-pane">
+        <div class="modal-header-block">
+          <div class="modal-meta-bar">
+            <span class="role-badge" id="modal-side-badge">阵营</span>
+            <span class="modal-role-label" id="modal-role-label">阿瓦隆身份</span>
+          </div>
+          <h3 class="modal-title" id="modal-char-name">人物名字</h3>
+        </div>
+
+        <div class="modal-block">
+          <div class="modal-block-label">经典判词 / 设计台词</div>
+          <div class="modal-block-content" id="modal-quote" style="font-style: italic; color: #cbd5e1;"></div>
+        </div>
+
+        <div class="modal-block">
+          <div class="modal-block-label">阿瓦隆机制映射理由</div>
+          <div class="modal-block-content" id="modal-reason"></div>
+        </div>
+
+        <div class="modal-block">
+          <div class="modal-block-label">视觉符码 (Visual Motif)</div>
+          <div class="modal-block-content" id="modal-motif" style="font-family: var(--font-mono); font-size: 12px;"></div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="modal-nav-actions">
+          <button class="modal-nav-btn" id="modal-prev-btn">← 上一张</button>
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-sub);" id="modal-counter">1 / 15</span>
+          <button class="modal-nav-btn" id="modal-next-btn">下一张 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ================= DATA STORE =================
+    const THEMES_DATA = {
+      demon_slayer: {
+        key: "demon_slayer",
+        name: "鬼灭之刃 · 柱灭密令",
+        backImg: "./cards/demon_slayer/characters/Character_Card_Back_Print_Master_v1.webp",
+        characters: [
+          {
+            id: "ds-01",
+            name: "蝴蝶忍",
+            role: "梅林 (Merlin)",
+            side: "good",
+            sideLabel: "正义 · 梅林",
+            quote: "“蝶影照见群恶，先知之名不可言。”",
+            reason: "作为鬼杀队智囊，能洞悉绝大部分恶人，但身躯脆弱，必须隐匿身份切勿暴露，否则终局将被无惨刺杀。",
+            motif: "紫藤花蝶影与日轮毒刃",
+            front: "./cards/demon_slayer/characters/01_Merlin_Shinobu_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-02",
+            name: "栗花落香奈乎",
+            role: "派西维尔 (Percival)",
+            side: "good",
+            sideLabel: "正义 · 派西维尔",
+            quote: "“双影皆似先知，唯有慧眼可辨真伪。”",
+            reason: "双目敏锐，感应到忍与童磨两人身上散发的光芒，需以慧眼辨别谁是真先知、谁是伪装者。",
+            motif: "抛掷铜币决断与花之呼吸",
+            front: "./cards/demon_slayer/characters/02_Percival_Kanao_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-03",
+            name: "童磨",
+            role: "莫甘娜 (Morgana)",
+            side: "evil",
+            sideLabel: "邪恶 · 莫甘娜",
+            quote: "“冰莲伪作先知，真视亦受蒙蔽。”",
+            reason: "极乐教虚伪先知，在香奈乎眼中与蝴蝶忍散发同等神圣之光，以假乱真惑乱正义之师。",
+            motif: "血鬼术结晶之御子与血色冰莲",
+            front: "./cards/demon_slayer/characters/03_Morgana_Doma_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-04",
+            name: "鬼舞辻无惨",
+            role: "刺客 (Assassin)",
+            side: "evil",
+            sideLabel: "邪恶 · 刺客",
+            quote: "“万影皆可舍，唯先知必须殒落。”",
+            reason: "万鬼之祖，若正义方拿到三胜，手握终局诛灭梅林的致命翻盘决断权。",
+            motif: "深红竖瞳、血肉黑荆棘与拟态面孔",
+            front: "./cards/demon_slayer/characters/04_Assassin_Muzan_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-05",
+            name: "猗窝座",
+            role: "奥伯伦 (Oberon)",
+            side: "evil",
+            sideLabel: "邪恶 · 奥伯伦",
+            quote: "“孤身行于幽夜，同类无知其踪。”",
+            reason: "崇尚绝对武道的独行上弦，与其他恶人互不相识，独自行事破坏任务。",
+            motif: "破坏杀·罗针与雪花术式阵",
+            front: "./cards/demon_slayer/characters/05_Oberon_Akaza_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-06",
+            name: "黑死牟",
+            role: "莫德雷德 (Mordred)",
+            side: "evil",
+            sideLabel: "邪恶 · 莫德雷德",
+            quote: "“六眸洞穿明镜，身隐先知视野之外。”",
+            reason: "上弦之壹。虚无与六目洞察神明，彻底隐蔽在蝴蝶忍的探知盲区之外。",
+            motif: "六目魔刀、月之呼吸与虚无残月",
+            front: "./cards/demon_slayer/characters/06_Mordred_Kokushibo_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-07",
+            name: "堕姬",
+            role: "爪牙 (Minion)",
+            side: "evil",
+            sideLabel: "邪恶 · 爪牙",
+            quote: "“奉恶之召，惑乱正义之师。”",
+            reason: "普通邪恶阵营成员，与同伴合谋混入队伍暗中破坏任务。",
+            motif: "八重樱血绸带与花魁之容",
+            front: "./cards/demon_slayer/characters/07_Minion_Daki_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-08",
+            name: "灶门祢豆子·善",
+            role: "兰斯洛特·善 (Lancelot Good)",
+            side: "good",
+            sideLabel: "正义 · 兰斯洛特",
+            quote: "“血鬼之躯亦秉持正义之心。”",
+            reason: "克服鬼之凶性守护人类，高洁坚韧，为正义阵营而战。",
+            motif: "竹筒封印、粉色眼眸与守护之火",
+            front: "./cards/demon_slayer/characters/08_Lancelot_Good_Nezuko_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-09",
+            name: "灶门祢豆子·恶",
+            role: "不忠仆·恶 (Lancelot Evil)",
+            side: "evil",
+            sideLabel: "邪恶 · 不忠仆",
+            quote: "“深匿于光明之中，与暗影共生。”",
+            reason: "鬼化暴走状态，深匿于同伴之中，倒向毁灭之渊。",
+            motif: "爆血荆棘纹、暴走利爪与暗影烈焰",
+            front: "./cards/demon_slayer/characters/09_Lancelot_Evil_Nezuko_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-10",
+            name: "灶门炭治郎",
+            role: "忠臣 (Loyal Servant)",
+            side: "good",
+            sideLabel: "正义 · 忠臣",
+            quote: "“纵陷幽昧长夜，赤心不改其志。”",
+            reason: "坚毅正义之刃，以清澈嗅觉与同伴心意带队出征。",
+            motif: "日轮花札耳饰与火之神神乐",
+            front: "./cards/demon_slayer/characters/10_Loyal_Tanjiro_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-11",
+            name: "富冈义勇",
+            role: "忠臣 (Loyal Servant)",
+            side: "good",
+            sideLabel: "正义 · 忠臣",
+            quote: "“水面生平，以静水流深守卫同伴。”",
+            reason: "水柱，生杀予夺不交于他人之手，以沉着冷静捍卫任务安全。",
+            motif: "水之呼吸拾壹之型·凪与半半羽织",
+            front: "./cards/demon_slayer/characters/11_Loyal_Giyu_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-12",
+            name: "炼狱杏寿郎",
+            role: "忠臣 (Loyal Servant)",
+            side: "good",
+            sideLabel: "正义 · 忠臣",
+            quote: "“点燃心中的火炎，绝不让任何一人倒下！”",
+            reason: "炎柱，浩然正气，以生命点亮长夜，凝聚队伍信念。",
+            motif: "炎之呼吸·玖之型炼狱与炽烈烈焰",
+            front: "./cards/demon_slayer/characters/12_Loyal_Rengoku_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-13",
+            name: "我妻善逸",
+            role: "忠臣 (Loyal Servant)",
+            side: "good",
+            sideLabel: "正义 · 忠臣",
+            quote: "“于睡梦中引动雷霆，一瞬即是绝杀。”",
+            reason: "雷之呼吸，于绝境中爆发雷霆一击，捍卫胜利。",
+            motif: "雷之呼吸·壹之型霹雳一闪与金黄雷芒",
+            front: "./cards/demon_slayer/characters/13_Loyal_Zenitsu_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-14",
+            name: "嘴平伊之助",
+            role: "忠臣 (Loyal Servant)",
+            side: "good",
+            sideLabel: "正义 · 忠臣",
+            quote: "“猪突猛进！无论任何迷雾皆以双刃劈开！”",
+            reason: "兽之呼吸，凭敏锐触觉撕裂迷局，果决投票。",
+            motif: "野猪头套、锯齿双刀与兽之空间感知",
+            front: "./cards/demon_slayer/characters/14_Loyal_Inosuke_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-15",
+            name: "珠世",
+            role: "湖中仙女 (Lady of the Lake)",
+            side: "neutral",
+            sideLabel: "中立 · 湖中仙女",
+            quote: "“以药理窥探本心，于湖水倒影中勘破善恶。”",
+            reason: "执掌湖中仙女查验神权，以医道水镜勘破被查验者的真实善恶底细。",
+            motif: "惑血·视觉梦幻之香与药研瓷盅",
+            front: "./cards/demon_slayer/characters/15_Lady_of_the_Lake_Tamayo_Print_Master_v1.webp"
+          }
+        ],
+        boards: [
+          { name: "5人局任务计分板", desc: "经典 5 人局标准版面", img: "./cards/demon_slayer/scoreboards/Scoreboard_5P_Print_Master_v4.webp" },
+          { name: "6人局任务计分板", desc: "6 人局标准任务轮次", img: "./cards/demon_slayer/scoreboards/Scoreboard_6P_Print_Master_v2.webp" },
+          { name: "7人局任务计分板", desc: "第4轮两张破坏票判定标示", img: "./cards/demon_slayer/scoreboards/Scoreboard_7P_Print_Master_v2.webp" },
+          { name: "8-10人多人集结计分板", desc: "高阶多人阵营大对决", img: "./cards/demon_slayer/scoreboards/Scoreboard_Multiplayer_8-10_Print_Master_v2.webp" }
+        ],
+        tokens: [
+          { name: "任务成功标记", desc: "蓝色光盾 25mm 标准圆形 Token", img: "./cards/demon_slayer/tokens/Task_Success_Token_Circular_v1.webp" },
+          { name: "任务失败标记", desc: "红色破灭 25mm 标准圆形 Token", img: "./cards/demon_slayer/tokens/Task_Failure_Token_Circular_v1.webp" },
+          { name: "决议流票标记", desc: "金色圆环 25mm 轨道跟踪 Token", img: "./cards/demon_slayer/tokens/Decision_Track_Token_Circular_v1.webp" },
+          { name: "执行任务卡 (成功/失败/卡背)", desc: "出征队员秘密选票牌组", img: "./cards/demon_slayer/missions/Mission_Success_Print_Master_v1.webp" }
+        ]
+      },
+
+      naruto: {
+        key: "naruto",
+        name: "火影忍者 · 忍界之暗 (V7)",
+        backImg: "./cards/naruto/characters/00_Character_Card_Back.webp",
+        characters: [
+          {
+            id: "n-01",
+            name: "宇智波鼬",
+            role: "梅林 (Merlin)",
+            side: "good",
+            sideLabel: "正义 · 梅林",
+            quote: "“豪杰之志贯穿长夜，知晓破晓降临。”",
+            reason: "【看见邪恶阵营，但无法识别莫德雷德】。深藏于暗部与晓组织的长夜中，洞悉全貌却决不可言说。",
+            motif: "写轮眼视界与幻术群鸦散落",
+            front: "./cards/naruto/characters/01_Merlin_Uchiha_Itachi.webp"
+          },
+          {
+            id: "n-02",
+            name: "宇智波佐助",
+            role: "派西维尔 (Percival)",
+            side: "good",
+            sideLabel: "正义 · 派西维尔",
+            quote: "“双眼洞察幻象与真实，守护最后的火种。”",
+            reason: "【在真梅林与伪梅林之间判断】。在兄长（真梅林鼬）与带土（伪梅林）的双重视界中辨明真伪。",
+            motif: "分裂的写轮眼微光与雷遁千鸟",
+            front: "./cards/naruto/characters/02_Percival_Uchiha_Sasuke.webp"
+          },
+          {
+            id: "n-03",
+            name: "漩涡鸣人",
+            role: "忠臣 (Loyal Servant)",
+            side: "good",
+            sideLabel: "正义 · 忠臣",
+            quote: "“笔直向前说到做到，这就是我的忍道！”",
+            reason: "【无身份信息，带队完成任务】。秉持忍道堂堂正正出征，以赤诚凝聚队伍信念。",
+            motif: "螺旋丸与木叶金色流光",
+            front: "./cards/naruto/characters/03_Loyal_Servant_Uzumaki_Naruto.webp"
+          },
+          {
+            id: "n-04",
+            name: "旗木卡卡西",
+            role: "忠臣 (Loyal Servant)",
+            side: "good",
+            sideLabel: "正义 · 忠臣",
+            quote: "“依据行动线索，守护队伍与身后之人。”",
+            reason: "【依据行动线索保护任务队伍】。依靠冷静推演与战术经验，为好人排坑扫雷。",
+            motif: "雷切闪电与木叶护额",
+            front: "./cards/naruto/characters/04_Loyal_Servant_Hatake_Kakashi.webp"
+          },
+          {
+            id: "n-05",
+            name: "春野樱",
+            role: "忠臣 (Loyal Servant)",
+            side: "good",
+            sideLabel: "正义 · 忠臣",
+            quote: "“救援队友并维持任务推进，绝不退缩！”",
+            reason: "【救援队友并维持任务推进】。医疗忍术与怪力，坚毅守护同伴捍卫任务完成。",
+            motif: "医疗百豪之印与怪力冲击",
+            front: "./cards/naruto/characters/05_Loyal_Servant_Haruno_Sakura.webp"
+          },
+          {
+            id: "n-06",
+            name: "奈良鹿丸",
+            role: "忠臣 (Loyal Servant)",
+            side: "good",
+            sideLabel: "正义 · 忠臣",
+            quote: "“何等麻烦，但棋局推演已落定胜负。”",
+            reason: "【根据组队、投票和任务记录推理】。200+ IQ 凭借公投大数据抽丝剥茧，锁定真凶。",
+            motif: "影子网格与将棋棋盘推演",
+            front: "./cards/naruto/characters/06_Loyal_Servant_Nara_Shikamaru.webp"
+          },
+          {
+            id: "n-07",
+            name: "宇智波带土",
+            role: "莫甘娜 (Morgana)",
+            side: "evil",
+            sideLabel: "邪恶 · 莫甘娜",
+            quote: "“面具下的虚幻之眼，诱导歧路之人。”",
+            reason: "【伪装成梅林误导派西维尔】。戴上面具化名阿飞与宇智波斑，诱导佐助走入歧途迷雾。",
+            motif: "神威时空螺旋与面具裂纹",
+            front: "./cards/naruto/characters/07_Morgana_Uchiha_Obito.webp"
+          },
+          {
+            id: "n-08",
+            name: "佩恩",
+            role: "刺客 (Assassin)",
+            side: "evil",
+            sideLabel: "邪恶 · 刺客",
+            quote: "“察、辨、诛：感受痛楚，终局刺杀！”",
+            reason: "【察、辨、诛：终局锁定并刺杀梅林】。掌控六道神罗天征，手握最后一击必杀决定权。",
+            motif: "轮回眼波纹与查克拉黑棒",
+            front: "./cards/naruto/characters/08_Assassin_Pain.webp"
+          },
+          {
+            id: "n-09",
+            name: "宇智波斑",
+            role: "莫德雷德 (Mordred)",
+            side: "evil",
+            sideLabel: "邪恶 · 莫德雷德",
+            quote: "“天上天下，身隐于神目不可及之处。”",
+            reason: "【隐藏于梅林的探知盲区】。超越凡人感知，鼬的先知双眼亦无法察觉其存在。",
+            motif: "宇智波团扇与无限月读之月",
+            front: "./cards/naruto/characters/09_Mordred_Uchiha_Madara.webp"
+          },
+          {
+            id: "n-10",
+            name: "大蛇丸",
+            role: "奥伯伦 (Oberon)",
+            side: "evil",
+            sideLabel: "邪恶 · 奥伯伦",
+            quote: "“白蛇咬断契约，独行于黑白之间。”",
+            reason: "【白蛇咬断契约，与其他坏人彼此不识】。叛离晓组织独行于幽世，坏人不知其身份。",
+            motif: "白蛇咬断发光契约与分离仪式阵",
+            front: "./cards/naruto/characters/10_Oberon_Orochimaru.webp"
+          },
+          {
+            id: "n-11",
+            name: "干柿鬼鲛",
+            role: "爪牙 (Minion)",
+            side: "evil",
+            sideLabel: "邪恶 · 爪牙",
+            quote: "“追随胜者，截断正义之路。”",
+            reason: "【与邪恶同伴协作，从水下破坏任务】。大刀鲛肌配合晓同伴破坏队伍出征。",
+            motif: "大刀鲛肌与深海水牢之术",
+            front: "./cards/naruto/characters/11_Minion_Hoshigaki_Kisame.webp"
+          },
+          {
+            id: "n-12",
+            name: "迪达拉",
+            role: "爪牙 (Minion)",
+            side: "evil",
+            sideLabel: "邪恶 · 爪牙",
+            quote: "“混入队伍，艺术就是爆炸！喝！”",
+            reason: "【混入任务队伍并以黏土机关引爆目标】。伺机投下破坏黑票。",
+            motif: "起爆黏土巨鸟与瞬间破灭",
+            front: "./cards/naruto/characters/12_Minion_Deidara.webp"
+          },
+          {
+            id: "n-13",
+            name: "日向雏田",
+            role: "湖中仙女 (Lady of the Lake)",
+            side: "neutral",
+            sideLabel: "中立 · 湖中仙女",
+            quote: "“白眼与湖面水镜，共同勘破忠诚纯度。”",
+            reason: "【白眼与湖面水镜共同审视忠诚】。洞悉查验目标的灵魂纯度，照亮好坏本质。",
+            motif: "白眼水镜与月光澄澈倒影",
+            front: "./cards/naruto/characters/13_Lady_of_the_Lake_Hyuga_Hinata.webp"
+          },
+          {
+            id: "n-14",
+            name: "我爱罗（风影）",
+            role: "兰斯洛特·善 (Lancelot Good)",
+            side: "good",
+            sideLabel: "正义 · 兰斯洛特",
+            quote: "“以流沙筑成骑士之盾，誓死守护王国。”",
+            reason: "【以流沙筑成骑士盾墙守护同伴】。成年风影沉着高洁，为守卫和平出征。",
+            motif: "守护之沙与圆桌誓约剑徽",
+            front: "./cards/naruto/characters/14_Lancelot_Gaara_Good.webp"
+          },
+          {
+            id: "n-15",
+            name: "我爱罗（修罗）",
+            role: "兰斯洛特·恶 (Lancelot Evil)",
+            side: "evil",
+            sideLabel: "邪恶 · 兰斯洛特",
+            quote: "“以砂瀑送葬摧毁誓约，将忠诚埋入荒漠。”",
+            reason: "【以砂瀑送葬摧毁誓约埋葬忠诚】。少年嗜血修罗，在黑暗中背弃誓言。",
+            motif: "砂瀑送葬断契石与守鹤魔眼",
+            front: "./cards/naruto/characters/15_Lancelot_Gaara_Evil.webp"
+          }
+        ],
+        boards: [
+          { name: "5人局任务计分板 (V2)", desc: "标准 5 人任务轨道与公投限制", img: "./cards/naruto/scoreboards/Scoreboard_5P_Final_v2.webp" },
+          { name: "6人局任务计分板 (V2)", desc: "6 人局标准任务轮次", img: "./cards/naruto/scoreboards/Scoreboard_6P_Final_v2.webp" },
+          { name: "7人局任务计分板 (V6 修正版)", desc: "第4轮两滴血需2张破坏票判定", img: "./cards/naruto/scoreboards/Scoreboard_7P_Final_v6.webp" },
+          { name: "忍界集结 8-10人通用计分板 (V6)", desc: "四边 3mm 延展出血·金色内框完备", img: "./cards/naruto/scoreboards/Scoreboard_Ninja_Gathering_8-10_Final_v6.webp" }
+        ],
+        tokens: [
+          { name: "任务成功标记", desc: "蓝色查克拉 25mm 标准圆形 Token", img: "./cards/naruto/tokens/Task_Success_Token_Circular_v3.webp" },
+          { name: "任务失败标记", desc: "红色爆裂 25mm 标准圆形 Token", img: "./cards/naruto/tokens/Task_Failure_Token_Circular_v3.webp" },
+          { name: "决议流票标记", desc: "金色圆环 25mm 轨道跟踪 Token", img: "./cards/naruto/tokens/Decision_Track_Token_Circular_v3.webp" },
+          { name: "火影版登船令 (Boarding Order)", desc: "出征队员上船顺位指令卡 (54×85.5mm)", img: "./cards/naruto/boarding/Naruto_Boarding_Order_Final.webp" },
+          { name: "投票卡组 (赞成/反对/卡背)", desc: "全员公开表决票", img: "./cards/naruto/votes/Vote_Approve_Master_v1.webp" }
+        ]
+      }
+    };
+
+    // State
+    let currentThemeKey = "demon_slayer";
+    let currentFilter = "all";
+    let modalIndex = 0;
+    let filteredList = [];
+
+    const cardsContainer = document.getElementById("cards-container");
+    const boardsContainer = document.getElementById("boards-container");
+    const tokensContainer = document.getElementById("tokens-container");
+
+    // Modal elements
+    const modal = document.getElementById("modal");
+    const modalClose = document.getElementById("modal-close");
+    const modalImgFront = document.getElementById("modal-img-front");
+    const modalImgBack = document.getElementById("modal-img-back");
+    const modalFlipper = document.getElementById("modal-flipper");
+    const modalFlipBtn = document.getElementById("modal-flip-btn");
+    const modalSideBadge = document.getElementById("modal-side-badge");
+    const modalRoleLabel = document.getElementById("modal-role-label");
+    const modalCharName = document.getElementById("modal-char-name");
+    const modalQuote = document.getElementById("modal-quote");
+    const modalReason = document.getElementById("modal-reason");
+    const modalMotif = document.getElementById("modal-motif");
+    const modalPrevBtn = document.getElementById("modal-prev-btn");
+    const modalNextBtn = document.getElementById("modal-next-btn");
+    const modalCounter = document.getElementById("modal-counter");
+
+    function renderGallery() {
+      const theme = THEMES_DATA[currentThemeKey];
+      document.body.setAttribute("data-theme", currentThemeKey);
+
+      // Counts
+      const totalChars = theme.characters.length;
+      const goodCount = theme.characters.filter(c => c.side === "good").length;
+      const evilCount = theme.characters.filter(c => c.side === "evil").length;
+      const neutralCount = theme.characters.filter(c => c.side === "neutral").length;
+      const accCount = theme.boards.length + theme.tokens.length;
+
+      document.getElementById("count-all").textContent = totalChars;
+      document.getElementById("count-good").textContent = goodCount;
+      document.getElementById("count-evil").textContent = evilCount;
+      document.getElementById("count-neutral").textContent = neutralCount;
+      document.getElementById("count-accessories").textContent = accCount;
+
+      // Filter characters
+      if (currentFilter === "all") {
+        filteredList = theme.characters;
+        document.getElementById("accessories-section").style.display = "block";
+      } else if (currentFilter === "accessories") {
+        filteredList = [];
+        document.getElementById("accessories-section").style.display = "block";
+      } else {
+        filteredList = theme.characters.filter(c => c.side === currentFilter);
+        document.getElementById("accessories-section").style.display = "none";
+      }
+
+      // Render cards
+      cardsContainer.innerHTML = "";
+      filteredList.forEach((char, idx) => {
+        const item = document.createElement("div");
+        item.className = "card-item";
+
+        item.innerHTML = `
+          <div class="card-3d-wrap" data-card-idx="${idx}">
+            <div class="card-flipper">
+              <div class="card-face front">
+                <img src="${char.front}" alt="${char.name}" loading="lazy" />
+                <div class="card-sheen"></div>
+              </div>
+              <div class="card-face back">
+                <img src="${theme.backImg}" alt="统一卡背" loading="lazy" />
+              </div>
+            </div>
+            <button class="flip-btn-overlay" title="翻转卡背">↺</button>
+          </div>
+          <div class="card-info">
+            <div class="card-header-line">
+              <span class="char-name">${char.name}</span>
+              <span class="role-badge ${char.side}">${char.sideLabel}</span>
+            </div>
+            <div class="card-role-title">${char.role}</div>
+            <p class="card-quote">${char.quote}</p>
+            <div class="card-inspect-hint" data-inspect-idx="${idx}">
+              <span>查看设计母版与机制 ↗</span>
+              <span>300 DPI</span>
+            </div>
+          </div>
+        `;
+
+        // 3D Tilt interaction
+        const wrap = item.querySelector(".card-3d-wrap");
+        const flipper = item.querySelector(".card-flipper");
+        const flipBtn = item.querySelector(".flip-btn-overlay");
+
+        wrap.addEventListener("mousemove", (e) => {
+          if (flipper.classList.contains("is-flipped")) return;
+          const rect = wrap.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -12;
+          const rotateY = ((x - centerX) / centerX) * 12;
+
+          wrap.style.setProperty("--mouse-x", `${(x / rect.width) * 100}%`);
+          wrap.style.setProperty("--mouse-y", `${(y / rect.height) * 100}%`);
+          flipper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+
+        wrap.addEventListener("mouseleave", () => {
+          if (!flipper.classList.contains("is-flipped")) {
+            flipper.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+          }
+        });
+
+        // Flip button toggle
+        flipBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          flipper.classList.toggle("is-flipped");
+        });
+
+        // Click card opens Lightbox
+        wrap.addEventListener("click", () => {
+          openModal(idx);
+        });
+
+        item.querySelector(".card-inspect-hint").addEventListener("click", () => {
+          openModal(idx);
+        });
+
+        cardsContainer.appendChild(item);
+      });
+
+      // Render Accessories
+      boardsContainer.innerHTML = "";
+      theme.boards.forEach((b) => {
+        const el = document.createElement("div");
+        el.className = "board-card";
+        el.innerHTML = `
+          <div class="board-img-wrap">
+            <img src="${b.img}" alt="${b.name}" loading="lazy" />
+          </div>
+          <div>
+            <div style="font-size: 14px; font-weight: 700;">${b.name}</div>
+            <div style="font-size: 11.5px; color: var(--text-sub);">${b.desc}</div>
+          </div>
+        `;
+        el.addEventListener("click", () => {
+          openCustomPreview(b.name, b.desc, b.img);
+        });
+        boardsContainer.appendChild(el);
+      });
+
+      tokensContainer.innerHTML = "";
+      theme.tokens.forEach((t) => {
+        const el = document.createElement("div");
+        el.className = "token-card";
+        el.innerHTML = `
+          <div class="token-preview">
+            <img src="${t.img}" alt="${t.name}" loading="lazy" />
+          </div>
+          <div>
+            <div style="font-size: 13.5px; font-weight: 700;">${t.name}</div>
+            <div style="font-size: 11px; color: var(--text-sub);">${t.desc}</div>
+          </div>
+        `;
+        el.addEventListener("click", () => {
+          openCustomPreview(t.name, t.desc, t.img);
+        });
+        tokensContainer.appendChild(el);
+      });
+    }
+
+    // Lightbox Modal Logic
+    function openModal(idx) {
+      modalIndex = idx;
+      const char = filteredList[modalIndex];
+      if (!char) return;
+
+      const theme = THEMES_DATA[currentThemeKey];
+      modalImgFront.src = char.front;
+      modalImgBack.src = theme.backImg;
+      modalFlipper.classList.remove("is-flipped");
+
+      modalCharName.textContent = char.name;
+      modalRoleLabel.textContent = char.role;
+      modalSideBadge.textContent = char.sideLabel;
+      modalSideBadge.className = `role-badge ${char.side}`;
+      modalQuote.textContent = char.quote;
+      modalReason.textContent = char.reason;
+      modalMotif.textContent = char.motif;
+      modalCounter.textContent = `${modalIndex + 1} / ${filteredList.length}`;
+
+      modal.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function openCustomPreview(title, desc, imgSrc) {
+      modalImgFront.src = imgSrc;
+      modalImgBack.src = imgSrc;
+      modalFlipper.classList.remove("is-flipped");
+
+      modalCharName.textContent = title;
+      modalRoleLabel.textContent = "配件与计分规范";
+      modalSideBadge.textContent = "桌游实物";
+      modalSideBadge.className = "role-badge neutral";
+      modalQuote.textContent = desc;
+      modalReason.textContent = "标准 300 DPI 印刷级导出。适配实物折叠压痕与出血工艺，保证印刷无白边、色块饱满。";
+      modalMotif.textContent = "四边 3mm 延展出血 · 300 DPI 无损压制";
+      modalCounter.textContent = "配件展示";
+
+      modal.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    modalClose.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    modalFlipBtn.addEventListener("click", () => {
+      modalFlipper.classList.toggle("is-flipped");
+    });
+
+    modalCardFlipper = document.getElementById("modal-flipper");
+    modalCardFlipper.addEventListener("click", () => {
+      modalFlipper.classList.toggle("is-flipped");
+    });
+
+    modalPrevBtn.addEventListener("click", () => {
+      if (filteredList.length === 0) return;
+      modalIndex = (modalIndex - 1 + filteredList.length) % filteredList.length;
+      openModal(modalIndex);
+    });
+
+    modalNextBtn.addEventListener("click", () => {
+      if (filteredList.length === 0) return;
+      modalIndex = (modalIndex + 1) % filteredList.length;
+      openModal(modalIndex);
+    });
+
+    // Keyboard support
+    window.addEventListener("keydown", (e) => {
+      if (!modal.classList.contains("open")) return;
+      if (e.key === "Escape") closeModal();
+      if (e.key === "ArrowLeft") modalPrevBtn.click();
+      if (e.key === "ArrowRight") modalNextBtn.click();
+      if (e.key === " ") {
+        e.preventDefault();
+        modalFlipBtn.click();
+      }
+    });
+
+    // Switch Theme Handlers
+    document.getElementById("tab-ds").addEventListener("click", () => {
+      currentThemeKey = "demon_slayer";
+      document.getElementById("tab-ds").classList.add("active");
+      document.getElementById("tab-naruto").classList.remove("active");
+      renderGallery();
+    });
+
+    document.getElementById("tab-naruto").addEventListener("click", () => {
+      currentThemeKey = "naruto";
+      document.getElementById("tab-naruto").classList.add("active");
+      document.getElementById("tab-ds").classList.remove("active");
+      renderGallery();
+    });
+
+    // Filter Buttons Handlers
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentFilter = btn.dataset.filter;
+        renderGallery();
+      });
+    });
+
+    // Initial render
+    renderGallery();
+  </script>
+</body>
+</html>

@@ -15,7 +15,7 @@
   <meta property="og:description" content="Small tools, AI experiments, and notes on what I learn." />
   <meta name="twitter:card" content="summary" />
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2308090b'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial,sans-serif' font-weight='700' font-size='38' fill='%23eef2f5'%3EL%3C/text%3E%3Ccircle cx='47' cy='44' r='5' fill='%234cc4ea'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b0f14' stroke='rgba(76,196,234,0.35)' stroke-width='2'/%3E%3Cpath d='M18 16v32h32' stroke='%234cc4ea' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M31 35L47 19' stroke='%234cc4ea' stroke-width='5.5' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='47' cy='19' r='5' fill='%234cc4ea'/%3E%3C/svg%3E" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -186,12 +186,80 @@
     }
 
     .logo {
-      font-weight: 600;
-      font-size: 17px;
-      letter-spacing: -0.03em;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      user-select: none;
     }
 
-    .logo span { color: var(--accent); }
+    .logo-mark {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(145deg, #161c23, #0a0d11);
+      border: 1px solid rgba(226, 236, 245, 0.12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 2px 8px rgba(0, 0, 0, 0.45);
+      transition: border-color 260ms ease, box-shadow 260ms ease, transform 260ms var(--ease-snap);
+      flex-shrink: 0;
+    }
+
+    .logo:hover .logo-mark {
+      border-color: rgba(76, 196, 234, 0.5);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 18px -2px rgba(76, 196, 234, 0.45);
+      transform: translateY(-0.5px) scale(1.05);
+    }
+
+    .logo-mark svg {
+      width: 17px;
+      height: 17px;
+      display: block;
+    }
+
+    .mark-path {
+      transition: stroke 240ms ease;
+    }
+
+    .mark-node {
+      transition: filter 240ms ease, transform 240ms ease;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .logo:hover .mark-node {
+      filter: drop-shadow(0 0 5px #4cc4ea);
+      transform: scale(1.3);
+    }
+
+    .logo-name {
+      display: inline-flex;
+      align-items: baseline;
+      font-weight: 600;
+      font-size: 15.5px;
+      letter-spacing: -0.028em;
+      color: #f0f4f8;
+      transition: color 200ms ease;
+    }
+
+    .logo:hover .logo-name {
+      color: #ffffff;
+    }
+
+    .logo-dot {
+      color: var(--accent);
+      margin-left: 1px;
+      transition: filter 240ms ease, transform 240ms ease;
+    }
+
+    .logo:hover .logo-dot {
+      filter: drop-shadow(0 0 6px var(--accent));
+      transform: scale(1.15);
+    }
 
     .nav-links {
       display: flex;
@@ -412,31 +480,6 @@
       flex-wrap: wrap;
       gap: 12px;
       margin-top: 40px;
-    }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .scroll-hint i {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(180deg, var(--accent), transparent);
-      animation: drip 2.2s var(--ease-out) infinite;
-      transform-origin: top;
-    }
-
-    @keyframes drip {
-      0% { transform: scaleY(0); opacity: 1; }
-      70% { transform: scaleY(1); opacity: 1; }
-      100% { transform: scaleY(1); opacity: 0; }
     }
 
     /* ============ Sections ============ */
@@ -700,23 +743,372 @@
 
     .phone-bar i:last-child { background: var(--accent); border-color: transparent; }
 
+    /* --- Visual: Avalon Master Deck 5-Card Collector Showcase --- */
+    .deck-showcase {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 290px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1200px;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 120%, rgba(20, 24, 30, 0.95), #08090b 80%);
+    }
+
+    /* Ambient lighting */
+    .deck-spotlight-left {
+      position: absolute;
+      bottom: -20px;
+      left: 6%;
+      width: 260px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.28), transparent 70%);
+      pointer-events: none;
+      filter: blur(25px);
+    }
+    .deck-spotlight-right {
+      position: absolute;
+      bottom: -20px;
+      right: 6%;
+      width: 260px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.28), transparent 70%);
+      pointer-events: none;
+      filter: blur(25px);
+    }
+
+    /* Table arena ring */
+    .deck-arena-ring {
+      position: absolute;
+      bottom: -36px;
+      width: 440px;
+      height: 130px;
+      border-radius: 50%;
+      border: 1px dashed rgba(226, 236, 245, 0.12);
+      pointer-events: none;
+      transform: rotateX(60deg);
+    }
+    .deck-arena-ring::after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 50%;
+      border: 1px solid rgba(76, 196, 234, 0.16);
+    }
+
+    /* Top HUD Labels */
+    .deck-hud-left {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #c084fc;
+      background: rgba(192, 132, 252, 0.1);
+      border: 1px solid rgba(192, 132, 252, 0.25);
+      padding: 3px 8px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 10;
+    }
+    .deck-hud-right {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fb923c;
+      background: rgba(251, 146, 60, 0.1);
+      border: 1px solid rgba(251, 146, 60, 0.25);
+      padding: 3px 8px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 10;
+    }
+
+    /* Fan Container */
+    .deck-fan {
+      position: relative;
+      width: 100%;
+      height: 230px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      margin-top: 12px;
+    }
+
+    /* Individual Card */
+    .fan-card {
+      position: absolute;
+      width: 124px;
+      aspect-ratio: 54 / 85.5;
+      border-radius: 11px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.85);
+      transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 550ms ease, border-color 550ms ease;
+    }
+    .fan-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 5 Card Rest Positions */
+    .fan-c1 {
+      transform: translateX(-155px) translateY(18px) rotate(-16deg);
+      z-index: 1;
+      border-color: rgba(192, 132, 252, 0.35);
+    }
+    .fan-c2 {
+      transform: translateX(-80px) translateY(7px) rotate(-8deg);
+      z-index: 2;
+      border-color: rgba(244, 63, 94, 0.35);
+    }
+    .fan-c3 {
+      transform: translateX(0px) translateY(-8px) rotate(0deg);
+      z-index: 5;
+      border-color: rgba(251, 146, 60, 0.6);
+      box-shadow: 0 20px 42px -6px rgba(0, 0, 0, 0.9), 0 0 26px rgba(251, 146, 60, 0.35);
+    }
+    .fan-c4 {
+      transform: translateX(80px) translateY(7px) rotate(8deg);
+      z-index: 2;
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .fan-c5 {
+      transform: translateX(155px) translateY(18px) rotate(16deg);
+      z-index: 1;
+      border-color: rgba(244, 63, 94, 0.35);
+    }
+
+    /* Hover Fan-out Expansions */
+    .card:hover .fan-c1 {
+      transform: translateX(-195px) translateY(12px) rotate(-22deg) scale(1.04);
+      box-shadow: 0 22px 48px rgba(0, 0, 0, 0.95), 0 0 25px rgba(192, 132, 252, 0.4);
+    }
+    .card:hover .fan-c2 {
+      transform: translateX(-98px) translateY(2px) rotate(-11deg) scale(1.05);
+      box-shadow: 0 22px 48px rgba(0, 0, 0, 0.95), 0 0 25px rgba(244, 63, 94, 0.4);
+    }
+    .card:hover .fan-c3 {
+      transform: translateX(0px) translateY(-22px) rotate(0deg) scale(1.08);
+      box-shadow: 0 28px 56px rgba(0, 0, 0, 0.98), 0 0 38px rgba(251, 146, 60, 0.6);
+      border-color: rgba(251, 146, 60, 0.85);
+    }
+    .card:hover .fan-c4 {
+      transform: translateX(98px) translateY(2px) rotate(11deg) scale(1.05);
+      box-shadow: 0 22px 48px rgba(0, 0, 0, 0.95), 0 0 25px rgba(56, 189, 248, 0.4);
+    }
+    .card:hover .fan-c5 {
+      transform: translateX(195px) translateY(12px) rotate(22deg) scale(1.04);
+      box-shadow: 0 22px 48px rgba(0, 0, 0, 0.95), 0 0 25px rgba(244, 63, 94, 0.4);
+    }
+
+    /* Foreground Tabletop Tokens */
+    .deck-token-left {
+      position: absolute;
+      bottom: 12px;
+      left: 20px;
+      width: 44px;
+      height: 44px;
+      z-index: 10;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 10px rgba(56, 189, 248, 0.35));
+      transition: transform 400ms ease;
+    }
+    .deck-token-right {
+      position: absolute;
+      bottom: 12px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      z-index: 10;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 10px rgba(244, 63, 94, 0.35));
+      transition: transform 400ms ease;
+    }
+    .card:hover .deck-token-left {
+      transform: translateY(-4px) scale(1.1);
+    }
+    .card:hover .deck-token-right {
+      transform: translateY(-4px) scale(1.1);
+    }
+    .deck-token-left img, .deck-token-right img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
     /* --- Visual: chart / graph / timeline (SVG) --- */
     .card-visual svg { width: 100%; height: 100%; display: block; }
 
-    .chart-line { stroke-dasharray: 400; stroke-dashoffset: 400; transition: stroke-dashoffset 1.6s var(--ease-reveal); }
+    .chart-line { stroke-dasharray: 400; stroke-dashoffset: 400; transition: stroke-dashoffset 1.6s var(--ease-reveal), filter 300ms ease; }
     .in .chart-line { stroke-dashoffset: 0; }
+    .card:hover .chart-line { filter: drop-shadow(0 0 6px rgba(76, 196, 234, 0.65)); }
 
+    /* Turnitin Forensic Scanner & HUD */
+    .tl-bar { transform-box: fill-box; transform-origin: left; transform: scaleX(0); transition: transform 900ms var(--ease-reveal), filter 300ms ease; }
+    .in .tl-bar { transform: scaleX(1); }
+    .in .tl-bar:nth-of-type(2) { transition-delay: 120ms; }
+    .in .tl-bar:nth-of-type(3) { transition-delay: 240ms; }
+    .in .tl-bar:nth-of-type(4) { transition-delay: 360ms; }
+    .card:hover .tl-bar { filter: drop-shadow(0 0 5px rgba(76, 196, 234, 0.4)); }
+
+    .scan-rig {
+      transform: translateX(40px);
+      transition: opacity 350ms ease;
+      opacity: 0.22;
+      pointer-events: none;
+    }
+    .card:hover .scan-rig {
+      opacity: 1;
+      animation: forensic-sweep 3.2s cubic-bezier(0.45, 0, 0.25, 1) infinite alternate;
+    }
+    @keyframes forensic-sweep {
+      0% { transform: translateX(38px); }
+      100% { transform: translateX(362px); }
+    }
+
+    .hud-ping {
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform 300ms ease;
+    }
+    .card:hover .hud-ping {
+      animation: hud-beacon 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+    @keyframes hud-beacon {
+      0% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 2px #22c55e); }
+      50% { transform: scale(1.6); opacity: 0.35; filter: drop-shadow(0 0 7px #22c55e); }
+      100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 2px #22c55e); }
+    }
+    .card:hover .hud-text { fill: #4cc4ea; transition: fill 300ms ease; }
+
+    /* IELTS Dictation Lab: Audio Scrubber & Equalizer */
+    .audio-cadence { transition: opacity 300ms ease; }
+    .card:hover .audio-cadence { opacity: 1; }
+    .eq-bar {
+      transform-box: fill-box;
+      transform-origin: bottom;
+      transition: transform 200ms ease, opacity 200ms ease;
+    }
+    .card:hover .eq-bar.b1 { animation: eq-bounce 550ms ease-in-out infinite alternate; animation-delay: 50ms; }
+    .card:hover .eq-bar.b2 { animation: eq-bounce 700ms ease-in-out infinite alternate; animation-delay: 140ms; }
+    .card:hover .eq-bar.b3 { animation: eq-bounce 460ms ease-in-out infinite alternate; animation-delay: 220ms; }
+    .card:hover .eq-bar.b4 { animation: eq-bounce 640ms ease-in-out infinite alternate; animation-delay: 80ms; }
+    .card:hover .eq-bar.b5 { animation: eq-bounce 520ms ease-in-out infinite alternate; animation-delay: 180ms; }
+    .card:hover .eq-bar.b6 { animation: eq-bounce 610ms ease-in-out infinite alternate; animation-delay: 110ms; }
+
+    @keyframes eq-bounce {
+      0% { transform: scaleY(0.25); opacity: 0.35; }
+      100% { transform: scaleY(1.45); opacity: 1; }
+    }
+
+    .audio-scrubber-group {
+      transform: translateX(10px);
+      transition: opacity 300ms ease;
+      opacity: 0.2;
+      pointer-events: none;
+    }
+    .card:hover .audio-scrubber-group {
+      opacity: 0.95;
+      animation: audio-scrub 4.1s linear infinite;
+    }
+    @keyframes audio-scrub {
+      0% { transform: translateX(5px); }
+      100% { transform: translateX(195px); }
+    }
+
+    .audio-ripple {
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .card:hover .audio-ripple.r1 {
+      animation: sound-ping 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+    .card:hover .audio-ripple.r2 {
+      animation: sound-ping 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      animation-delay: 0.9s;
+    }
+    @keyframes sound-ping {
+      0% { transform: scale(1); opacity: 0.85; stroke-width: 1.5; }
+      100% { transform: scale(3.5); opacity: 0; stroke-width: 0.5; }
+    }
+
+    /* Link AI: Neural Data Streams & Synaptic Pulses */
     .node { transition: transform 500ms var(--ease-out); transform-box: fill-box; transform-origin: center; }
     .card:hover .node.n1 { transform: translate(-4px, -3px); }
     .card:hover .node.n2 { transform: translate(4px, -4px); }
     .card:hover .node.n3 { transform: translate(5px, 3px); }
     .card:hover .node.n4 { transform: translate(-5px, 4px); }
 
-    .tl-bar { transform-box: fill-box; transform-origin: left; transform: scaleX(0); transition: transform 900ms var(--ease-reveal); }
-    .in .tl-bar { transform: scaleX(1); }
-    .in .tl-bar:nth-of-type(2) { transition-delay: 120ms; }
-    .in .tl-bar:nth-of-type(3) { transition-delay: 240ms; }
-    .in .tl-bar:nth-of-type(4) { transition-delay: 360ms; }
+    .node-core {
+      transition: transform 500ms var(--ease-out), filter 300ms ease;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .card:hover .n1-core { transform: translate(-4px, -3px); filter: drop-shadow(0 0 5px #4cc4ea); }
+    .card:hover .n2-core { transform: translate(4px, -4px); filter: drop-shadow(0 0 5px #4cc4ea); }
+    .card:hover .n3-core { transform: translate(5px, 3px); filter: drop-shadow(0 0 5px #4cc4ea); }
+    .card:hover .n4-core { transform: translate(-5px, 4px); filter: drop-shadow(0 0 5px #4cc4ea); }
+
+    .data-streams { transition: opacity 300ms ease; }
+    .card:hover .data-streams { opacity: 1; }
+    .card:hover .stream.s1 { animation: stream-flow 1.1s linear infinite; }
+    .card:hover .stream.s2 { animation: stream-flow 1.3s linear infinite reverse; }
+    .card:hover .stream.s3 { animation: stream-flow 1.0s linear infinite; }
+    .card:hover .stream.s4 { animation: stream-flow 1.2s linear infinite reverse; }
+
+    @keyframes stream-flow {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: 36; }
+    }
+
+    .synapse-pulse {
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .card:hover .synapse-pulse.p1 {
+      animation: synapse-ping 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+    .card:hover .synapse-pulse.p2 {
+      animation: synapse-ping 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      animation-delay: 1s;
+    }
+    @keyframes synapse-ping {
+      0% { transform: scale(0.8); opacity: 0.85; stroke-width: 1.5; }
+      100% { transform: scale(2.8); opacity: 0; stroke-width: 0.5; }
+    }
+    .card:hover .hub-core { filter: drop-shadow(0 0 8px #4cc4ea); }
+
+    /* Roundtable Avalon Card Polish */
+    .card:hover .seat.on {
+      box-shadow: 0 0 20px var(--accent), 0 0 35px rgba(76, 196, 234, 0.45);
+      animation: haptic-breathe 1.6s ease-in-out infinite alternate;
+    }
+    @keyframes haptic-breathe {
+      0% { transform: rotate(var(--a)) translateY(-64px) scale(1); }
+      100% { transform: rotate(var(--a)) translateY(-64px) scale(1.22); }
+    }
+    .card:hover .table {
+      box-shadow: inset 0 0 24px rgba(76, 196, 234, 0.18);
+    }
 
     /* ============ About / Now ============ */
     .about {
@@ -810,46 +1202,390 @@
 
     .cc p { margin: 0; color: var(--text-2); font-size: 17px; max-width: 30rem; }
 
-    .orbit {
+    /* Interactive Orbit Stage & Gravity System */
+    .cc-interactive-wrap {
       position: relative;
-      width: 180px;
-      height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      z-index: 5;
     }
 
-    .orbit .ring {
+    .orbit-stage {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+      transform-style: preserve-3d;
+    }
+
+    .orbit-stage:hover {
+      transform: scale(1.04);
+    }
+
+    .orbit-stage:active {
+      transform: scale(0.97);
+    }
+
+    /* Concentric gravitational wave ripples */
+    .grav-wave {
+      position: absolute;
+      inset: -14px;
+      border-radius: 50%;
+      border: 1px solid rgba(76, 196, 234, 0.22);
+      pointer-events: none;
+      animation: grav-pulse 3.8s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+    }
+
+    .grav-wave.w2 {
+      animation-delay: 1.9s;
+      border-color: rgba(244, 114, 182, 0.22);
+    }
+
+    @keyframes grav-pulse {
+      0% {
+        transform: scale(0.72);
+        opacity: 0.85;
+      }
+      50% {
+        opacity: 0.35;
+      }
+      100% {
+        transform: scale(1.28);
+        opacity: 0;
+      }
+    }
+
+    /* Outer static guide rings */
+    .orbit-ring {
       position: absolute;
       inset: 0;
       border-radius: 50%;
       border: 1px solid var(--line-strong);
+      pointer-events: none;
+      box-shadow: inset 0 0 28px rgba(76, 196, 234, 0.05);
     }
 
-    .orbit .ring.r2 { inset: 30px; border-style: dashed; border-color: var(--accent-line); animation: spin 30s linear infinite reverse; }
+    .orbit-ring.inner {
+      inset: 26px;
+      border-style: dashed;
+      border-color: rgba(76, 196, 234, 0.22);
+      animation: spin 36s linear infinite;
+    }
 
-    .orbit .planet {
+    /* Rotating binary arm */
+    .orbit-arm {
       position: absolute;
-      width: 56px;
-      height: 56px;
+      inset: 0;
+      border-radius: 50%;
+      animation: spin 16s linear infinite;
+      transition: animation-duration 500ms ease;
+    }
+
+    .orbit-stage:hover .orbit-arm {
+      animation-duration: 8s;
+    }
+
+    /* Glowing gravitational tether line connecting both stars */
+    .orbit-tether {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      right: 14px;
+      height: 1px;
+      transform: translateY(-50%);
+      background: linear-gradient(90deg, 
+        rgba(244, 114, 182, 0.7) 0%, 
+        rgba(244, 114, 182, 0.15) 30%, 
+        transparent 45%, 
+        transparent 55%, 
+        rgba(76, 196, 234, 0.15) 70%, 
+        rgba(76, 196, 234, 0.7) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Stars with counter-spin so text stays horizontal and readable */
+    .star {
+      position: absolute;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
       display: grid;
       place-items: center;
       font-weight: 600;
       font-size: 15px;
-      letter-spacing: -0.02em;
-      background: var(--surface-3);
-      border: 1px solid var(--line-strong);
-      box-shadow: var(--inner-hi);
+      letter-spacing: -0.01em;
+      top: 50%;
+      margin-top: -27px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      transition: box-shadow 240ms ease;
     }
 
-    .orbit .p1 { top: 12px; left: 12px; }
-    .orbit .p2 { bottom: 12px; right: 12px; background: var(--accent); color: var(--accent-ink); border-color: transparent; box-shadow: 0 0 30px -4px var(--accent); }
-
-    .orbit .heart {
-      position: absolute;
-      inset: 0;
+    /* Counter-spin keeps letters upright */
+    .star-inner {
       display: grid;
       place-items: center;
+      width: 100%;
+      height: 100%;
+      animation: counter-spin 16s linear infinite;
+      transition: animation-duration 500ms ease;
+    }
+
+    .orbit-stage:hover .star-inner {
+      animation-duration: 8s;
+    }
+
+    @keyframes counter-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(-360deg); }
+    }
+
+    /* Star CC: Romantic rose starlight */
+    .star.star-cc {
+      left: 0;
+      background: radial-gradient(circle at 35% 35%, rgba(254, 205, 226, 0.28), rgba(244, 114, 182, 0.12) 70%), var(--surface-2);
+      border: 1px solid rgba(244, 114, 182, 0.5);
+      color: #f472b6;
+      box-shadow: 0 0 24px -2px rgba(244, 114, 182, 0.42), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    }
+
+    .orbit-stage:hover .star.star-cc {
+      box-shadow: 0 0 32px 0px rgba(244, 114, 182, 0.7);
+    }
+
+    /* Star LK: Electric cyan orbit */
+    .star.star-lk {
+      right: 0;
+      background: radial-gradient(circle at 35% 35%, rgba(186, 230, 253, 0.28), rgba(76, 196, 234, 0.14) 70%), var(--surface-2);
+      border: 1px solid rgba(76, 196, 234, 0.55);
+      color: #7ee0ff;
+      box-shadow: 0 0 24px -2px rgba(76, 196, 234, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    }
+
+    .orbit-stage:hover .star.star-lk {
+      box-shadow: 0 0 32px 0px rgba(76, 196, 234, 0.7);
+    }
+
+    /* Central gravitational core with heartbeat */
+    .orbit-core {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(244, 114, 182, 0.24) 0%, rgba(76, 196, 234, 0.16) 60%, transparent 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      animation: heartbeat 2.6s ease-in-out infinite;
+    }
+
+    .orbit-core-glyph {
+      font-size: 15px;
+      line-height: 1;
+      background: linear-gradient(135deg, #f472b6, #4cc4ea);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transform: translateY(0.5px);
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      14% { transform: scale(1.18); opacity: 1; filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.6)); }
+      28% { transform: scale(1.04); opacity: 0.9; }
+      42% { transform: scale(1.14); opacity: 0.98; filter: drop-shadow(0 0 8px rgba(76, 196, 234, 0.6)); }
+      70% { transform: scale(1); opacity: 0.85; }
+    }
+
+    /* Micro hover hint button */
+    .orbit-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--text-3);
+      padding: 5px 12px;
+      border-radius: var(--r-full);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      transition: all 200ms ease;
+      cursor: pointer;
+    }
+
+    .orbit-stage:hover + .orbit-hint,
+    .orbit-hint:hover {
+      color: var(--text-1);
+      border-color: rgba(76, 196, 234, 0.35);
+      background: rgba(76, 196, 234, 0.06);
+      box-shadow: 0 0 16px -2px rgba(76, 196, 234, 0.2);
+    }
+
+    .orbit-hint-spark {
+      color: #f472b6;
+      animation: twinkle 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.4; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 0 4px #f472b6); }
+    }
+
+    /* Stardust Fireworks Canvas */
+    #cc-canvas {
+      position: absolute;
+      top: -80px;
+      left: -80px;
+      width: calc(100% + 160px);
+      height: calc(100% + 160px);
+      pointer-events: none;
+      z-index: 25;
+    }
+
+    /* Exclusive Whisper Popover Card (Easter Egg) */
+    .cc-whisper-card {
+      position: absolute;
+      bottom: calc(100% + 16px);
+      right: 50%;
+      transform: translateX(50%) translateY(12px) scale(0.95);
+      width: min(340px, calc(100vw - 48px));
+      padding: 20px 22px;
+      border-radius: var(--r-lg);
+      background: rgba(14, 18, 24, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow:
+        0 24px 48px -12px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(244, 114, 182, 0.18),
+        0 0 32px -4px rgba(76, 196, 234, 0.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 30;
+    }
+
+    .cc-whisper-card.open {
+      opacity: 1;
+      transform: translateX(50%) translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .cc-whisper-card::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 12px;
+      height: 12px;
+      background: rgba(14, 18, 24, 0.94);
+      border-right: 1px solid rgba(255, 255, 255, 0.12);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .cc-whisper-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .cc-whisper-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-2);
+    }
+
+    .cc-whisper-title .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f472b6, #4cc4ea);
+      box-shadow: 0 0 8px #f472b6;
+    }
+
+    .cc-whisper-close {
+      background: transparent;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 4px;
+      border-radius: 4px;
+      transition: color 150ms ease, background 150ms ease;
+    }
+
+    .cc-whisper-close:hover {
+      color: var(--text-1);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .cc-whisper-quote {
+      position: relative;
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--text-1);
+      margin: 0 0 14px 0;
+      min-height: 48px;
+      transition: opacity 200ms ease;
+    }
+
+    .cc-whisper-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-3);
+      font-family: var(--font-mono);
+    }
+
+    .cc-whisper-sub {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .cc-whisper-next {
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--r-full);
+      padding: 3px 10px;
       color: var(--accent);
-      font-size: 20px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 180ms ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .cc-whisper-next:hover {
+      border-color: var(--accent);
+      background: rgba(76, 196, 234, 0.12);
+      color: #fff;
     }
 
     /* ============ Contact ============ */
@@ -943,11 +1679,34 @@
 
       .section-head { flex-direction: column; align-items: start; }
 
-      .cc { grid-template-columns: 1fr; }
-      .orbit { width: 140px; height: 140px; }
-      .orbit .planet { width: 46px; height: 46px; font-size: 13px; }
-
-      .scroll-hint { display: none; }
+      .cc {
+        grid-template-columns: 1fr;
+        text-align: center;
+        justify-items: center;
+        padding: 36px 20px;
+        gap: 28px;
+      }
+      .cc p { margin-inline: auto; }
+      .cc-interactive-wrap {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .orbit-stage {
+        width: 180px;
+        height: 180px;
+      }
+      .star {
+        width: 46px;
+        height: 46px;
+        margin-top: -23px;
+        font-size: 13px;
+      }
+      .cc-whisper-card {
+        width: min(310px, calc(100vw - 40px));
+        padding: 16px 18px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -969,7 +1728,18 @@
   </div>
 
   <nav class="nav" id="nav" aria-label="Main navigation">
-    <a class="logo" href="#top" aria-label="Linkai home">Linkai<span>.</span></a>
+    <a class="logo" href="#top" aria-label="Linkai home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path class="mark-path" d="M6.5 5.5V18.5H18.5" stroke="#4cc4ea" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path class="mark-path" d="M11.5 13.5L17.5 6.5" stroke="#4cc4ea" stroke-width="2.2" stroke-linecap="round"/>
+          <circle class="mark-node" cx="17.5" cy="6.5" r="2.2" fill="#4cc4ea"/>
+          <circle cx="6.5" cy="5.5" r="1.2" fill="rgba(76,196,234,0.65)"/>
+          <circle cx="18.5" cy="18.5" r="1.2" fill="rgba(76,196,234,0.65)"/>
+        </svg>
+      </span>
+      <span class="logo-name">Linkai<span class="logo-dot">.</span></span>
+    </a>
     <div class="nav-right">
       <div class="nav-links" id="navLinks">
         <a href="#projects" data-i18n="nav.projects">Projects</a>
@@ -991,22 +1761,17 @@
     <!-- ============ Hero ============ -->
     <section class="hero">
       <div class="container">
-        <div class="badge reveal"><span class="dot"></span><span data-i18n="hero.badge">Currently building with AI</span></div>
+        <div class="badge reveal"><span class="dot"></span><span data-i18n="hero.badge">Independent Building · Crafting Tools with AI</span></div>
         <h1 class="reveal"><span class="text-gradient" data-i18n="hero.title">Building small things with curiosity and AI.</span></h1>
         <p class="lead reveal" data-i18n="hero.lead">
-          Hi, I'm Linkai. I make simple tools, try out ideas, and keep notes on what I learn —
-          this is where the ones worth sharing end up.
+          Hi, I'm Linkai. I like building small, well-crafted tools, exploring with AI, and documenting what I learn along the way. Everything worth sharing lives here.
         </p>
         <div class="actions reveal">
-          <a class="btn btn-primary" href="#projects" data-i18n="hero.cta">See projects</a>
+          <a class="btn btn-primary" href="#projects" data-i18n="hero.cta">Explore tools</a>
           <a class="btn btn-ghost" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
             GitHub <span class="arrow" aria-hidden="true">↗</span>
           </a>
         </div>
-      </div>
-      <div class="scroll-hint" aria-hidden="true">
-        <span class="mono" data-i18n="hero.scroll">Scroll</span>
-        <i></i>
       </div>
     </section>
 
@@ -1016,45 +1781,88 @@
         <div class="section-head reveal">
           <div>
             <div class="mono" data-i18n="projects.kicker">01 — Selected work</div>
-            <h2 data-i18n="projects.title">Things I've been building.</h2>
+            <h2 data-i18n="projects.title">Tools built from real friction.</h2>
           </div>
-          <p data-i18n="projects.desc">Small, practical experiments. Some are shipped, some are still on the workbench.</p>
+          <p data-i18n="projects.desc">Bespoke, practical instruments. Each solves a specific problem from lived experience — some shipped, some on the workbench.</p>
         </div>
 
         <div class="bento">
-          <!-- Roundtable -->
-          <article class="card span-2 row-2 reveal">
-            <div class="card-visual" aria-hidden="true">
-              <div class="phone">
-                <div class="phone-screen">
-                  <div class="phone-notch"></div>
-                  <div class="phone-title">AVALON</div>
-                  <div class="table">
-                    <i class="seat on" style="--a:0deg"></i>
-                    <i class="seat" style="--a:72deg"></i>
-                    <i class="seat on" style="--a:144deg"></i>
-                    <i class="seat" style="--a:216deg"></i>
-                    <i class="seat" style="--a:288deg"></i>
+          <!-- Avalon Custom Deck Showcase -->
+          <a class="card span-2 row-2 reveal" href="./avalon-cards/">
+            <div class="card-visual" aria-hidden="true" style="padding: 0; min-height: 290px;">
+              <div class="deck-showcase">
+                <div class="deck-spotlight-left"></div>
+                <div class="deck-spotlight-right"></div>
+                <div class="deck-arena-ring"></div>
+
+                <div class="deck-hud-left">
+                  <span>⚔️</span>
+                  <span>柱灭密令</span>
+                </div>
+                <div class="deck-hud-right">
+                  <span>🍥</span>
+                  <span>忍界之暗</span>
+                </div>
+
+                <div class="deck-fan">
+                  <!-- C1: 蝴蝶忍 (鬼灭·梅林) -->
+                  <div class="fan-card fan-c1">
+                    <img src="./avalon-cards/cards/demon_slayer/characters/01_Merlin_Shinobu_Print_Master_v1.webp" alt="蝴蝶忍 · 梅林" />
                   </div>
-                  <div class="phone-bar"><i></i><i></i><i></i></div>
+                  <!-- C2: 鬼舞辻无惨 (鬼灭·刺客) -->
+                  <div class="fan-card fan-c2">
+                    <img src="./avalon-cards/cards/demon_slayer/characters/04_Assassin_Muzan_Print_Master_v1.webp" alt="鬼舞辻无惨 · 刺客" />
+                  </div>
+                  <!-- C3: 宇智波鼬 (火影·梅林 Apex) -->
+                  <div class="fan-card fan-c3">
+                    <img src="./avalon-cards/cards/naruto/characters/01_Merlin_Uchiha_Itachi.webp" alt="宇智波鼬 · 梅林" />
+                  </div>
+                  <!-- C4: 宇智波佐助 (火影·派西维尔) -->
+                  <div class="fan-card fan-c4">
+                    <img src="./avalon-cards/cards/naruto/characters/02_Percival_Uchiha_Sasuke.webp" alt="宇智波佐助 · 派西维尔" />
+                  </div>
+                  <!-- C5: 宇智波斑 (火影·莫德雷德) -->
+                  <div class="fan-card fan-c5">
+                    <img src="./avalon-cards/cards/naruto/characters/09_Mordred_Uchiha_Madara.webp" alt="宇智波斑 · 莫德雷德" />
+                  </div>
+                </div>
+
+                <!-- Floating Physical Tokens -->
+                <div class="deck-token-left" title="鬼灭·任务成功Token">
+                  <img src="./avalon-cards/cards/demon_slayer/tokens/Task_Success_Token_Circular_v1.webp" alt="任务成功印记" />
+                </div>
+                <div class="deck-token-right" title="火影·任务失败Token">
+                  <img src="./avalon-cards/cards/naruto/tokens/Task_Failure_Token_Circular_v3.webp" alt="任务失败印记" />
                 </div>
               </div>
             </div>
             <div class="card-body">
               <div class="card-meta">
-                <span class="mono" data-i18n="rt.kicker">Game companion</span>
-                <span class="status wip" data-i18n="status.wip">WIP</span>
+                <span class="mono" data-i18n="rt.kicker">Custom Tabletop Vault</span>
+                <span class="status live" data-i18n="status.live">Live</span>
               </div>
-              <h3>Roundtable</h3>
-              <p data-i18n="rt.desc">A mobile-friendly companion for playing Avalon with friends — roles, rounds and votes, all on one phone.</p>
-              <div class="tags"><span class="tag" data-i18n="rt.tag">Mobile web</span><span class="tag">HTML</span><span class="tag">JS</span></div>
+              <h3><span data-i18n="rt.title">Avalon Custom Decks</span> <span class="arrow" aria-hidden="true">↗</span></h3>
+              <p data-i18n="rt.desc">Bespoke tabletop card sets for The Resistance: Avalon — full 300 DPI print-ready master decks featuring Demon Slayer &amp; Naruto Shippuden, with custom mechanics lore, tokens, and 3D physical card inspections.</p>
+              <div class="tags"><span class="tag" data-i18n="rt.tag">Tabletop Design · 300 DPI</span><span class="tag">Demon Slayer</span><span class="tag">Naruto</span><span class="tag">3D Vault</span></div>
             </div>
-          </article>
+          </a>
 
           <!-- Turnitin -->
           <a class="card span-2 reveal" href="./turnitin-check/">
             <div class="card-visual" aria-hidden="true">
               <svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <linearGradient id="scanBeamGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#4cc4ea" stop-opacity="0" />
+                    <stop offset="40%" stop-color="#4cc4ea" stop-opacity="0.22" />
+                    <stop offset="100%" stop-color="#4cc4ea" stop-opacity="0.8" />
+                  </linearGradient>
+                  <linearGradient id="scanLineGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4cc4ea" stop-opacity="0.1" />
+                    <stop offset="50%" stop-color="#4cc4ea" stop-opacity="1" />
+                    <stop offset="100%" stop-color="#4cc4ea" stop-opacity="0.1" />
+                  </linearGradient>
+                </defs>
                 <g stroke="rgba(226,236,245,0.06)">
                   <line x1="40" y1="20" x2="40" y2="130" /><line x1="120" y1="20" x2="120" y2="130" />
                   <line x1="200" y1="20" x2="200" y2="130" /><line x1="280" y1="20" x2="280" y2="130" />
@@ -1068,15 +1876,27 @@
                   <text x="46" y="41">CreationDate</text><text x="116" y="67">ModDate</text>
                   <text x="196" y="93" fill="#031219">XMP</text><text x="256" y="119" fill="#031219">Producer</text>
                 </g>
+                <!-- Forensic HUD Verification Badge -->
+                <g class="forensic-hud">
+                  <circle class="hud-ping" cx="316" cy="18" r="3" fill="#22c55e" />
+                  <text class="hud-text" x="325" y="21" font-family="Geist Mono, monospace" font-size="8" fill="#78838d" letter-spacing="0.06em">0-LEAK VERIFIED</text>
+                </g>
+                <!-- Forensic Scan Beam Rig -->
+                <g class="scan-rig">
+                  <rect class="scan-trail" x="-36" y="20" width="36" height="110" fill="url(#scanBeamGrad)" opacity="0.45" />
+                  <line class="scan-line" x1="0" y1="18" x2="0" y2="132" stroke="url(#scanLineGrad)" stroke-width="1.8" />
+                  <circle class="scan-dot" cx="0" cy="18" r="2" fill="#4cc4ea" />
+                  <circle class="scan-dot" cx="0" cy="132" r="2" fill="#4cc4ea" />
+                </g>
               </svg>
             </div>
             <div class="card-body">
               <div class="card-meta">
-                <span class="mono" data-i18n="tt.kicker">Tool</span>
+                <span class="mono" data-i18n="tt.kicker">Forensic Privacy Tool</span>
                 <span class="status live" data-i18n="status.live">Live</span>
               </div>
-              <h3><span data-i18n="tt.title">Turnitin Check</span> <span class="arrow" aria-hidden="true">↗</span></h3>
-              <p data-i18n="tt.desc">Local PDF metadata &amp; timeline forensic check.</p>
+              <h3><span data-i18n="tt.title">Turnitin Forensic Check</span> <span class="arrow" aria-hidden="true">↗</span></h3>
+              <p data-i18n="tt.desc">A zero-leak client-side forensic analyzer for Turnitin PDFs. Verifies metadata chains, timestamp continuity, and producer fingerprints without uploading files.</p>
             </div>
           </a>
 
@@ -1089,18 +1909,48 @@
                     <stop offset="0" stop-color="#4cc4ea" stop-opacity="0.35" />
                     <stop offset="1" stop-color="#4cc4ea" stop-opacity="0" />
                   </linearGradient>
+                  <linearGradient id="scrubberGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4cc4ea" stop-opacity="0.1" />
+                    <stop offset="50%" stop-color="#4cc4ea" stop-opacity="0.9" />
+                    <stop offset="100%" stop-color="#4cc4ea" stop-opacity="0.1" />
+                  </linearGradient>
                 </defs>
                 <g stroke="rgba(226,236,245,0.06)">
                   <line x1="0" y1="30" x2="200" y2="30" /><line x1="0" y1="60" x2="200" y2="60" /><line x1="0" y1="90" x2="200" y2="90" />
                 </g>
                 <path d="M0 100 L30 92 L60 95 L90 74 L120 70 L150 48 L180 40 L200 26 L200 120 L0 120 Z" fill="url(#area)" />
                 <path class="chart-line" d="M0 100 L30 92 L60 95 L90 74 L120 70 L150 48 L180 40 L200 26" fill="none" stroke="#4cc4ea" stroke-width="2" vector-effect="non-scaling-stroke" />
+                <!-- Audio Scrubber Playhead Line -->
+                <g class="audio-scrubber-group">
+                  <line x1="0" y1="18" x2="0" y2="114" stroke="url(#scrubberGrad)" stroke-width="1.6" />
+                  <circle cx="0" cy="20" r="2" fill="#4cc4ea" />
+                  <circle cx="0" cy="112" r="2" fill="#4cc4ea" />
+                </g>
+                <!-- Audio Cadence Equalizer Bars -->
+                <g class="audio-cadence" opacity="0.65">
+                  <text x="12" y="19" font-family="Geist Mono, monospace" font-size="7" fill="#78838d" letter-spacing="0.08em">SLICE · 4.1s</text>
+                  <g class="eq-cluster" transform="translate(142, 9)">
+                    <rect class="eq-bar b1" x="0" y="3" width="2" height="7" rx="1" fill="#4cc4ea" />
+                    <rect class="eq-bar b2" x="5" y="0" width="2" height="10" rx="1" fill="#4cc4ea" />
+                    <rect class="eq-bar b3" x="10" y="4" width="2" height="6" rx="1" fill="#4cc4ea" />
+                    <rect class="eq-bar b4" x="15" y="1" width="2" height="9" rx="1" fill="#4cc4ea" />
+                    <rect class="eq-bar b5" x="20" y="0" width="2" height="10" rx="1" fill="#4cc4ea" />
+                    <rect class="eq-bar b6" x="25" y="3" width="2" height="7" rx="1" fill="#4cc4ea" />
+                  </g>
+                </g>
+                <!-- Acoustic Pulse Playhead -->
+                <g class="audio-playhead">
+                  <circle class="audio-ripple r1" cx="180" cy="40" r="4" fill="none" stroke="#4cc4ea" stroke-width="1" />
+                  <circle class="audio-ripple r2" cx="180" cy="40" r="4" fill="none" stroke="#4cc4ea" stroke-width="1" />
+                  <circle class="playhead-halo" cx="180" cy="40" r="6" fill="rgba(76,196,234,0.22)" />
+                  <circle class="playhead-core" cx="180" cy="40" r="2.5" fill="#4cc4ea" />
+                </g>
               </svg>
             </div>
             <div class="card-body">
-              <div class="card-meta"><span class="mono" data-i18n="ielts.kicker">Language Lab</span><span class="status live" data-i18n="status.live">Live</span></div>
+              <div class="card-meta"><span class="mono" data-i18n="ielts.kicker">Language Acquisition Lab</span><span class="status live" data-i18n="status.live">Live</span></div>
               <h3><span data-i18n="ielts.title">IELTS Dictation Lab</span> <span class="arrow" aria-hidden="true">↗</span></h3>
-              <p data-i18n="ielts.desc">Full-spectrum IELTS listening answer words dictation system with smart grading &amp; Anki export.</p>
+              <p data-i18n="ielts.desc">Escaping rote vocabulary drills: real audio slice dictation, 4.1s computer-delivered exam cadence, intelligent error recycling, and instant Anki flashcard export.</p>
             </div>
           </a>
 
@@ -1108,23 +1958,39 @@
           <article class="card reveal">
             <div class="card-visual" aria-hidden="true">
               <svg viewBox="0 0 200 120">
-                <g stroke="rgba(76,196,234,0.35)" stroke-width="1">
+                <!-- Static background edges -->
+                <g stroke="rgba(76,196,234,0.2)" stroke-width="1">
                   <line x1="100" y1="60" x2="48" y2="32" /><line x1="100" y1="60" x2="158" y2="28" />
                   <line x1="100" y1="60" x2="160" y2="92" /><line x1="100" y1="60" x2="44" y2="94" />
-                  <line x1="48" y1="32" x2="44" y2="94" stroke-dasharray="3 4" />
+                  <line x1="48" y1="32" x2="44" y2="94" stroke-dasharray="3 4" stroke="rgba(226,236,245,0.12)" />
                 </g>
+                <!-- Active glowing data packet streams -->
+                <g class="data-streams" stroke="#4cc4ea" stroke-width="1.4" opacity="0.35">
+                  <line class="stream s1" x1="100" y1="60" x2="48" y2="32" stroke-dasharray="4 14" />
+                  <line class="stream s2" x1="100" y1="60" x2="158" y2="28" stroke-dasharray="4 14" />
+                  <line class="stream s3" x1="100" y1="60" x2="160" y2="92" stroke-dasharray="4 14" />
+                  <line class="stream s4" x1="100" y1="60" x2="44" y2="94" stroke-dasharray="4 14" />
+                </g>
+                <!-- Outer nodes -->
                 <circle class="node n1" cx="48" cy="32" r="7" fill="#14181d" stroke="rgba(226,236,245,0.2)" />
+                <circle class="node-core n1-core" cx="48" cy="32" r="2.5" fill="#4cc4ea" />
                 <circle class="node n2" cx="158" cy="28" r="9" fill="#14181d" stroke="rgba(226,236,245,0.2)" />
+                <circle class="node-core n2-core" cx="158" cy="28" r="3" fill="#4cc4ea" />
                 <circle class="node n3" cx="160" cy="92" r="6" fill="#14181d" stroke="rgba(226,236,245,0.2)" />
+                <circle class="node-core n3-core" cx="160" cy="92" r="2" fill="#4cc4ea" />
                 <circle class="node n4" cx="44" cy="94" r="8" fill="#14181d" stroke="rgba(226,236,245,0.2)" />
-                <circle cx="100" cy="60" r="18" fill="rgba(76,196,234,0.12)" />
-                <circle cx="100" cy="60" r="11" fill="#4cc4ea" />
+                <circle class="node-core n4-core" cx="44" cy="94" r="2.5" fill="#4cc4ea" />
+                <!-- Central Hub with Synaptic Pulse Rings -->
+                <circle class="synapse-pulse p1" cx="100" cy="60" r="14" fill="none" stroke="#4cc4ea" stroke-width="1" />
+                <circle class="synapse-pulse p2" cx="100" cy="60" r="14" fill="none" stroke="#4cc4ea" stroke-width="1" />
+                <circle class="hub-halo" cx="100" cy="60" r="18" fill="rgba(76,196,234,0.12)" />
+                <circle class="hub-core" cx="100" cy="60" r="11" fill="#4cc4ea" />
               </svg>
             </div>
             <div class="card-body">
-              <div class="card-meta"><span class="mono" data-i18n="lai.kicker">Experiments</span><span class="status wip" data-i18n="status.wip">WIP</span></div>
+              <div class="card-meta"><span class="mono" data-i18n="lai.kicker">Studio Experiments</span><span class="status wip" data-i18n="status.wip">WIP</span></div>
               <h3>Link AI</h3>
-              <p data-i18n="lai.desc">Small projects built with AI, curiosity, and probably too many browser tabs.</p>
+              <p data-i18n="lai.desc">Bespoke micro-tools built with AI, curiosity, and lived-experience observations. Small, sharp, and genuinely useful.</p>
             </div>
           </article>
         </div>
@@ -1137,8 +2003,7 @@
         <div class="reveal">
           <div class="mono" data-i18n="about.kicker">02 — About</div>
           <p class="about-text" data-i18n="about.text">
-            I'm interested in the space <strong>between an idea and a useful little product.</strong>
-            I enjoy learning in public and <strong>turning experiments into something real.</strong>
+            I’ve always been captivated by the distance between a <strong>spark of inspiration and a truly handy tool</strong>. Driven to share learnings in the open, turning every experiment into a <strong>tangible, usable reality.</strong>
           </p>
         </div>
 
@@ -1152,19 +2017,19 @@
               <span class="icon" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>
               </span>
-              <div><strong data-i18n="now.1t">AI-assisted building</strong><span data-i18n="now.1d">Small, practical experiments</span></div>
+              <div><strong data-i18n="now.1t">Bespoke Toolmaking</strong><span data-i18n="now.1d">Iterating on Turnitin analyzer &amp; IELTS Lab</span></div>
             </li>
             <li>
               <span class="icon" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>
               </span>
-              <div><strong data-i18n="now.2t">English learning</strong><span data-i18n="now.2d">Notes and tools for the IELTS Lab</span></div>
+              <div><strong data-i18n="now.2t">Language Patterns</strong><span data-i18n="now.2d">Distilling natural conversational patterns</span></div>
             </li>
             <li>
               <span class="icon" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16"/></svg>
               </span>
-              <div><strong data-i18n="now.3t">Web projects</strong><span data-i18n="now.3d">Ideas useful enough to ship</span></div>
+              <div><strong data-i18n="now.3t">Observations &amp; Notes</strong><span data-i18n="now.3d">Reflecting on everyday friction, keeping plaintext notes</span></div>
             </li>
           </ul>
         </div>
@@ -1175,17 +2040,73 @@
     <section id="cc" class="section">
       <div class="container">
         <div class="cc reveal">
-          <div>
+          <div class="cc-content">
             <div class="mono" data-i18n="cc.kicker">03 — A little more personal</div>
             <h2>CC<span class="x">×</span>Linkai</h2>
             <p data-i18n="cc.desc">Our little corner of the internet.</p>
           </div>
-          <div class="orbit" aria-hidden="true">
-            <div class="ring"></div>
-            <div class="ring r2"></div>
-            <div class="planet p1">CC</div>
-            <div class="planet p2">LK</div>
-            <div class="heart">♥</div>
+
+          <div class="cc-interactive-wrap">
+            <!-- Stardust fireworks canvas -->
+            <canvas id="ccCanvas" aria-hidden="true"></canvas>
+
+            <!-- Easter egg floating whisper card -->
+            <div id="ccWhisper" class="cc-whisper-card" role="dialog" aria-modal="false" aria-label="CC × Linkai Whisper">
+              <div class="cc-whisper-head">
+                <div class="cc-whisper-title">
+                  <span class="badge-dot" aria-hidden="true"></span>
+                  <span data-i18n="cc.egg.badge">Binary Orbit</span>
+                </div>
+                <button type="button" class="cc-whisper-close" id="ccWhisperClose" aria-label="Close whisper">✕</button>
+              </div>
+              <blockquote class="cc-whisper-quote" id="ccWhisperText">
+                “在浩瀚的时空坐标系里，你是我唯一确定的引力解。”
+              </blockquote>
+              <div class="cc-whisper-foot">
+                <span id="ccWhisperSub" class="cc-whisper-sub">✦ 相对论引力场方程 · 唯一定解</span>
+                <button type="button" class="cc-whisper-next" id="ccWhisperNext">
+                  <span data-i18n="cc.egg.next">Next ↻</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 3D Interactive Binary Star Orbit Stage -->
+            <div class="orbit-stage" id="orbitStage" role="button" tabindex="0" aria-label="CC and Linkai Binary Star Gravitational Orbit. Click to interact.">
+              <!-- Gravitational wave pulses -->
+              <div class="grav-wave" aria-hidden="true"></div>
+              <div class="grav-wave w2" aria-hidden="true"></div>
+
+              <!-- Static orbital trajectory rings -->
+              <div class="orbit-ring" aria-hidden="true"></div>
+              <div class="orbit-ring inner" aria-hidden="true"></div>
+
+              <!-- Rotating binary gravitational arm -->
+              <div class="orbit-arm" aria-hidden="true">
+                <!-- Gravitational tether -->
+                <div class="orbit-tether"></div>
+
+                <!-- Star CC (Rose Starlight) -->
+                <div class="star star-cc" title="CC">
+                  <div class="star-inner">CC</div>
+                </div>
+
+                <!-- Star LK (Electric Cyan Orbit) -->
+                <div class="star star-lk" title="Linkai">
+                  <div class="star-inner">LK</div>
+                </div>
+              </div>
+
+              <!-- Center gravitational core / heartbeat -->
+              <div class="orbit-core" aria-hidden="true">
+                <span class="orbit-core-glyph">♥</span>
+              </div>
+            </div>
+
+            <!-- Hint button -->
+            <button type="button" class="orbit-hint" id="orbitHintBtn">
+              <span class="orbit-hint-spark" aria-hidden="true">✦</span>
+              <span data-i18n="cc.hint">Click to touch gravity</span>
+            </button>
           </div>
         </div>
       </div>
@@ -1195,8 +2116,8 @@
     <section id="contact" class="contact">
       <div class="container reveal">
         <div class="mono" data-i18n="contact.kicker">04 — Contact</div>
-        <h2><span class="text-gradient" data-i18n="contact.title">Let's build something small.</span></h2>
-        <p data-i18n="contact.desc">GitHub is the best place to find my work and get in touch.</p>
+        <h2><span class="text-gradient" data-i18n="contact.title">Let's build something genuinely useful.</span></h2>
+        <p data-i18n="contact.desc">Open for conversations on software craft, social observation, or tools. GitHub is the best place to get in touch.</p>
         <a class="btn btn-primary" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
           <span data-i18n="contact.cta">Say hello on GitHub</span> <span class="arrow" aria-hidden="true">↗</span>
         </a>
@@ -1219,47 +2140,50 @@
 
     // ============ i18n (English is the HTML default; Chinese lives here) ============
     const ZH = {
-      "meta.title": "Linkai — 抱持好奇，借力 AI，打磨微小而实用的创造",
-      "meta.desc": "Linkai 的个人小站：探索顺手的小工具、AI 实验，以及持续学习的行路笔记。",
+      "meta.title": "Linkai — 抱持好奇，与 AI 同行，打磨微小而顺手的作品",
+      "meta.desc": "Linkai 的个人小站：做些顺手好用的小工具，动手验证灵感，并随手记录研习所得。",
       "nav.projects": "作品",
       "nav.about": "关于",
       "nav.cc": "CC",
       "nav.cta": "打个招呼",
-      "hero.badge": "借力 AI · 持续探索构建中",
+      "hero.badge": "独立构建 · 借力 AI 持续打磨具体工具",
       "hero.title": "抱持好奇，与 AI 同行，<br />打磨微小而顺手的作品。",
       "hero.lead": "你好，我是 Linkai。我喜欢做些顺手好用的小工具，动手验证灵感，并随手记录研习所得——凡是觉得值得分享的，都留在了这里。",
       "hero.cta": "浏览作品",
-      "hero.scroll": "下滑探索",
       "projects.kicker": "01 — 精选作品",
-      "projects.title": "近期打磨的作品。",
-      "projects.desc": "微小而实在的探索：有的已发布可用，有的仍在工坊中迭代。",
-      "status.wip": "迭代中",
+      "projects.title": "从真实痛点中敲出来的工具。",
+      "projects.desc": "拒绝为了用 AI 而造概念：每个小工具都来自真实的生活摩擦，有的已稳定服役，有的还在打磨。",
+      "status.wip": "打磨中",
       "status.live": "已上线",
-      "rt.kicker": "桌游伴侣",
-      "rt.desc": "朋友聚会玩《阿瓦隆》时的轻量手机助手——暗牌身份、出征轮次与表决投票，单机即可顺畅流转。",
-      "rt.tag": "移动 Web",
-      "tt.kicker": "取证工具",
+      "rt.kicker": "实体桌游定制工坊",
+      "rt.title": "阿瓦隆定制卡牌典藏",
+      "rt.desc": "以 300 DPI 工业级印刷规范重塑经典社交推演：《鬼灭之刃》与《火影忍者》双套完整实体母版，含机制隐喻叙事、全套计分轨道与拟真 3D 物理反光展厅。",
+      "rt.tag": "桌游衍生设计 · 300 DPI 印刷级",
+      "tt.kicker": "离线安全取证",
       "tt.title": "Turnitin 报告特征核验",
-      "tt.desc": "本地 PDF 取证分析：深入解析元数据链条、修改时序与底层文档结构。",
-      "ielts.kicker": "语言研习",
-      "ielts.title": "雅思答案词听写引擎",
-      "ielts.desc": "全能真题答案词听写引擎：1,925 核心词汇，智能批改，机考节奏与错题 Anki 导出。",
-      "lai.kicker": "AI 实验场",
-      "lai.desc": "以好奇心为墨、借力 AI 探索，伴随着无数开着的浏览器标签页，一点点敲出来的小项目。",
+      "tt.desc": "留学生作业防伪护身符：浏览器纯本地运行，离线拆解 PDF 底层修改时序与生成器指纹，秒查篡改痕迹，0% 论文隐私外泄。",
+      "ielts.kicker": "实战盲打训练",
+      "ielts.title": "雅思真题听写实验室",
+      "ielts.desc": "拒绝死记硬背中文释义：提取官方真题真实发音音频切片，4.1 秒机考节奏盲打实战，智能错题循环与一键 Anki 闪卡包导出。",
+      "lai.kicker": "独立实验工坊",
+      "lai.desc": "用克制干净的代码验证想法。不做庞杂臃肿的系统，只做小而锋利、真正能省下时间的小帮手。",
       "about.kicker": "02 — 关于我",
-      "about.text": "我始终着迷于<strong>从灵光一现到一件顺手小产品</strong>之间的距离。乐于公开分享研习所得，<strong>把每一次动手实验，都变成切实可用的现实。</strong>",
-      "now.label": "近况",
-      "now.1t": "AI 辅助构建",
-      "now.1d": "开展微小而实用的实践",
-      "now.2t": "英语深度研习",
-      "now.2d": "持续沉淀 IELTS Lab 的工具与心得",
-      "now.3t": "Web 独立创造",
-      "now.3d": "将有价值的想法打磨并发布",
+      "about.text": "我始终着迷于从<strong>灵光一现到一件顺手小产品之间的距离</strong>。乐于公开分享研习所得，把每一次动手实验，都变成<strong>切实可用的现实</strong>。",
+      "now.label": "近况 · NOW",
+      "now.1t": "独立工具打磨",
+      "now.1d": "持续迭代 Turnitin 取证与雅思听写系统",
+      "now.2t": "真实语块沉淀",
+      "now.2d": "在日常交流与深度阅读中沉淀高频表达",
+      "now.3t": "生活观察与记录",
+      "now.3d": "关注具体生活中的细微摩擦，保持纯文本思考",
       "cc.kicker": "03 — 幕后一隅",
-      "cc.desc": "我们在浩瀚网络里的一方小小自留地。",
+      "cc.desc": "浩瀚网络世界里，我们的一方小小自留地。",
+      "cc.hint": "✦ 点击触碰引力",
+      "cc.egg.badge": "双星共轨",
+      "cc.egg.next": "换一句 ↻",
       "contact.kicker": "04 — 联络",
-      "contact.title": "不如一起，<br />做点好玩的小创造。",
-      "contact.desc": "若想探看我的代码仓库，或是打声招呼，GitHub 永远是最好的入口。",
+      "contact.title": "不如一起，<br />做点真正有用的小创造。",
+      "contact.desc": "探讨工具设计、学术反思，或只是打个招呼，GitHub 和邮件永远敞开。",
       "contact.cta": "去 GitHub 打个招呼",
     };
 
@@ -1272,6 +2196,36 @@
 
     const langBtns = document.querySelectorAll(".lang-switch button");
 
+    // ============ CC Easter Egg Quotes & Cycling ============
+    const CC_QUOTES = {
+      zh: [
+        { text: "“在浩瀚的时空坐标系里，你是我唯一确定的引力解。”", sub: "✦ 相对论引力场方程 · 唯一定解" },
+        { text: "“保持好奇，并肩漫步，把具体的日子过成风景。”", sub: "✦ 漫步在每一个平常的日子里" },
+        { text: "“宇宙万物皆在膨胀远离，唯有爱让两个星系彼此靠近。”", sub: "✦ 克服熵增与红移的微小奇迹" },
+        { text: "“代码能写出无限逻辑，而有些羁绊，无需任何条件语句。”", sub: "✦ 无需 if / else，始终恒真" }
+      ],
+      en: [
+        { text: "“In the boundless spacetime coordinate system, you are my only certain gravitational solution.”", sub: "✦ Gravitational field equations · Unique solution" },
+        { text: "“Staying curious, walking side by side, turning everyday moments into scenery.”", sub: "✦ Wandering through every ordinary day" },
+        { text: "“While the universe expands and drifts apart, only love pulls two galaxies closer.”", sub: "✦ Overcoming cosmic entropy and redshift" },
+        { text: "“Code can express infinite logic, but some bonds need no conditional statements.”", sub: "✦ Always true, without if or else" }
+      ]
+    };
+
+    let currentQuoteIdx = 0;
+
+    function updateWhisperQuote() {
+      const currentLang = document.documentElement.lang === "zh-CN" ? "zh" : "en";
+      const quotes = CC_QUOTES[currentLang] || CC_QUOTES.en;
+      const q = quotes[currentQuoteIdx % quotes.length];
+      const textEl = document.getElementById("ccWhisperText");
+      const subEl = document.getElementById("ccWhisperSub");
+      if (textEl && subEl) {
+        textEl.textContent = q.text;
+        subEl.textContent = q.sub;
+      }
+    }
+
     function setLang(lang) {
       const dict = lang === "zh" ? ZH : EN;
       i18nEls.forEach((el) => {
@@ -1281,10 +2235,14 @@
       document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
       document.title = dict["meta.title"];
       metaDesc.content = dict["meta.desc"];
-      document.getElementById("nowDate").textContent = lang === "zh"
-        ? `${now.getFullYear()} 年 ${now.getMonth() + 1} 月`
-        : now.toLocaleDateString("en", { month: "short", year: "numeric" });
+      const nowDateEl = document.getElementById("nowDate");
+      if (nowDateEl) {
+        nowDateEl.textContent = lang === "zh"
+          ? `${now.getFullYear()} 年 ${now.getMonth() + 1} 月`
+          : now.toLocaleDateString("en", { month: "short", year: "numeric" });
+      }
       langBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+      updateWhisperQuote();
     }
 
     const savedLang = (() => { try { return localStorage.getItem("lang"); } catch (e) { return null; } })();
@@ -1335,6 +2293,209 @@
         card.style.setProperty("--my", `${e.clientY - r.top}px`);
       });
     });
+
+    // ============ CC Section: Binary Orbit & Stardust Fireworks ============
+    const ccCanvas = document.getElementById("ccCanvas");
+    let ccCtx = null;
+    let ccParticles = [];
+    let ccAnimId = null;
+
+    function resizeCcCanvas() {
+      if (!ccCanvas) return;
+      const rect = ccCanvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      ccCanvas.width = rect.width * dpr;
+      ccCanvas.height = rect.height * dpr;
+      ccCtx = ccCanvas.getContext("2d");
+    }
+
+    window.addEventListener("resize", resizeCcCanvas, { passive: true });
+    resizeCcCanvas();
+
+    const SPARKLE_COLORS = [
+      "#f472b6", // Rose starlight
+      "#4cc4ea", // Electric cyan
+      "#fbbf24", // Celestial gold
+      "#ffffff", // Shimmer white
+      "#c084fc", // Nebula violet
+      "#38bdf8"  // Orbit cyan
+    ];
+
+    function spawnStardust(originX, originY) {
+      if (!ccCanvas) return;
+      if (!ccCtx || ccCanvas.width === 0) resizeCcCanvas();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = ccCanvas.getBoundingClientRect();
+
+      let startX = originX !== undefined ? (originX - rect.left) * dpr : (ccCanvas.width / 2);
+      let startY = originY !== undefined ? (originY - rect.top) * dpr : (ccCanvas.height / 2);
+
+      const count = 48;
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = (Math.random() * 5.4 + 1.2) * dpr;
+        const color = SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)];
+        ccParticles.push({
+          x: startX,
+          y: startY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: (Math.random() * 2.8 + 1.2) * dpr,
+          color: color,
+          alpha: 1,
+          decay: Math.random() * 0.018 + 0.012,
+          gravity: 0.065 * dpr,
+          drag: 0.965,
+          isStar: Math.random() < 0.38
+        });
+      }
+
+      if (!ccAnimId) {
+        animateStardust();
+      }
+    }
+
+    function animateStardust() {
+      if (!ccCtx || !ccCanvas) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      ccCtx.clearRect(0, 0, ccCanvas.width, ccCanvas.height);
+
+      for (let i = ccParticles.length - 1; i >= 0; i--) {
+        const p = ccParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.vx *= p.drag;
+        p.vy *= p.drag;
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          ccParticles.splice(i, 1);
+          continue;
+        }
+
+        ccCtx.save();
+        ccCtx.globalAlpha = Math.max(0, p.alpha);
+        ccCtx.fillStyle = p.color;
+        ccCtx.shadowBlur = 6 * dpr;
+        ccCtx.shadowColor = p.color;
+
+        if (p.isStar) {
+          const s = p.size * 1.5;
+          ccCtx.beginPath();
+          ccCtx.moveTo(p.x, p.y - s);
+          ccCtx.quadraticCurveTo(p.x, p.y, p.x + s, p.y);
+          ccCtx.quadraticCurveTo(p.x, p.y, p.x, p.y + s);
+          ccCtx.quadraticCurveTo(p.x, p.y, p.x - s, p.y);
+          ccCtx.quadraticCurveTo(p.x, p.y, p.x, p.y - s);
+          ccCtx.closePath();
+          ccCtx.fill();
+        } else {
+          ccCtx.beginPath();
+          ccCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ccCtx.fill();
+        }
+        ccCtx.restore();
+      }
+
+      if (ccParticles.length > 0) {
+        ccAnimId = requestAnimationFrame(animateStardust);
+      } else {
+        ccCtx.clearRect(0, 0, ccCanvas.width, ccCanvas.height);
+        ccAnimId = null;
+      }
+    }
+
+    // 3D Magnetic Gravitational Tilt on Orbit
+    const orbitStage = document.getElementById("orbitStage");
+    const ccWhisper = document.getElementById("ccWhisper");
+    const ccWhisperClose = document.getElementById("ccWhisperClose");
+    const ccWhisperNext = document.getElementById("ccWhisperNext");
+    const orbitHintBtn = document.getElementById("orbitHintBtn");
+
+    if (orbitStage) {
+      orbitStage.addEventListener("pointermove", (e) => {
+        const rect = orbitStage.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = (e.clientX - cx) / (rect.width / 2);
+        const dy = (e.clientY - cy) / (rect.height / 2);
+        orbitStage.style.transform = `perspective(600px) rotateX(${-dy * 10}deg) rotateY(${dx * 10}deg) scale3d(1.04, 1.04, 1.04)`;
+      });
+
+      orbitStage.addEventListener("pointerleave", () => {
+        orbitStage.style.transform = "";
+      });
+    }
+
+    function triggerOrbitInteraction(e) {
+      if (e && e.clientX !== undefined) {
+        spawnStardust(e.clientX, e.clientY);
+      } else if (orbitStage) {
+        const r = orbitStage.getBoundingClientRect();
+        spawnStardust(r.left + r.width / 2, r.top + r.height / 2);
+      }
+
+      if (ccWhisper) {
+        if (!ccWhisper.classList.contains("open")) {
+          updateWhisperQuote();
+          ccWhisper.classList.add("open");
+        } else {
+          currentQuoteIdx++;
+          updateWhisperQuote();
+        }
+      }
+    }
+
+    if (orbitStage) {
+      orbitStage.addEventListener("click", triggerOrbitInteraction);
+      orbitStage.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          triggerOrbitInteraction();
+        }
+      });
+    }
+
+    if (orbitHintBtn) {
+      orbitHintBtn.addEventListener("click", triggerOrbitInteraction);
+    }
+
+    if (ccWhisperNext) {
+      ccWhisperNext.addEventListener("click", (e) => {
+        e.stopPropagation();
+        currentQuoteIdx++;
+        updateWhisperQuote();
+        const r = ccWhisperNext.getBoundingClientRect();
+        spawnStardust(r.left + r.width / 2, r.top + r.height / 2);
+      });
+    }
+
+    if (ccWhisperClose) {
+      ccWhisperClose.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (ccWhisper) ccWhisper.classList.remove("open");
+      });
+    }
+
+    document.addEventListener("pointerdown", (e) => {
+      if (ccWhisper && ccWhisper.classList.contains("open")) {
+        const wrap = document.querySelector(".cc-interactive-wrap");
+        if (wrap && !wrap.contains(e.target)) {
+          ccWhisper.classList.remove("open");
+        }
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && ccWhisper && ccWhisper.classList.contains("open")) {
+        ccWhisper.classList.remove("open");
+      }
+    });
+
+    // Initial quote sync
+    updateWhisperQuote();
   </script>
 </body>
 </html>
