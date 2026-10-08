@@ -1,5 +1,5 @@
 // ==========================================
-// 刘夏来雅思听力语料库 · 全能答案词听写系统
+// 雅思官方听力真题 · 全能答案词听写系统
 // 涵盖 4 大核心词书，共 2,092 核心答案词：
 // 1. 📘 高频答案词 (985 词 · C1 考场真题 · 14 单元)
 // 2. 📗 基础答案词 (597 词 · A1~B2 必修 · 10 单元)
@@ -301,7 +301,7 @@ class DictationApp {
       this.logoBadge.textContent = (this.currentBookKey === "all_words") ? "IELTS 核心" : ((this.currentBookKey === "c1_high_frequency") ? "IELTS C1" : book.title);
     }
     if (this.logoTitle) {
-      this.logoTitle.textContent = `雅思听力语料库 · ${book.title}听写系统`;
+      this.logoTitle.textContent = `雅思听力真题 · ${book.title}听写系统`;
     }
     if (this.logoSubtitle) {
       this.logoSubtitle.textContent = `${book.total_words} 核心答案词 · ${book.desc}`;
