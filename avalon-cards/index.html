@@ -504,17 +504,17 @@
     /* Scoreboards Grid */
     .boards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 20px;
     }
     .board-card {
       background: var(--bg-card);
       border: 1px solid var(--line);
       border-radius: 16px;
-      padding: 12px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       cursor: pointer;
       transition: all 250ms var(--ease);
     }
@@ -525,11 +525,14 @@
     }
     .board-img-wrap {
       width: 100%;
-      aspect-ratio: 108 / 85.5;
-      background: #050608;
+      aspect-ratio: 1346 / 1081;
+      background: #020305;
       border-radius: 10px;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .board-img-wrap img {
       width: 100%;
@@ -537,35 +540,51 @@
       object-fit: contain;
       display: block;
     }
+    .board-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(226, 236, 245, 0.08);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-sub);
+    }
+    .board-card:hover .board-card-footer {
+      color: var(--accent);
+    }
 
     /* Tokens & Other Accessories */
     .tokens-flex {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 16px;
     }
     .token-card {
       background: var(--bg-card);
       border: 1px solid var(--line);
       border-radius: 16px;
-      padding: 16px;
+      padding: 16px 18px;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
       cursor: pointer;
       transition: all 200ms ease;
-      flex: 1;
-      min-width: 220px;
     }
     .token-card:hover {
       border-color: var(--line-strong);
       background: var(--bg-hover);
     }
     .token-preview {
-      width: 52px;
-      height: 52px;
+      width: 76px;
+      height: 76px;
       flex-shrink: 0;
-      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.5) 75%);
+      filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.75));
     }
     .token-preview img {
       width: 100%;
@@ -594,7 +613,7 @@
     }
 
     .modal-box {
-      max-width: 880px;
+      max-width: 920px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
@@ -603,14 +622,29 @@
       border-radius: 24px;
       box-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.8), 0 0 40px var(--accent-glow);
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: 360px 1fr;
       position: relative;
+      transition: max-width 250ms ease;
     }
 
-    @media (max-width: 768px) {
-      .modal-box {
-        grid-template-columns: 1fr;
-        max-height: 85vh;
+    /* Scoreboard Mode (Wide Landscape) */
+    .modal-box.mode-board {
+      max-width: 1140px;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, 1fr);
+    }
+
+    /* Token Mode */
+    .modal-box.mode-token {
+      max-width: 860px;
+      grid-template-columns: 340px 1fr;
+    }
+
+    @media (max-width: 860px) {
+      .modal-box,
+      .modal-box.mode-board,
+      .modal-box.mode-token {
+        grid-template-columns: 1fr !important;
+        max-height: 88vh;
       }
     }
 
@@ -648,17 +682,21 @@
       border-right: 1px solid var(--line);
       perspective: 1200px;
       -webkit-perspective: 1200px;
+      position: relative;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 860px) {
       .modal-visual-pane {
         border-radius: 24px 24px 0 0;
         border-right: none;
         border-bottom: 1px solid var(--line);
+        padding: 24px 16px;
       }
     }
 
+    /* Card Mode Display */
     .modal-card-display {
-      width: 230px;
+      width: 270px;
+      max-width: 100%;
       aspect-ratio: 54 / 85.5;
       position: relative;
       cursor: pointer;
@@ -669,6 +707,26 @@
     }
     .modal-card-display.is-flipped {
       transform: rotateY(180deg);
+    }
+
+    /* Board Mode Display: Wide Landscape, Uncropped! */
+    .modal-box.mode-board .modal-card-display {
+      width: 100%;
+      max-width: 660px;
+      aspect-ratio: 1346 / 1081;
+      border-radius: 12px;
+      transform: none !important;
+      cursor: zoom-in;
+    }
+
+    /* Token Mode Display: Circular, 1:1, Uncropped! */
+    .modal-box.mode-token .modal-card-display {
+      width: 230px;
+      height: 230px;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      transform: none !important;
+      cursor: zoom-in;
     }
 
     .modal-card-face {
@@ -691,6 +749,21 @@
       transform: rotateY(180deg) translateZ(1px);
     }
 
+    .modal-box.mode-board .modal-card-face {
+      border-radius: 12px;
+      background: #020305;
+      transform: none !important;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .modal-box.mode-token .modal-card-face {
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(2, 3, 5, 0.95) 75%);
+      transform: none !important;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 12px;
+    }
+
     .modal-card-face img {
       width: 100%;
       height: 100%;
@@ -699,6 +772,24 @@
       pointer-events: none;
       user-select: none;
       -webkit-user-select: none;
+    }
+
+    /* In Board & Token modes, use CONTAIN so ZERO pixels cropped */
+    .modal-box.mode-board .modal-card-face img {
+      object-fit: contain !important;
+      background: #020305;
+    }
+    .modal-box.mode-token .modal-card-face img {
+      object-fit: contain !important;
+      filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.9));
+    }
+
+    .modal-actions-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .modal-flip-btn {
@@ -718,6 +809,100 @@
     .modal-flip-btn:hover {
       color: #fff;
       border-color: var(--line-strong);
+    }
+
+    .modal-zoom-btn {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--line);
+      color: #cbd5e1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 180ms ease;
+    }
+    .modal-zoom-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.16);
+      border-color: var(--accent);
+    }
+
+    /* Fullscreen Overlay Viewer */
+    .fullscreen-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(2, 3, 5, 0.96);
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 250ms ease;
+    }
+    .fullscreen-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .fullscreen-close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--line-strong);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 210;
+      transition: all 180ms ease;
+    }
+    .fullscreen-close-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.08);
+    }
+    .fullscreen-img-wrap {
+      max-width: 95vw;
+      max-height: 84vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fullscreen-img-wrap img {
+      max-width: 95vw;
+      max-height: 84vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 24px 72px rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .fullscreen-caption {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .fullscreen-caption a {
+      color: var(--accent);
+      text-decoration: underline;
+      font-weight: 600;
     }
 
     .modal-detail-pane {
@@ -935,7 +1120,7 @@
 
   <!-- Detail Lightbox Modal -->
   <div class="modal-overlay" id="modal">
-    <div class="modal-box">
+    <div class="modal-box mode-card" id="modal-box">
       <button class="modal-close-btn" id="modal-close" title="关闭 (ESC)">✕</button>
 
       <!-- Visual Pane -->
@@ -948,10 +1133,15 @@
             <img id="modal-img-back" src="" alt="专属卡背" />
           </div>
         </div>
-        <button class="modal-flip-btn" id="modal-flip-btn" title="点击或按空格键翻转">
-          <span>🔄 翻转查看卡背</span>
-        </button>
-        <span style="font-size: 10.5px; font-family: var(--font-mono); color: var(--text-sub); opacity: 0.85;">💡 点击卡牌或按空格键翻转</span>
+        <div class="modal-actions-bar">
+          <button class="modal-flip-btn" id="modal-flip-btn" title="点击或按空格键翻转">
+            <span>🔄 翻转查看卡背</span>
+          </button>
+          <button class="modal-zoom-btn" id="modal-zoom-btn" title="全屏查看超清大图">
+            <span>🔍 全屏超清大图</span>
+          </button>
+        </div>
+        <span id="modal-hint-text" style="font-size: 10.5px; font-family: var(--font-mono); color: var(--text-sub); opacity: 0.85;">💡 点击卡牌或按空格键翻转</span>
       </div>
 
       <!-- Detail Pane -->
@@ -986,6 +1176,21 @@
           <button class="modal-nav-btn" id="modal-next-btn">下一张 →</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen High-Res Master Viewer -->
+  <div class="fullscreen-overlay" id="fullscreen-viewer">
+    <button class="fullscreen-close-btn" id="fullscreen-close" title="退出全屏 (ESC)">✕</button>
+    <div class="fullscreen-img-wrap">
+      <img id="fullscreen-img" src="" alt="超清大图" />
+    </div>
+    <div class="fullscreen-caption">
+      <span id="fullscreen-title">计分板 / 配件</span>
+      <span>·</span>
+      <span>300 DPI 印刷母版</span>
+      <span>·</span>
+      <a id="fullscreen-raw-link" href="" target="_blank" download>在新标签页打开原图 ↗</a>
     </div>
   </div>
 
@@ -1465,7 +1670,10 @@
     // State
     let currentThemeKey = "demon_slayer";
     let currentFilter = "all";
+    let modalMode = "card"; // "card" | "board" | "token"
     let modalIndex = 0;
+    let modalBoardIndex = 0;
+    let modalTokenIndex = 0;
     let filteredList = [];
 
     const cardsContainer = document.getElementById("cards-container");
@@ -1474,11 +1682,14 @@
 
     // Modal elements
     const modal = document.getElementById("modal");
+    const modalBox = document.getElementById("modal-box");
     const modalClose = document.getElementById("modal-close");
     const modalImgFront = document.getElementById("modal-img-front");
     const modalImgBack = document.getElementById("modal-img-back");
     const modalFlipper = document.getElementById("modal-flipper");
     const modalFlipBtn = document.getElementById("modal-flip-btn");
+    const modalZoomBtn = document.getElementById("modal-zoom-btn");
+    const modalHintText = document.getElementById("modal-hint-text");
     const modalSideBadge = document.getElementById("modal-side-badge");
     const modalRoleLabel = document.getElementById("modal-role-label");
     const modalCharName = document.getElementById("modal-char-name");
@@ -1488,6 +1699,32 @@
     const modalPrevBtn = document.getElementById("modal-prev-btn");
     const modalNextBtn = document.getElementById("modal-next-btn");
     const modalCounter = document.getElementById("modal-counter");
+
+    // Fullscreen elements
+    const fullscreenViewer = document.getElementById("fullscreen-viewer");
+    const fullscreenClose = document.getElementById("fullscreen-close");
+    const fullscreenImg = document.getElementById("fullscreen-img");
+    const fullscreenTitle = document.getElementById("fullscreen-title");
+    const fullscreenRawLink = document.getElementById("fullscreen-raw-link");
+
+    function openFullscreen(src, title) {
+      if (!src) return;
+      fullscreenImg.src = src;
+      fullscreenTitle.textContent = title || "超清大图";
+      fullscreenRawLink.href = src;
+      fullscreenViewer.classList.add("open");
+    }
+
+    function closeFullscreen() {
+      fullscreenViewer.classList.remove("open");
+    }
+
+    fullscreenClose.addEventListener("click", closeFullscreen);
+    fullscreenViewer.addEventListener("click", (e) => {
+      if (e.target === fullscreenViewer || e.target === fullscreenClose || e.target.parentElement === fullscreenClose) {
+        closeFullscreen();
+      }
+    });
 
     function renderGallery() {
       const theme = THEMES_DATA[currentThemeKey];
@@ -1624,39 +1861,44 @@
 
       // Render Accessories
       boardsContainer.innerHTML = "";
-      theme.boards.forEach((b) => {
+      theme.boards.forEach((b, bIdx) => {
         const el = document.createElement("div");
         el.className = "board-card";
         el.innerHTML = `
           <div class="board-img-wrap">
             <img src="${b.img}" alt="${b.name}" loading="lazy" />
           </div>
-          <div>
-            <div style="font-size: 14px; font-weight: 700;">${b.name}</div>
-            <div style="font-size: 11.5px; color: var(--text-sub);">${b.desc}</div>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="font-size: 15px; font-weight: 700;">${b.name}</div>
+            <div style="font-size: 12px; color: var(--text-sub); line-height: 1.4;">${b.desc}</div>
+            <div class="board-card-footer">
+              <span>🔍 点击查看全景大图</span>
+              <span>108 × 85.5 mm</span>
+            </div>
           </div>
         `;
         el.addEventListener("click", () => {
-          openCustomPreview(b.name, b.desc, b.img, null);
+          openBoardPreview(bIdx);
         });
         boardsContainer.appendChild(el);
       });
 
       tokensContainer.innerHTML = "";
-      theme.tokens.forEach((t) => {
+      theme.tokens.forEach((t, tIdx) => {
         const el = document.createElement("div");
         el.className = "token-card";
         el.innerHTML = `
           <div class="token-preview">
             <img src="${t.img}" alt="${t.name}" loading="lazy" />
           </div>
-          <div>
-            <div style="font-size: 13.5px; font-weight: 700;">${t.name}</div>
-            <div style="font-size: 11px; color: var(--text-sub);">${t.desc}</div>
+          <div style="display: flex; flex-direction: column; gap: 3px;">
+            <div style="font-size: 14px; font-weight: 700;">${t.name}</div>
+            <div style="font-size: 11.5px; color: var(--text-sub); line-height: 1.4;">${t.desc}</div>
+            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--accent); margin-top: 4px;">🔍 点击查看母版</div>
           </div>
         `;
         el.addEventListener("click", () => {
-          openCustomPreview(t.name, t.desc, t.img, t.back || null);
+          openTokenPreview(tIdx);
         });
         tokensContainer.appendChild(el);
       });
@@ -1664,14 +1906,18 @@
 
     // Lightbox Modal Logic
     function openModal(idx) {
+      modalMode = "card";
       modalIndex = idx;
       const card = filteredList[modalIndex];
       if (!card) return;
 
+      modalBox.className = "modal-box mode-card";
       modalImgFront.src = card.front;
       modalImgBack.src = card.back;
       modalFlipper.classList.remove("is-flipped");
       modalFlipBtn.style.display = "inline-flex";
+      modalZoomBtn.style.display = "inline-flex";
+      modalHintText.textContent = "💡 点击卡牌或按空格键翻转";
       const flipBtnSpan = modalFlipBtn.querySelector("span");
       if (flipBtnSpan) flipBtnSpan.textContent = "🔄 翻转查看卡背";
 
@@ -1688,27 +1934,76 @@
       document.body.style.overflow = "hidden";
     }
 
-    function openCustomPreview(title, desc, imgSrc, backSrc) {
-      modalImgFront.src = imgSrc;
-      if (backSrc) {
-        modalImgBack.src = backSrc;
-        modalFlipBtn.style.display = "inline-flex";
-        const flipBtnSpan = modalFlipBtn.querySelector("span");
-        if (flipBtnSpan) flipBtnSpan.textContent = "🔄 翻转查看卡背";
-      } else {
-        modalImgBack.src = imgSrc;
-        modalFlipBtn.style.display = "none";
-      }
-      modalFlipper.classList.remove("is-flipped");
+    function openBoardPreview(idx) {
+      modalMode = "board";
+      const theme = THEMES_DATA[currentThemeKey];
+      modalBoardIndex = (idx + theme.boards.length) % theme.boards.length;
+      const board = theme.boards[modalBoardIndex];
+      if (!board) return;
 
-      modalCharName.textContent = title;
-      modalRoleLabel.textContent = "配件与实物规范";
+      modalBox.className = "modal-box mode-board";
+      modalImgFront.src = board.img;
+      modalImgBack.src = board.img;
+      modalFlipper.classList.remove("is-flipped");
+      modalFlipBtn.style.display = "none";
+      modalZoomBtn.style.display = "inline-flex";
+      modalHintText.textContent = "🔍 点击大图或放大镜全屏查看 300 DPI 超清印刷母版";
+
+      modalCharName.textContent = board.name;
+      modalRoleLabel.textContent = "实体计分轨道与出征人数表 (Scoreboard)";
       modalSideBadge.textContent = "桌游实物";
       modalSideBadge.className = "role-badge neutral";
-      modalQuote.textContent = desc;
-      modalReason.textContent = "标准 300 DPI 印刷级导出。适配实物折叠压痕与出血工艺，保证印刷无白边、色块饱满。";
-      modalMotif.textContent = "四边 3mm 延展出血 · 300 DPI 无损压制";
-      modalCounter.textContent = "配件展示";
+      modalQuote.textContent = board.desc;
+      modalReason.textContent = "标准 108 × 85.5 mm 游戏计分主板（高精度 1346 × 1081 px）。集成 1-5 轮任务出征人数标示、流票公投决议轨、以及对应人数的破坏票特殊判定规则（如7人局第4轮需2张失败票）。";
+      modalMotif.textContent = "四边 3mm 延展出血 · 300 DPI 高精度全景母版";
+      modalCounter.textContent = `${modalBoardIndex + 1} / ${theme.boards.length}`;
+
+      modal.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function openTokenPreview(idx) {
+      modalMode = "token";
+      const theme = THEMES_DATA[currentThemeKey];
+      modalTokenIndex = (idx + theme.tokens.length) % theme.tokens.length;
+      const token = theme.tokens[modalTokenIndex];
+      if (!token) return;
+
+      const isCircular = token.img.includes("Token") || token.name.includes("标记");
+      if (isCircular) {
+        modalBox.className = "modal-box mode-token";
+        modalFlipBtn.style.display = "none";
+        modalHintText.textContent = "🔍 点击圆牌全屏查看 25mm 实体 Token 母版";
+      } else {
+        modalBox.className = "modal-box mode-card";
+        if (token.back) {
+          modalFlipBtn.style.display = "inline-flex";
+          const flipBtnSpan = modalFlipBtn.querySelector("span");
+          if (flipBtnSpan) flipBtnSpan.textContent = "🔄 翻转查看卡背";
+          modalHintText.textContent = "💡 点击卡牌或按空格键翻转";
+        } else {
+          modalFlipBtn.style.display = "none";
+          modalHintText.textContent = "🔍 点击查看大图";
+        }
+      }
+
+      modalImgFront.src = token.img;
+      modalImgBack.src = token.back || token.img;
+      modalFlipper.classList.remove("is-flipped");
+      modalZoomBtn.style.display = "inline-flex";
+
+      modalCharName.textContent = token.name;
+      modalRoleLabel.textContent = isCircular ? "25mm 标准圆形 Token 配件" : "专属配件指令/表决卡";
+      modalSideBadge.textContent = isCircular ? "25mm 标记" : "配件卡牌";
+      modalSideBadge.className = "role-badge neutral";
+      modalQuote.textContent = token.desc;
+      modalReason.textContent = isCircular
+        ? "标准 25 mm 实物圆形 Token（高精度 295 × 295 px 母版）。适配实体厚纸板对裱冲切工艺，外围带抗磨损缓冲轮廓与高对比度核心纹章。"
+        : "标准 54 × 85.5 mm 实体卡牌规格（709 × 1081 px）。正背面独立高精度母版，适配出征顺位与全员公开表决。";
+      modalMotif.textContent = isCircular
+        ? "直径 25mm 圆形模切 · 300 DPI 印刷母版"
+        : "54 × 85.5 mm 标准卡牌 · 双面 300 DPI 印刷母版";
+      modalCounter.textContent = `${modalTokenIndex + 1} / ${theme.tokens.length}`;
 
       modal.classList.add("open");
       document.body.style.overflow = "hidden";
@@ -1733,29 +2028,63 @@
     }
 
     modalFlipBtn.addEventListener("click", toggleModalFlip);
-    modalFlipper.addEventListener("click", toggleModalFlip);
+
+    modalFlipper.addEventListener("click", () => {
+      if (modalMode === "board") {
+        openFullscreen(modalImgFront.src, modalCharName.textContent);
+      } else if (modalMode === "token" && modalBox.classList.contains("mode-token")) {
+        openFullscreen(modalImgFront.src, modalCharName.textContent);
+      } else {
+        toggleModalFlip();
+      }
+    });
+
+    modalZoomBtn.addEventListener("click", () => {
+      const activeSrc = modalFlipper.classList.contains("is-flipped") ? modalImgBack.src : modalImgFront.src;
+      openFullscreen(activeSrc, modalCharName.textContent);
+    });
 
     modalPrevBtn.addEventListener("click", () => {
-      if (filteredList.length === 0) return;
-      modalIndex = (modalIndex - 1 + filteredList.length) % filteredList.length;
-      openModal(modalIndex);
+      if (modalMode === "card") {
+        if (filteredList.length === 0) return;
+        modalIndex = (modalIndex - 1 + filteredList.length) % filteredList.length;
+        openModal(modalIndex);
+      } else if (modalMode === "board") {
+        openBoardPreview(modalBoardIndex - 1);
+      } else if (modalMode === "token") {
+        openTokenPreview(modalTokenIndex - 1);
+      }
     });
 
     modalNextBtn.addEventListener("click", () => {
-      if (filteredList.length === 0) return;
-      modalIndex = (modalIndex + 1) % filteredList.length;
-      openModal(modalIndex);
+      if (modalMode === "card") {
+        if (filteredList.length === 0) return;
+        modalIndex = (modalIndex + 1) % filteredList.length;
+        openModal(modalIndex);
+      } else if (modalMode === "board") {
+        openBoardPreview(modalBoardIndex + 1);
+      } else if (modalMode === "token") {
+        openTokenPreview(modalTokenIndex + 1);
+      }
     });
 
     // Keyboard support
     window.addEventListener("keydown", (e) => {
+      if (fullscreenViewer.classList.contains("open")) {
+        if (e.key === "Escape") {
+          closeFullscreen();
+          return;
+        }
+      }
       if (!modal.classList.contains("open")) return;
       if (e.key === "Escape") closeModal();
       if (e.key === "ArrowLeft") modalPrevBtn.click();
       if (e.key === "ArrowRight") modalNextBtn.click();
       if (e.key === " ") {
-        e.preventDefault();
-        toggleModalFlip();
+        if (modalMode === "card" || (modalMode === "token" && !modalBox.classList.contains("mode-token"))) {
+          e.preventDefault();
+          toggleModalFlip();
+        }
       }
     });
 
