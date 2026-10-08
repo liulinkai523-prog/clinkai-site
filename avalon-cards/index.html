@@ -303,6 +303,7 @@
       width: 100%;
       aspect-ratio: 54 / 85.5;
       perspective: 1200px;
+      -webkit-perspective: 1200px;
       cursor: pointer;
       position: relative;
     }
@@ -312,6 +313,7 @@
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
       transition: transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
       border-radius: 12px;
       box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.6);
@@ -327,14 +329,19 @@
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
       border-radius: 12px;
       overflow: hidden;
       background: #000;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
+    .card-face.front {
+      transform: rotateY(0deg) translateZ(1px);
+    }
+
     .card-face.back {
-      transform: rotateY(180deg);
+      transform: rotateY(180deg) translateZ(1px);
     }
 
     .card-face img {
@@ -342,6 +349,9 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     /* Holographic sheen layer on hover */
@@ -429,6 +439,11 @@
       background: rgba(168, 85, 247, 0.15);
       color: #c084fc;
       border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+    .role-badge.mission {
+      background: rgba(234, 179, 8, 0.15);
+      color: #facc15;
+      border: 1px solid rgba(234, 179, 8, 0.3);
     }
 
     .card-role-title {
@@ -631,6 +646,8 @@
       justify-content: center;
       gap: 16px;
       border-right: 1px solid var(--line);
+      perspective: 1200px;
+      -webkit-perspective: 1200px;
     }
     @media (max-width: 768px) {
       .modal-visual-pane {
@@ -643,30 +660,45 @@
     .modal-card-display {
       width: 230px;
       aspect-ratio: 54 / 85.5;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.12);
       position: relative;
       cursor: pointer;
       transform-style: preserve-3d;
-      transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      -webkit-transform-style: preserve-3d;
+      transition: transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      border-radius: 14px;
     }
     .modal-card-display.is-flipped {
       transform: rotateY(180deg);
     }
 
-    .modal-card-display img {
+    .modal-card-face {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #000;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .modal-card-face.front {
+      transform: rotateY(0deg) translateZ(1px);
+    }
+    .modal-card-face.back {
+      transform: rotateY(180deg) translateZ(1px);
+    }
+
+    .modal-card-face img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      backface-visibility: hidden;
-    }
-    .modal-card-display img.back {
-      position: absolute;
-      inset: 0;
-      transform: rotateY(180deg);
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .modal-flip-btn {
@@ -834,11 +866,11 @@
         <div class="theme-tabs" role="tablist">
           <button class="theme-tab-btn active" data-theme-target="demon_slayer" id="tab-ds">
             <span>⚔️ 鬼灭之刃 · 柱灭密令</span>
-            <span class="badge">15 人物 + 配件</span>
+            <span class="badge">15 角色 + 任务卡 + 配件</span>
           </button>
           <button class="theme-tab-btn" data-theme-target="naruto" id="tab-naruto">
             <span>🍥 火影忍者 · 忍界之暗</span>
-            <span class="badge">V7 确认版 (16 人物)</span>
+            <span class="badge">V7 版 (15 角色 + 任务公投卡)</span>
           </button>
         </div>
       </div>
@@ -849,6 +881,7 @@
         <button class="filter-btn" data-filter="good">正义阵营 <span class="count" id="count-good">0</span></button>
         <button class="filter-btn" data-filter="evil">邪恶阵营 <span class="count" id="count-evil">0</span></button>
         <button class="filter-btn" data-filter="neutral">中立 / 仙女 <span class="count" id="count-neutral">0</span></button>
+        <button class="filter-btn" data-filter="mission">任务与公投卡 <span class="count" id="count-mission">0</span></button>
         <button class="filter-btn" data-filter="accessories">配件与计分板 <span class="count" id="count-accessories">0</span></button>
       </div>
     </header>
@@ -907,13 +940,18 @@
 
       <!-- Visual Pane -->
       <div class="modal-visual-pane">
-        <div class="modal-card-display" id="modal-flipper">
-          <img id="modal-img-front" src="" alt="正面卡牌" />
-          <img id="modal-img-back" class="back" src="" alt="统一卡背" />
+        <div class="modal-card-display" id="modal-flipper" title="点击卡牌即可 3D 翻转卡背">
+          <div class="modal-card-face front">
+            <img id="modal-img-front" src="" alt="正面卡牌" />
+          </div>
+          <div class="modal-card-face back">
+            <img id="modal-img-back" src="" alt="专属卡背" />
+          </div>
         </div>
-        <button class="modal-flip-btn" id="modal-flip-btn">
+        <button class="modal-flip-btn" id="modal-flip-btn" title="点击或按空格键翻转">
           <span>🔄 翻转查看卡背</span>
         </button>
+        <span style="font-size: 10.5px; font-family: var(--font-mono); color: var(--text-sub); opacity: 0.85;">💡 点击卡牌或按空格键翻转</span>
       </div>
 
       <!-- Detail Pane -->
@@ -957,7 +995,8 @@
       demon_slayer: {
         key: "demon_slayer",
         name: "鬼灭之刃 · 柱灭密令",
-        backImg: "./cards/demon_slayer/characters/Character_Card_Back_Print_Master_v1.webp",
+        charBackImg: "./cards/demon_slayer/characters/Character_Card_Back_Print_Master_v1.webp",
+        missionBackImg: "./cards/demon_slayer/missions/Mission_Card_Back_Print_Master_v1.webp",
         characters: [
           {
             id: "ds-01",
@@ -1125,6 +1164,34 @@
             front: "./cards/demon_slayer/characters/15_Lady_of_the_Lake_Tamayo_Print_Master_v1.webp"
           }
         ],
+        missions: [
+          {
+            id: "ds-m-01",
+            name: "出征任务成功",
+            role: "任务执行卡 (Mission Success)",
+            side: "good",
+            sideLabel: "正义 · 成功",
+            category: "mission",
+            quote: "“合力斩恶，赫刀同心！正义阵营必出此票。”",
+            reason: "【任务出征表决核心卡】好人阵营队员出征必须且只能投出任务成功卡；恶人阵营为隐匿身份亦可战略性伪装投出成功卡。三轮任务成功正义阵营获胜。",
+            motif: "日轮赫刀斩击印 · 金蓝圣光破晓",
+            front: "./cards/demon_slayer/missions/Mission_Success_Print_Master_v1.webp",
+            back: "./cards/demon_slayer/missions/Mission_Card_Back_Print_Master_v1.webp"
+          },
+          {
+            id: "ds-m-02",
+            name: "出征任务失败",
+            role: "破坏暗票 (Mission Failure)",
+            side: "evil",
+            sideLabel: "邪恶 · 破坏",
+            category: "mission",
+            quote: "“血鬼暗噬，夜幕降临！破坏出征将队伍拖入深渊。”",
+            reason: "【出征破坏核心卡】仅邪恶阵营（万鬼/莫甘娜/刺客/爪牙等）队员有权秘密投出破坏票。一张失败即可致使任务溃败（7人局第4轮需2张）。",
+            motif: "鬼化血色荆棘 · 破灭深渊血刃",
+            front: "./cards/demon_slayer/missions/Mission_Failure_Print_Master_v2.webp",
+            back: "./cards/demon_slayer/missions/Mission_Card_Back_Print_Master_v1.webp"
+          }
+        ],
         boards: [
           { name: "5人局任务计分板", desc: "经典 5 人局标准版面", img: "./cards/demon_slayer/scoreboards/Scoreboard_5P_Print_Master_v4.webp" },
           { name: "6人局任务计分板", desc: "6 人局标准任务轮次", img: "./cards/demon_slayer/scoreboards/Scoreboard_6P_Print_Master_v2.webp" },
@@ -1135,14 +1202,16 @@
           { name: "任务成功标记", desc: "蓝色光盾 25mm 标准圆形 Token", img: "./cards/demon_slayer/tokens/Task_Success_Token_Circular_v1.webp" },
           { name: "任务失败标记", desc: "红色破灭 25mm 标准圆形 Token", img: "./cards/demon_slayer/tokens/Task_Failure_Token_Circular_v1.webp" },
           { name: "决议流票标记", desc: "金色圆环 25mm 轨道跟踪 Token", img: "./cards/demon_slayer/tokens/Decision_Track_Token_Circular_v1.webp" },
-          { name: "执行任务卡 (成功/失败/卡背)", desc: "出征队员秘密选票牌组", img: "./cards/demon_slayer/missions/Mission_Success_Print_Master_v1.webp" }
+          { name: "出征任务卡组 (出征选票)", desc: "出征队员秘密选票 · 54×85.5mm 专属卡背", img: "./cards/demon_slayer/missions/Mission_Success_Print_Master_v1.webp", back: "./cards/demon_slayer/missions/Mission_Card_Back_Print_Master_v1.webp" }
         ]
       },
 
       naruto: {
         key: "naruto",
         name: "火影忍者 · 忍界之暗 (V7)",
-        backImg: "./cards/naruto/characters/00_Character_Card_Back.webp",
+        charBackImg: "./cards/naruto/characters/00_Character_Card_Back.webp",
+        missionBackImg: "./cards/naruto/missions/Mission_Card_Back_Master_v1.webp",
+        voteBackImg: "./cards/naruto/votes/Vote_Card_Back_Master_v1.webp",
         characters: [
           {
             id: "n-01",
@@ -1310,6 +1379,73 @@
             front: "./cards/naruto/characters/15_Lancelot_Gaara_Evil.webp"
           }
         ],
+        missions: [
+          {
+            id: "n-m-01",
+            name: "出征任务成功",
+            role: "任务执行卡 (Mission Success)",
+            side: "good",
+            sideLabel: "正义 · 成功",
+            category: "mission",
+            quote: "“查克拉共鸣！木叶飞舞之处，烈火生生不息。”",
+            reason: "【任务出征表决卡】好人队员出征必须投此票，恶人亦可伪投。累计3次任务成功正义阵营即宣告斩获胜势（进入刺杀梅林阶段）。",
+            motif: "九尾金色尾兽查克拉 · 螺旋丸湛蓝烈芒",
+            front: "./cards/naruto/missions/Mission_Success_Master_v1.webp",
+            back: "./cards/naruto/missions/Mission_Card_Back_Master_v1.webp"
+          },
+          {
+            id: "n-m-02",
+            name: "出征任务失败",
+            role: "破坏暗票 (Mission Failure)",
+            side: "evil",
+            sideLabel: "邪恶 · 破坏",
+            category: "mission",
+            quote: "“月读暗界，绝望蔓延！深渊暗影从内部瓦解信任。”",
+            reason: "【秘密破坏出征卡】仅邪恶阵营成员在被指派上船出征时可投出此票，暗中颠覆正义任务进程。",
+            motif: "暗黑须佐能乎炎火 · 血红月读破败之痕",
+            front: "./cards/naruto/missions/Mission_Failed_Master_v1.webp",
+            back: "./cards/naruto/missions/Mission_Card_Back_Master_v1.webp"
+          },
+          {
+            id: "n-v-01",
+            name: "领队提案 · 赞成票",
+            role: "公开公投表决卡 (Vote Approve)",
+            side: "good",
+            sideLabel: "公投 · 赞成",
+            category: "mission",
+            quote: "“信任此支队伍，同意派遣出征！”",
+            reason: "【全员公开公投卡】每轮队长提名出征队伍后，全场玩家同时亮牌表决。严格要求过半数赞成队伍方可出发。",
+            motif: "木叶青鸟白羽 · 信任金盾契印",
+            front: "./cards/naruto/votes/Vote_Approve_Master_v1.webp",
+            back: "./cards/naruto/votes/Vote_Card_Back_Master_v1.webp"
+          },
+          {
+            id: "n-v-02",
+            name: "领队提案 · 反对票",
+            role: "公开公投表决卡 (Vote Reject)",
+            side: "evil",
+            sideLabel: "公投 · 反对",
+            category: "mission",
+            quote: "“此队心怀鬼胎，否决当前提案！”",
+            reason: "【全员公开公投卡】若察觉队伍中混有可疑恶人或不信任领队，投出反对票否决提案。连续5次流票邪恶直接胜利。",
+            motif: "暗黑封印血结 · 否决双刃交错",
+            front: "./cards/naruto/votes/Vote_Reject_Master_v1.webp",
+            back: "./cards/naruto/votes/Vote_Card_Back_Master_v1.webp"
+          },
+          {
+            id: "n-b-01",
+            name: "忍界出征登船令",
+            role: "上船顺位指令卡 (Boarding Order)",
+            side: "neutral",
+            sideLabel: "中立 · 登船令",
+            category: "mission",
+            quote: "“依令登船，各司其职，共赴忍界生死使命！”",
+            reason: "【出征顺位与领队交接】经典标准扑克尺寸登船卡，规范出征座次与队长发言交接顺序。",
+            motif: "木叶火之卷轴 · 铁画银钩军令",
+            front: "./cards/naruto/boarding/Naruto_Boarding_Order_Final.webp",
+            back: "./cards/naruto/characters/00_Character_Card_Back.webp"
+          }
+        ],
         boards: [
           { name: "5人局任务计分板 (V2)", desc: "标准 5 人任务轨道与公投限制", img: "./cards/naruto/scoreboards/Scoreboard_5P_Final_v2.webp" },
           { name: "6人局任务计分板 (V2)", desc: "6 人局标准任务轮次", img: "./cards/naruto/scoreboards/Scoreboard_6P_Final_v2.webp" },
@@ -1320,8 +1456,8 @@
           { name: "任务成功标记", desc: "蓝色查克拉 25mm 标准圆形 Token", img: "./cards/naruto/tokens/Task_Success_Token_Circular_v3.webp" },
           { name: "任务失败标记", desc: "红色爆裂 25mm 标准圆形 Token", img: "./cards/naruto/tokens/Task_Failure_Token_Circular_v3.webp" },
           { name: "决议流票标记", desc: "金色圆环 25mm 轨道跟踪 Token", img: "./cards/naruto/tokens/Decision_Track_Token_Circular_v3.webp" },
-          { name: "火影版登船令 (Boarding Order)", desc: "出征队员上船顺位指令卡 (54×85.5mm)", img: "./cards/naruto/boarding/Naruto_Boarding_Order_Final.webp" },
-          { name: "投票卡组 (赞成/反对/卡背)", desc: "全员公开表决票", img: "./cards/naruto/votes/Vote_Approve_Master_v1.webp" }
+          { name: "火影版登船令 (Boarding Order)", desc: "出征队员上船顺位指令卡 (54×85.5mm)", img: "./cards/naruto/boarding/Naruto_Boarding_Order_Final.webp", back: "./cards/naruto/characters/00_Character_Card_Back.webp" },
+          { name: "全员公开投票卡组 (赞成/反对)", desc: "全员公开表决票 · 专属公投卡背", img: "./cards/naruto/votes/Vote_Approve_Master_v1.webp", back: "./cards/naruto/votes/Vote_Card_Back_Master_v1.webp" }
         ]
       }
     };
@@ -1357,34 +1493,54 @@
       const theme = THEMES_DATA[currentThemeKey];
       document.body.setAttribute("data-theme", currentThemeKey);
 
+      // Collect all cards (characters + missions/votes)
+      const allCards = [
+        ...theme.characters.map(c => ({
+          ...c,
+          category: "character",
+          back: c.back || theme.charBackImg
+        })),
+        ...(theme.missions || []).map(m => ({
+          ...m,
+          category: "mission",
+          back: m.back || theme.missionBackImg
+        }))
+      ];
+
       // Counts
-      const totalChars = theme.characters.length;
-      const goodCount = theme.characters.filter(c => c.side === "good").length;
-      const evilCount = theme.characters.filter(c => c.side === "evil").length;
-      const neutralCount = theme.characters.filter(c => c.side === "neutral").length;
+      const totalCards = allCards.length;
+      const goodCount = allCards.filter(c => c.side === "good").length;
+      const evilCount = allCards.filter(c => c.side === "evil").length;
+      const neutralCount = allCards.filter(c => c.side === "neutral").length;
+      const missionCount = allCards.filter(c => c.category === "mission").length;
       const accCount = theme.boards.length + theme.tokens.length;
 
-      document.getElementById("count-all").textContent = totalChars;
+      document.getElementById("count-all").textContent = totalCards;
       document.getElementById("count-good").textContent = goodCount;
       document.getElementById("count-evil").textContent = evilCount;
       document.getElementById("count-neutral").textContent = neutralCount;
+      const countMissionEl = document.getElementById("count-mission");
+      if (countMissionEl) countMissionEl.textContent = missionCount;
       document.getElementById("count-accessories").textContent = accCount;
 
-      // Filter characters
+      // Filter cards
       if (currentFilter === "all") {
-        filteredList = theme.characters;
+        filteredList = allCards;
         document.getElementById("accessories-section").style.display = "block";
       } else if (currentFilter === "accessories") {
         filteredList = [];
         document.getElementById("accessories-section").style.display = "block";
+      } else if (currentFilter === "mission") {
+        filteredList = allCards.filter(c => c.category === "mission");
+        document.getElementById("accessories-section").style.display = "none";
       } else {
-        filteredList = theme.characters.filter(c => c.side === currentFilter);
+        filteredList = allCards.filter(c => c.side === currentFilter);
         document.getElementById("accessories-section").style.display = "none";
       }
 
       // Render cards
       cardsContainer.innerHTML = "";
-      filteredList.forEach((char, idx) => {
+      filteredList.forEach((card, idx) => {
         const item = document.createElement("div");
         item.className = "card-item";
 
@@ -1392,24 +1548,24 @@
           <div class="card-3d-wrap" data-card-idx="${idx}">
             <div class="card-flipper">
               <div class="card-face front">
-                <img src="${char.front}" alt="${char.name}" loading="lazy" />
+                <img src="${card.front}" alt="${card.name}" loading="lazy" />
                 <div class="card-sheen"></div>
               </div>
               <div class="card-face back">
-                <img src="${theme.backImg}" alt="统一卡背" loading="lazy" />
+                <img src="${card.back}" alt="${card.name} 专属卡背" loading="lazy" />
               </div>
             </div>
-            <button class="flip-btn-overlay" title="翻转卡背">↺</button>
+            <button class="flip-btn-overlay" title="3D 翻转卡背">↺</button>
           </div>
           <div class="card-info">
             <div class="card-header-line">
-              <span class="char-name">${char.name}</span>
-              <span class="role-badge ${char.side}">${char.sideLabel}</span>
+              <span class="char-name">${card.name}</span>
+              <span class="role-badge ${card.side}">${card.sideLabel}</span>
             </div>
-            <div class="card-role-title">${char.role}</div>
-            <p class="card-quote">${char.quote}</p>
+            <div class="card-role-title">${card.role}</div>
+            <p class="card-quote">${card.quote}</p>
             <div class="card-inspect-hint" data-inspect-idx="${idx}">
-              <span>查看设计母版与机制 ↗</span>
+              <span>查看卡牌与专属卡背 ↗</span>
               <span>300 DPI</span>
             </div>
           </div>
@@ -1438,13 +1594,20 @@
         wrap.addEventListener("mouseleave", () => {
           if (!flipper.classList.contains("is-flipped")) {
             flipper.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+          } else {
+            flipper.style.transform = `rotateY(180deg)`;
           }
         });
 
         // Flip button toggle
         flipBtn.addEventListener("click", (e) => {
           e.stopPropagation();
-          flipper.classList.toggle("is-flipped");
+          const isFlipped = flipper.classList.toggle("is-flipped");
+          if (isFlipped) {
+            flipper.style.transform = "rotateY(180deg)";
+          } else {
+            flipper.style.transform = "rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+          }
         });
 
         // Click card opens Lightbox
@@ -1452,7 +1615,7 @@
           openModal(idx);
         });
 
-        item.querySelector(".card-inspect-hint").addEventListener("click", () => {
+        item.querySelector(".card-info").addEventListener("click", () => {
           openModal(idx);
         });
 
@@ -1474,7 +1637,7 @@
           </div>
         `;
         el.addEventListener("click", () => {
-          openCustomPreview(b.name, b.desc, b.img);
+          openCustomPreview(b.name, b.desc, b.img, null);
         });
         boardsContainer.appendChild(el);
       });
@@ -1493,7 +1656,7 @@
           </div>
         `;
         el.addEventListener("click", () => {
-          openCustomPreview(t.name, t.desc, t.img);
+          openCustomPreview(t.name, t.desc, t.img, t.back || null);
         });
         tokensContainer.appendChild(el);
       });
@@ -1502,34 +1665,44 @@
     // Lightbox Modal Logic
     function openModal(idx) {
       modalIndex = idx;
-      const char = filteredList[modalIndex];
-      if (!char) return;
+      const card = filteredList[modalIndex];
+      if (!card) return;
 
-      const theme = THEMES_DATA[currentThemeKey];
-      modalImgFront.src = char.front;
-      modalImgBack.src = theme.backImg;
+      modalImgFront.src = card.front;
+      modalImgBack.src = card.back;
       modalFlipper.classList.remove("is-flipped");
+      modalFlipBtn.style.display = "inline-flex";
+      const flipBtnSpan = modalFlipBtn.querySelector("span");
+      if (flipBtnSpan) flipBtnSpan.textContent = "🔄 翻转查看卡背";
 
-      modalCharName.textContent = char.name;
-      modalRoleLabel.textContent = char.role;
-      modalSideBadge.textContent = char.sideLabel;
-      modalSideBadge.className = `role-badge ${char.side}`;
-      modalQuote.textContent = char.quote;
-      modalReason.textContent = char.reason;
-      modalMotif.textContent = char.motif;
+      modalCharName.textContent = card.name;
+      modalRoleLabel.textContent = card.role;
+      modalSideBadge.textContent = card.sideLabel;
+      modalSideBadge.className = `role-badge ${card.side}`;
+      modalQuote.textContent = card.quote;
+      modalReason.textContent = card.reason;
+      modalMotif.textContent = card.motif;
       modalCounter.textContent = `${modalIndex + 1} / ${filteredList.length}`;
 
       modal.classList.add("open");
       document.body.style.overflow = "hidden";
     }
 
-    function openCustomPreview(title, desc, imgSrc) {
+    function openCustomPreview(title, desc, imgSrc, backSrc) {
       modalImgFront.src = imgSrc;
-      modalImgBack.src = imgSrc;
+      if (backSrc) {
+        modalImgBack.src = backSrc;
+        modalFlipBtn.style.display = "inline-flex";
+        const flipBtnSpan = modalFlipBtn.querySelector("span");
+        if (flipBtnSpan) flipBtnSpan.textContent = "🔄 翻转查看卡背";
+      } else {
+        modalImgBack.src = imgSrc;
+        modalFlipBtn.style.display = "none";
+      }
       modalFlipper.classList.remove("is-flipped");
 
       modalCharName.textContent = title;
-      modalRoleLabel.textContent = "配件与计分规范";
+      modalRoleLabel.textContent = "配件与实物规范";
       modalSideBadge.textContent = "桌游实物";
       modalSideBadge.className = "role-badge neutral";
       modalQuote.textContent = desc;
@@ -1551,14 +1724,16 @@
       if (e.target === modal) closeModal();
     });
 
-    modalFlipBtn.addEventListener("click", () => {
-      modalFlipper.classList.toggle("is-flipped");
-    });
+    function toggleModalFlip() {
+      const isFlipped = modalFlipper.classList.toggle("is-flipped");
+      const flipBtnSpan = modalFlipBtn.querySelector("span");
+      if (flipBtnSpan) {
+        flipBtnSpan.textContent = isFlipped ? "🔄 翻转查看卡面" : "🔄 翻转查看卡背";
+      }
+    }
 
-    modalCardFlipper = document.getElementById("modal-flipper");
-    modalCardFlipper.addEventListener("click", () => {
-      modalFlipper.classList.toggle("is-flipped");
-    });
+    modalFlipBtn.addEventListener("click", toggleModalFlip);
+    modalFlipper.addEventListener("click", toggleModalFlip);
 
     modalPrevBtn.addEventListener("click", () => {
       if (filteredList.length === 0) return;
@@ -1580,13 +1755,16 @@
       if (e.key === "ArrowRight") modalNextBtn.click();
       if (e.key === " ") {
         e.preventDefault();
-        modalFlipBtn.click();
+        toggleModalFlip();
       }
     });
 
     // Switch Theme Handlers
     document.getElementById("tab-ds").addEventListener("click", () => {
       currentThemeKey = "demon_slayer";
+      currentFilter = "all";
+      document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+      document.querySelector('.filter-btn[data-filter="all"]').classList.add("active");
       document.getElementById("tab-ds").classList.add("active");
       document.getElementById("tab-naruto").classList.remove("active");
       renderGallery();
@@ -1594,6 +1772,9 @@
 
     document.getElementById("tab-naruto").addEventListener("click", () => {
       currentThemeKey = "naruto";
+      currentFilter = "all";
+      document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+      document.querySelector('.filter-btn[data-filter="all"]').classList.add("active");
       document.getElementById("tab-naruto").classList.add("active");
       document.getElementById("tab-ds").classList.remove("active");
       renderGallery();
