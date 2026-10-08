@@ -1173,21 +1173,27 @@
     .now li strong { display: block; font-weight: 500; font-size: 15px; }
     .now li span { color: var(--text-3); font-size: 14px; }
 
-    /* ============ CC ============ */
+    /* ============ CC Monogram Keepsake Card ============ */
     .cc {
       position: relative;
-      overflow: hidden;
       border-radius: var(--r-xl);
       border: 1px solid var(--line);
       background:
-        radial-gradient(600px 300px at 85% 120%, rgba(76, 196, 234, 0.16), transparent 70%),
+        radial-gradient(550px 300px at 85% 115%, rgba(76, 196, 234, 0.12), transparent 70%),
+        radial-gradient(400px 240px at 15% -10%, rgba(244, 114, 182, 0.08), transparent 70%),
         var(--surface);
       box-shadow: var(--inner-hi), var(--shadow-card);
-      padding: clamp(32px, 6vw, 64px);
+      padding: clamp(32px, 5vw, 56px);
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 32px;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: clamp(24px, 4vw, 48px);
       align-items: center;
+    }
+
+    .cc-intro {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
 
     .cc h2 {
@@ -1198,394 +1204,262 @@
       letter-spacing: -0.045em;
     }
 
-    .cc h2 .x { color: var(--accent); font-weight: 400; padding-inline: 0.08em; }
-
-    .cc p { margin: 0; color: var(--text-2); font-size: 17px; max-width: 30rem; }
-
-    /* Interactive Orbit Stage & Gravity System */
-    .cc-interactive-wrap {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      z-index: 5;
-    }
-
-    .orbit-stage {
-      position: relative;
-      width: 210px;
-      height: 210px;
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-      transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
-      transform-style: preserve-3d;
-    }
-
-    .orbit-stage:hover {
-      transform: scale(1.04);
-    }
-
-    .orbit-stage:active {
-      transform: scale(0.97);
-    }
-
-    /* Concentric gravitational wave ripples */
-    .grav-wave {
-      position: absolute;
-      inset: -14px;
-      border-radius: 50%;
-      border: 1px solid rgba(76, 196, 234, 0.22);
-      pointer-events: none;
-      animation: grav-pulse 3.8s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
-    }
-
-    .grav-wave.w2 {
-      animation-delay: 1.9s;
-      border-color: rgba(244, 114, 182, 0.22);
-    }
-
-    @keyframes grav-pulse {
-      0% {
-        transform: scale(0.72);
-        opacity: 0.85;
-      }
-      50% {
-        opacity: 0.35;
-      }
-      100% {
-        transform: scale(1.28);
-        opacity: 0;
-      }
-    }
-
-    /* Outer static guide rings */
-    .orbit-ring {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 1px solid var(--line-strong);
-      pointer-events: none;
-      box-shadow: inset 0 0 28px rgba(76, 196, 234, 0.05);
-    }
-
-    .orbit-ring.inner {
-      inset: 26px;
-      border-style: dashed;
-      border-color: rgba(76, 196, 234, 0.22);
-      animation: spin 36s linear infinite;
-    }
-
-    /* Rotating binary arm */
-    .orbit-arm {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      animation: spin 16s linear infinite;
-      transition: animation-duration 500ms ease;
-    }
-
-    .orbit-stage:hover .orbit-arm {
-      animation-duration: 8s;
-    }
-
-    /* Glowing gravitational tether line connecting both stars */
-    .orbit-tether {
-      position: absolute;
-      top: 50%;
-      left: 14px;
-      right: 14px;
-      height: 1px;
-      transform: translateY(-50%);
-      background: linear-gradient(90deg, 
-        rgba(244, 114, 182, 0.7) 0%, 
-        rgba(244, 114, 182, 0.15) 30%, 
-        transparent 45%, 
-        transparent 55%, 
-        rgba(76, 196, 234, 0.15) 70%, 
-        rgba(76, 196, 234, 0.7) 100%
-      );
-      pointer-events: none;
-    }
-
-    /* Stars with counter-spin so text stays horizontal and readable */
-    .star {
-      position: absolute;
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font-weight: 600;
-      font-size: 15px;
-      letter-spacing: -0.01em;
-      top: 50%;
-      margin-top: -27px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-      transition: box-shadow 240ms ease;
-    }
-
-    /* Counter-spin keeps letters upright */
-    .star-inner {
-      display: grid;
-      place-items: center;
-      width: 100%;
-      height: 100%;
-      animation: counter-spin 16s linear infinite;
-      transition: animation-duration 500ms ease;
-    }
-
-    .orbit-stage:hover .star-inner {
-      animation-duration: 8s;
-    }
-
-    @keyframes counter-spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(-360deg); }
-    }
-
-    /* Star CC: Romantic rose starlight */
-    .star.star-cc {
-      left: 0;
-      background: radial-gradient(circle at 35% 35%, rgba(254, 205, 226, 0.28), rgba(244, 114, 182, 0.12) 70%), var(--surface-2);
-      border: 1px solid rgba(244, 114, 182, 0.5);
-      color: #f472b6;
-      box-shadow: 0 0 24px -2px rgba(244, 114, 182, 0.42), inset 0 1px 1px rgba(255, 255, 255, 0.25);
-    }
-
-    .orbit-stage:hover .star.star-cc {
-      box-shadow: 0 0 32px 0px rgba(244, 114, 182, 0.7);
-    }
-
-    /* Star LK: Electric cyan orbit */
-    .star.star-lk {
-      right: 0;
-      background: radial-gradient(circle at 35% 35%, rgba(186, 230, 253, 0.28), rgba(76, 196, 234, 0.14) 70%), var(--surface-2);
-      border: 1px solid rgba(76, 196, 234, 0.55);
-      color: #7ee0ff;
-      box-shadow: 0 0 24px -2px rgba(76, 196, 234, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.25);
-    }
-
-    .orbit-stage:hover .star.star-lk {
-      box-shadow: 0 0 32px 0px rgba(76, 196, 234, 0.7);
-    }
-
-    /* Central gravitational core with heartbeat */
-    .orbit-core {
-      position: absolute;
-      inset: 0;
-      margin: auto;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(244, 114, 182, 0.24) 0%, rgba(76, 196, 234, 0.16) 60%, transparent 100%);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      display: grid;
-      place-items: center;
-      pointer-events: none;
-      animation: heartbeat 2.6s ease-in-out infinite;
-    }
-
-    .orbit-core-glyph {
-      font-size: 15px;
-      line-height: 1;
+    .cc h2 .x {
       background: linear-gradient(135deg, #f472b6, #4cc4ea);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      transform: translateY(0.5px);
+      font-weight: 400;
+      padding-inline: 0.08em;
     }
 
-    @keyframes heartbeat {
-      0%, 100% { transform: scale(1); opacity: 0.85; }
-      14% { transform: scale(1.18); opacity: 1; filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.6)); }
-      28% { transform: scale(1.04); opacity: 0.9; }
-      42% { transform: scale(1.14); opacity: 0.98; filter: drop-shadow(0 0 8px rgba(76, 196, 234, 0.6)); }
-      70% { transform: scale(1); opacity: 0.85; }
+    .cc p { margin: 0 0 20px 0; color: var(--text-2); font-size: 17px; max-width: 28rem; }
+
+    .cc-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: var(--r-pill);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-3);
     }
 
-    /* Micro hover hint button */
-    .orbit-hint {
+    .cc-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4cc4ea;
+      box-shadow: 0 0 8px #4cc4ea;
+      animation: pulse-dot 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(0.75); opacity: 0.4; }
+    }
+
+    /* Keepsake Card Container */
+    .cc-card-wrap {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      perspective: 1000px;
+    }
+
+    .cc-keepsake-card {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      border-radius: var(--r-lg);
+      background:
+        radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.07), transparent 65%),
+        linear-gradient(145deg, rgba(20, 25, 32, 0.85) 0%, rgba(11, 14, 18, 0.92) 100%);
+      border: 1px solid rgba(226, 236, 245, 0.1);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 0 24px rgba(255, 255, 255, 0.015),
+        0 24px 48px -16px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 24px 26px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: border-color 240ms ease, box-shadow 240ms ease, transform 240ms var(--ease-snap);
+      transform-style: preserve-3d;
+      overflow: hidden;
+    }
+
+    .cc-keepsake-card:hover {
+      border-color: rgba(76, 196, 234, 0.35);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        0 30px 60px -16px rgba(0, 0, 0, 0.8),
+        0 0 32px -6px rgba(76, 196, 234, 0.15);
+    }
+
+    .cc-keepsake-card:active {
+      transform: scale(0.985);
+    }
+
+    /* Metallic sheen sweep */
+    .keepsake-shimmer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.04) 48%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.04) 52%, transparent 70%);
+      transform: translateX(-100%);
+      transition: transform 800ms ease;
+      pointer-events: none;
+    }
+
+    .cc-keepsake-card:hover .keepsake-shimmer {
+      transform: translateX(100%);
+    }
+
+    /* Header: Monogram Seal & Metadata Badge */
+    .keepsake-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .keepsake-monogram {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      color: var(--text-3);
-      padding: 5px 12px;
-      border-radius: var(--r-full);
+    }
+
+    .monogram-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 10px;
+      border-radius: var(--r-sm);
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
       background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--line);
-      transition: all 200ms ease;
-      cursor: pointer;
     }
 
-    .orbit-stage:hover + .orbit-hint,
-    .orbit-hint:hover {
-      color: var(--text-1);
-      border-color: rgba(76, 196, 234, 0.35);
-      background: rgba(76, 196, 234, 0.06);
-      box-shadow: 0 0 16px -2px rgba(76, 196, 234, 0.2);
-    }
-
-    .orbit-hint-spark {
+    .monogram-pill.cc-pill {
       color: #f472b6;
-      animation: twinkle 2s ease-in-out infinite alternate;
+      border-color: rgba(244, 114, 182, 0.3);
+      background: rgba(244, 114, 182, 0.08);
     }
 
-    @keyframes twinkle {
-      0% { opacity: 0.4; transform: scale(0.9); }
-      100% { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 0 4px #f472b6); }
+    .monogram-pill.lk-pill {
+      color: #7ee0ff;
+      border-color: rgba(76, 196, 234, 0.35);
+      background: rgba(76, 196, 234, 0.08);
     }
 
-    /* Stardust Fireworks Canvas */
-    #cc-canvas {
-      position: absolute;
-      top: -80px;
-      left: -80px;
-      width: calc(100% + 160px);
-      height: calc(100% + 160px);
-      pointer-events: none;
-      z-index: 25;
-    }
-
-    /* Exclusive Whisper Popover Card (Easter Egg) */
-    .cc-whisper-card {
-      position: absolute;
-      bottom: calc(100% + 16px);
-      right: 50%;
-      transform: translateX(50%) translateY(12px) scale(0.95);
-      width: min(340px, calc(100vw - 48px));
-      padding: 20px 22px;
-      border-radius: var(--r-lg);
-      background: rgba(14, 18, 24, 0.94);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow:
-        0 24px 48px -12px rgba(0, 0, 0, 0.7),
-        0 0 0 1px rgba(244, 114, 182, 0.18),
-        0 0 32px -4px rgba(76, 196, 234, 0.22);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 30;
-    }
-
-    .cc-whisper-card.open {
-      opacity: 1;
-      transform: translateX(50%) translateY(0) scale(1);
-      pointer-events: auto;
-    }
-
-    .cc-whisper-card::after {
-      content: "";
-      position: absolute;
-      bottom: -6px;
-      left: 50%;
-      transform: translateX(-50%) rotate(45deg);
-      width: 12px;
-      height: 12px;
-      background: rgba(14, 18, 24, 0.94);
-      border-right: 1px solid rgba(255, 255, 255, 0.12);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .cc-whisper-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .cc-whisper-title {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 11px;
-      font-family: var(--font-mono);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-2);
-    }
-
-    .cc-whisper-title .badge-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #f472b6, #4cc4ea);
-      box-shadow: 0 0 8px #f472b6;
-    }
-
-    .cc-whisper-close {
-      background: transparent;
-      border: none;
-      color: var(--text-3);
-      cursor: pointer;
-      font-size: 14px;
+    .monogram-knot {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
       line-height: 1;
-      padding: 4px;
+      animation: pulse-knot 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-knot {
+      0%, 100% { opacity: 0.4; transform: scale(0.95); }
+      50% { opacity: 0.9; transform: scale(1.1); filter: drop-shadow(0 0 4px rgba(244, 114, 182, 0.6)); }
+    }
+
+    .keepsake-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 3px 8px;
       border-radius: 4px;
-      transition: color 150ms ease, background 150ms ease;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.02);
     }
 
-    .cc-whisper-close:hover {
-      color: var(--text-1);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .cc-whisper-quote {
+    /* Body Quote */
+    .keepsake-body {
       position: relative;
-      font-size: 14.5px;
-      line-height: 1.6;
-      color: var(--text-1);
-      margin: 0 0 14px 0;
-      min-height: 48px;
-      transition: opacity 200ms ease;
+      margin-bottom: 20px;
     }
 
-    .cc-whisper-foot {
+    .keepsake-quote {
+      margin: 0 0 10px 0;
+      padding: 0;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text-1);
+      font-weight: 450;
+      letter-spacing: -0.01em;
+      min-height: 50px;
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .keepsake-sub {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-3);
+      letter-spacing: 0.02em;
+      transition: opacity 160ms ease;
+    }
+
+    /* Footer: Counter & Tactile cycle button */
+    .keepsake-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .keepsake-counter {
+      font-family: var(--font-mono);
       font-size: 11px;
       color: var(--text-3);
-      font-family: var(--font-mono);
+      letter-spacing: 0.06em;
+      font-variant-numeric: tabular-nums;
     }
 
-    .cc-whisper-sub {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .cc-whisper-next {
-      background: none;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: var(--r-full);
-      padding: 3px 10px;
-      color: var(--accent);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      cursor: pointer;
-      transition: all 180ms ease;
+    .keepsake-action {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--accent);
+      background: rgba(76, 196, 234, 0.06);
+      border: 1px solid rgba(76, 196, 234, 0.2);
+      transition: all 180ms ease;
+      cursor: pointer;
     }
 
-    .cc-whisper-next:hover {
-      border-color: var(--accent);
+    .cc-keepsake-card:hover .keepsake-action {
       background: rgba(76, 196, 234, 0.12);
+      border-color: rgba(76, 196, 234, 0.4);
       color: #fff;
+    }
+
+    .keepsake-action .cycle-glyph {
+      display: inline-block;
+      transition: transform 300ms ease;
+    }
+
+    .cc-keepsake-card:active .keepsake-action .cycle-glyph {
+      transform: rotate(180deg);
+    }
+
+    /* Concentric touch ripple */
+    .keepsake-ripple {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      border: 1px solid rgba(76, 196, 234, 0.6);
+      background: radial-gradient(circle, rgba(76, 196, 234, 0.15) 0%, transparent 70%);
+      transform: translate(-50%, -50%) scale(0);
+      animation: ripple-spread 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes ripple-spread {
+      0% {
+        transform: translate(-50%, -50%) scale(0.1);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(2.8);
+        opacity: 0;
+      }
     }
 
     /* ============ Contact ============ */
@@ -1681,31 +1555,20 @@
 
       .cc {
         grid-template-columns: 1fr;
-        text-align: center;
-        justify-items: center;
         padding: 36px 20px;
-        gap: 28px;
+        gap: 24px;
+      }
+      .cc-intro {
+        align-items: center;
+        text-align: center;
       }
       .cc p { margin-inline: auto; }
-      .cc-interactive-wrap {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+      .cc-card-wrap {
+        justify-content: center;
       }
-      .orbit-stage {
-        width: 180px;
-        height: 180px;
-      }
-      .star {
-        width: 46px;
-        height: 46px;
-        margin-top: -23px;
-        font-size: 13px;
-      }
-      .cc-whisper-card {
-        width: min(310px, calc(100vw - 40px));
-        padding: 16px 18px;
+      .cc-keepsake-card {
+        max-width: 100%;
+        padding: 20px 20px;
       }
     }
 
@@ -2040,73 +1903,47 @@
     <section id="cc" class="section">
       <div class="container">
         <div class="cc reveal">
-          <div class="cc-content">
+          <div class="cc-intro">
             <div class="mono" data-i18n="cc.kicker">03 — A little more personal</div>
             <h2>CC<span class="x">×</span>Linkai</h2>
             <p data-i18n="cc.desc">Our little corner of the internet.</p>
+            <div class="cc-status-pill">
+              <span class="cc-status-dot" aria-hidden="true"></span>
+              <span data-i18n="cc.status">SHARED FREQUENCY</span>
+            </div>
           </div>
 
-          <div class="cc-interactive-wrap">
-            <!-- Stardust fireworks canvas -->
-            <canvas id="ccCanvas" aria-hidden="true"></canvas>
+          <div class="cc-card-wrap">
+            <!-- Tactical Monogram Keepsake Card -->
+            <div class="cc-keepsake-card" id="ccCard" role="region" aria-label="CC and Linkai Commemorative Card. Click to cycle message.">
+              <div class="keepsake-shimmer" aria-hidden="true"></div>
 
-            <!-- Easter egg floating whisper card -->
-            <div id="ccWhisper" class="cc-whisper-card" role="dialog" aria-modal="false" aria-label="CC × Linkai Whisper">
-              <div class="cc-whisper-head">
-                <div class="cc-whisper-title">
-                  <span class="badge-dot" aria-hidden="true"></span>
-                  <span data-i18n="cc.egg.badge">Binary Orbit</span>
+              <div class="keepsake-header">
+                <div class="keepsake-monogram">
+                  <span class="monogram-pill cc-pill">CC</span>
+                  <span class="monogram-knot" aria-hidden="true">✦</span>
+                  <span class="monogram-pill lk-pill">LK</span>
                 </div>
-                <button type="button" class="cc-whisper-close" id="ccWhisperClose" aria-label="Close whisper">✕</button>
+                <span class="keepsake-badge" data-i18n="cc.badge">CO-PILOT</span>
               </div>
-              <blockquote class="cc-whisper-quote" id="ccWhisperText">
-                “在浩瀚的时空坐标系里，你是我唯一确定的引力解。”
-              </blockquote>
-              <div class="cc-whisper-foot">
-                <span id="ccWhisperSub" class="cc-whisper-sub">✦ 相对论引力场方程 · 唯一定解</span>
-                <button type="button" class="cc-whisper-next" id="ccWhisperNext">
-                  <span data-i18n="cc.egg.next">Next ↻</span>
-                </button>
+
+              <div class="keepsake-body">
+                <blockquote class="keepsake-quote" id="keepsakeQuote">
+                  “在浩瀚的时空坐标系里，你是我唯一确定的引力解。”
+                </blockquote>
+                <div class="keepsake-sub" id="keepsakeSub">
+                  ✦ 相对论引力场方程 · 唯一定解
+                </div>
+              </div>
+
+              <div class="keepsake-footer">
+                <span class="keepsake-counter" id="keepsakeCounter">01 / 04</span>
+                <div class="keepsake-action">
+                  <span class="cycle-glyph" aria-hidden="true">↻</span>
+                  <span data-i18n="cc.cycle">Cycle</span>
+                </div>
               </div>
             </div>
-
-            <!-- 3D Interactive Binary Star Orbit Stage -->
-            <div class="orbit-stage" id="orbitStage" role="button" tabindex="0" aria-label="CC and Linkai Binary Star Gravitational Orbit. Click to interact.">
-              <!-- Gravitational wave pulses -->
-              <div class="grav-wave" aria-hidden="true"></div>
-              <div class="grav-wave w2" aria-hidden="true"></div>
-
-              <!-- Static orbital trajectory rings -->
-              <div class="orbit-ring" aria-hidden="true"></div>
-              <div class="orbit-ring inner" aria-hidden="true"></div>
-
-              <!-- Rotating binary gravitational arm -->
-              <div class="orbit-arm" aria-hidden="true">
-                <!-- Gravitational tether -->
-                <div class="orbit-tether"></div>
-
-                <!-- Star CC (Rose Starlight) -->
-                <div class="star star-cc" title="CC">
-                  <div class="star-inner">CC</div>
-                </div>
-
-                <!-- Star LK (Electric Cyan Orbit) -->
-                <div class="star star-lk" title="Linkai">
-                  <div class="star-inner">LK</div>
-                </div>
-              </div>
-
-              <!-- Center gravitational core / heartbeat -->
-              <div class="orbit-core" aria-hidden="true">
-                <span class="orbit-core-glyph">♥</span>
-              </div>
-            </div>
-
-            <!-- Hint button -->
-            <button type="button" class="orbit-hint" id="orbitHintBtn">
-              <span class="orbit-hint-spark" aria-hidden="true">✦</span>
-              <span data-i18n="cc.hint">Click to touch gravity</span>
-            </button>
           </div>
         </div>
       </div>
@@ -2178,9 +2015,9 @@
       "now.3d": "关注具体生活中的细微摩擦，保持纯文本思考",
       "cc.kicker": "03 — 幕后一隅",
       "cc.desc": "浩瀚网络世界里，我们的一方小小自留地。",
-      "cc.hint": "✦ 点击触碰引力",
-      "cc.egg.badge": "双星共轨",
-      "cc.egg.next": "换一句 ↻",
+      "cc.status": "持续同频 · SHARED FREQUENCY",
+      "cc.badge": "生活同行者",
+      "cc.cycle": "换一句",
       "contact.kicker": "04 — 联络",
       "contact.title": "不如一起，<br />做点真正有用的小创造。",
       "contact.desc": "探讨工具设计、学术反思，或只是打个招呼，GitHub 和邮件永远敞开。",
@@ -2218,11 +2055,15 @@
       const currentLang = document.documentElement.lang === "zh-CN" ? "zh" : "en";
       const quotes = CC_QUOTES[currentLang] || CC_QUOTES.en;
       const q = quotes[currentQuoteIdx % quotes.length];
-      const textEl = document.getElementById("ccWhisperText");
-      const subEl = document.getElementById("ccWhisperSub");
-      if (textEl && subEl) {
-        textEl.textContent = q.text;
+      const quoteEl = document.getElementById("keepsakeQuote");
+      const subEl = document.getElementById("keepsakeSub");
+      const counterEl = document.getElementById("keepsakeCounter");
+      if (quoteEl && subEl) {
+        quoteEl.textContent = q.text;
         subEl.textContent = q.sub;
+      }
+      if (counterEl) {
+        counterEl.textContent = `0${(currentQuoteIdx % quotes.length) + 1} / 0${quotes.length}`;
       }
     }
 
@@ -2294,205 +2135,84 @@
       });
     });
 
-    // ============ CC Section: Binary Orbit & Stardust Fireworks ============
-    const ccCanvas = document.getElementById("ccCanvas");
-    let ccCtx = null;
-    let ccParticles = [];
-    let ccAnimId = null;
+    // ============ CC Section: Tactical Monogram Keepsake Card Interaction ============
+    const ccCard = document.getElementById("ccCard");
+    const keepsakeQuote = document.getElementById("keepsakeQuote");
+    const keepsakeSub = document.getElementById("keepsakeSub");
 
-    function resizeCcCanvas() {
-      if (!ccCanvas) return;
-      const rect = ccCanvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      ccCanvas.width = rect.width * dpr;
-      ccCanvas.height = rect.height * dpr;
-      ccCtx = ccCanvas.getContext("2d");
-    }
+    function cycleKeepsakeQuote(originX, originY) {
+      if (!ccCard) return;
 
-    window.addEventListener("resize", resizeCcCanvas, { passive: true });
-    resizeCcCanvas();
-
-    const SPARKLE_COLORS = [
-      "#f472b6", // Rose starlight
-      "#4cc4ea", // Electric cyan
-      "#fbbf24", // Celestial gold
-      "#ffffff", // Shimmer white
-      "#c084fc", // Nebula violet
-      "#38bdf8"  // Orbit cyan
-    ];
-
-    function spawnStardust(originX, originY) {
-      if (!ccCanvas) return;
-      if (!ccCtx || ccCanvas.width === 0) resizeCcCanvas();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const rect = ccCanvas.getBoundingClientRect();
-
-      let startX = originX !== undefined ? (originX - rect.left) * dpr : (ccCanvas.width / 2);
-      let startY = originY !== undefined ? (originY - rect.top) * dpr : (ccCanvas.height / 2);
-
-      const count = 48;
-      for (let i = 0; i < count; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = (Math.random() * 5.4 + 1.2) * dpr;
-        const color = SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)];
-        ccParticles.push({
-          x: startX,
-          y: startY,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          size: (Math.random() * 2.8 + 1.2) * dpr,
-          color: color,
-          alpha: 1,
-          decay: Math.random() * 0.018 + 0.012,
-          gravity: 0.065 * dpr,
-          drag: 0.965,
-          isStar: Math.random() < 0.38
-        });
+      // Create tactile ripple
+      if (originX !== undefined && originY !== undefined) {
+        const rect = ccCard.getBoundingClientRect();
+        const rx = originX - rect.left;
+        const ry = originY - rect.top;
+        const ripple = document.createElement("span");
+        ripple.className = "keepsake-ripple";
+        ripple.style.left = `${rx}px`;
+        ripple.style.top = `${ry}px`;
+        ccCard.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 700);
       }
 
-      if (!ccAnimId) {
-        animateStardust();
-      }
-    }
+      // Smooth quote transition
+      if (keepsakeQuote && keepsakeSub) {
+        keepsakeQuote.style.opacity = "0";
+        keepsakeQuote.style.transform = "translateY(3px)";
+        keepsakeSub.style.opacity = "0";
+        keepsakeSub.style.transform = "translateY(3px)";
 
-    function animateStardust() {
-      if (!ccCtx || !ccCanvas) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-      ccCtx.clearRect(0, 0, ccCanvas.width, ccCanvas.height);
-
-      for (let i = ccParticles.length - 1; i >= 0; i--) {
-        const p = ccParticles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += p.gravity;
-        p.vx *= p.drag;
-        p.vy *= p.drag;
-        p.alpha -= p.decay;
-
-        if (p.alpha <= 0) {
-          ccParticles.splice(i, 1);
-          continue;
-        }
-
-        ccCtx.save();
-        ccCtx.globalAlpha = Math.max(0, p.alpha);
-        ccCtx.fillStyle = p.color;
-        ccCtx.shadowBlur = 6 * dpr;
-        ccCtx.shadowColor = p.color;
-
-        if (p.isStar) {
-          const s = p.size * 1.5;
-          ccCtx.beginPath();
-          ccCtx.moveTo(p.x, p.y - s);
-          ccCtx.quadraticCurveTo(p.x, p.y, p.x + s, p.y);
-          ccCtx.quadraticCurveTo(p.x, p.y, p.x, p.y + s);
-          ccCtx.quadraticCurveTo(p.x, p.y, p.x - s, p.y);
-          ccCtx.quadraticCurveTo(p.x, p.y, p.x, p.y - s);
-          ccCtx.closePath();
-          ccCtx.fill();
-        } else {
-          ccCtx.beginPath();
-          ccCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ccCtx.fill();
-        }
-        ccCtx.restore();
-      }
-
-      if (ccParticles.length > 0) {
-        ccAnimId = requestAnimationFrame(animateStardust);
-      } else {
-        ccCtx.clearRect(0, 0, ccCanvas.width, ccCanvas.height);
-        ccAnimId = null;
-      }
-    }
-
-    // 3D Magnetic Gravitational Tilt on Orbit
-    const orbitStage = document.getElementById("orbitStage");
-    const ccWhisper = document.getElementById("ccWhisper");
-    const ccWhisperClose = document.getElementById("ccWhisperClose");
-    const ccWhisperNext = document.getElementById("ccWhisperNext");
-    const orbitHintBtn = document.getElementById("orbitHintBtn");
-
-    if (orbitStage) {
-      orbitStage.addEventListener("pointermove", (e) => {
-        const rect = orbitStage.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dx = (e.clientX - cx) / (rect.width / 2);
-        const dy = (e.clientY - cy) / (rect.height / 2);
-        orbitStage.style.transform = `perspective(600px) rotateX(${-dy * 10}deg) rotateY(${dx * 10}deg) scale3d(1.04, 1.04, 1.04)`;
-      });
-
-      orbitStage.addEventListener("pointerleave", () => {
-        orbitStage.style.transform = "";
-      });
-    }
-
-    function triggerOrbitInteraction(e) {
-      if (e && e.clientX !== undefined) {
-        spawnStardust(e.clientX, e.clientY);
-      } else if (orbitStage) {
-        const r = orbitStage.getBoundingClientRect();
-        spawnStardust(r.left + r.width / 2, r.top + r.height / 2);
-      }
-
-      if (ccWhisper) {
-        if (!ccWhisper.classList.contains("open")) {
-          updateWhisperQuote();
-          ccWhisper.classList.add("open");
-        } else {
+        setTimeout(() => {
           currentQuoteIdx++;
           updateWhisperQuote();
-        }
-      }
-    }
-
-    if (orbitStage) {
-      orbitStage.addEventListener("click", triggerOrbitInteraction);
-      orbitStage.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          triggerOrbitInteraction();
-        }
-      });
-    }
-
-    if (orbitHintBtn) {
-      orbitHintBtn.addEventListener("click", triggerOrbitInteraction);
-    }
-
-    if (ccWhisperNext) {
-      ccWhisperNext.addEventListener("click", (e) => {
-        e.stopPropagation();
+          keepsakeQuote.style.opacity = "1";
+          keepsakeQuote.style.transform = "translateY(0)";
+          keepsakeSub.style.opacity = "1";
+          keepsakeSub.style.transform = "translateY(0)";
+        }, 140);
+      } else {
         currentQuoteIdx++;
         updateWhisperQuote();
-        const r = ccWhisperNext.getBoundingClientRect();
-        spawnStardust(r.left + r.width / 2, r.top + r.height / 2);
-      });
+      }
     }
 
-    if (ccWhisperClose) {
-      ccWhisperClose.addEventListener("click", (e) => {
-        e.stopPropagation();
-        if (ccWhisper) ccWhisper.classList.remove("open");
-      });
-    }
+    if (ccCard) {
+      // 3D tactile micro-tilt + cursor spotlight tracking
+      ccCard.addEventListener("pointermove", (e) => {
+        const rect = ccCard.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        ccCard.style.setProperty("--mx", `${x}px`);
+        ccCard.style.setProperty("--my", `${y}px`);
 
-    document.addEventListener("pointerdown", (e) => {
-      if (ccWhisper && ccWhisper.classList.contains("open")) {
-        const wrap = document.querySelector(".cc-interactive-wrap");
-        if (wrap && !wrap.contains(e.target)) {
-          ccWhisper.classList.remove("open");
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const dx = (x - cx) / cx;
+        const dy = (y - cy) / cy;
+        // Subtle tilt: max 5 deg
+        ccCard.style.transform = `perspective(700px) rotateX(${(-dy * 5).toFixed(2)}deg) rotateY(${(dx * 5).toFixed(2)}deg) translateY(-2px)`;
+      });
+
+      ccCard.addEventListener("pointerleave", () => {
+        ccCard.style.transform = "";
+      });
+
+      // Click to cycle quote with ripple
+      ccCard.addEventListener("click", (e) => {
+        cycleKeepsakeQuote(e.clientX, e.clientY);
+      });
+
+      // Keyboard accessibility
+      ccCard.setAttribute("tabindex", "0");
+      ccCard.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          const r = ccCard.getBoundingClientRect();
+          cycleKeepsakeQuote(r.left + r.width / 2, r.top + r.height / 2);
         }
-      }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && ccWhisper && ccWhisper.classList.contains("open")) {
-        ccWhisper.classList.remove("open");
-      }
-    });
+      });
+    }
 
     // Initial quote sync
     updateWhisperQuote();
