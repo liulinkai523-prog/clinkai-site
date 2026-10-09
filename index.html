@@ -1180,7 +1180,7 @@
       border: 1px solid var(--line);
       background:
         radial-gradient(550px 300px at 85% 115%, rgba(76, 196, 234, 0.12), transparent 70%),
-        radial-gradient(400px 240px at 15% -10%, rgba(244, 114, 182, 0.08), transparent 70%),
+        radial-gradient(400px 240px at 15% -10%, rgba(226, 180, 89, 0.08), transparent 70%),
         var(--surface);
       box-shadow: var(--inner-hi), var(--shadow-card);
       padding: clamp(32px, 5vw, 56px);
@@ -1206,7 +1206,7 @@
 
     .cc h2 .x-trigger,
     .cc h2 .x {
-      background: linear-gradient(135deg, #f472b6, #4cc4ea);
+      background: linear-gradient(135deg, #e2b459 0%, #f5cf7a 50%, #4cc4ea 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-family: inherit;
@@ -1230,10 +1230,10 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       transform: translate(-50%, -50%) scale(0);
-      background: radial-gradient(circle, rgba(244, 114, 182, 0.4) 0%, rgba(76, 196, 234, 0.25) 50%, transparent 70%);
+      background: radial-gradient(circle, rgba(226, 180, 89, 0.4) 0%, rgba(76, 196, 234, 0.25) 50%, transparent 70%);
       border-radius: 50%;
       pointer-events: none;
       transition: transform 340ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 340ms ease;
@@ -1243,7 +1243,7 @@
 
     .cc h2 .x-trigger:hover {
       transform: scale(1.28) rotate(45deg);
-      filter: drop-shadow(0 0 12px rgba(244, 114, 182, 0.9)) drop-shadow(0 0 24px rgba(76, 196, 234, 0.7));
+      filter: drop-shadow(0 0 14px rgba(226, 180, 89, 0.9)) drop-shadow(0 0 28px rgba(76, 196, 234, 0.7));
     }
 
     .cc h2 .x-trigger:hover::before {
@@ -1255,7 +1255,7 @@
       transform: scale(0.92) rotate(90deg);
     }
 
-    /* ============ Pandora's Box Gateway Modal ============ */
+    /* ============ Pandora's Box Gateway Modal (Cosmic Relic Vault) ============ */
     .pandora-modal-overlay {
       position: fixed;
       inset: 0;
@@ -1265,7 +1265,7 @@
       padding: 20px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 300ms ease;
+      transition: opacity 320ms ease;
     }
 
     .pandora-modal-overlay.open {
@@ -1276,7 +1276,7 @@
     .pandora-backdrop {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 40%, rgba(26, 16, 38, 0.9) 0%, rgba(8, 9, 11, 0.96) 70%, #050608 100%);
+      background: radial-gradient(circle at 50% 38%, rgba(15, 23, 38, 0.9) 0%, rgba(7, 9, 13, 0.96) 65%, #030406 100%);
       backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
     }
@@ -1287,17 +1287,17 @@
       width: 100%;
       max-width: 440px;
       border-radius: var(--r-xl);
-      background: linear-gradient(165deg, rgba(28, 20, 38, 0.95) 0%, rgba(13, 15, 20, 0.97) 60%, rgba(8, 9, 11, 0.99) 100%);
-      border: 1px solid rgba(244, 114, 182, 0.28);
+      background: linear-gradient(170deg, rgba(17, 24, 36, 0.96) 0%, rgba(10, 13, 19, 0.98) 55%, rgba(6, 8, 11, 0.99) 100%);
+      border: 1px solid rgba(226, 180, 89, 0.28);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.16),
-        inset 0 0 32px rgba(244, 114, 182, 0.08),
-        0 24px 64px -16px rgba(0, 0, 0, 0.9),
-        0 0 50px -10px rgba(168, 85, 247, 0.3);
-      padding: 36px 30px 32px;
+        inset 0 0 36px rgba(76, 196, 234, 0.06),
+        0 24px 64px -16px rgba(0, 0, 0, 0.95),
+        0 0 50px -10px rgba(226, 180, 89, 0.22);
+      padding: 34px 28px 30px;
       text-align: center;
       transform: scale(0.92) translateY(14px);
-      transition: transform 360ms var(--ease-snap), opacity 300ms ease;
+      transition: transform 380ms var(--ease-snap), opacity 300ms ease;
       overflow: hidden;
     }
 
@@ -1320,6 +1320,7 @@
       cursor: pointer;
       font-size: 13px;
       transition: all 180ms ease;
+      z-index: 5;
     }
 
     .pandora-close:hover {
@@ -1328,102 +1329,89 @@
       transform: scale(1.08);
     }
 
-    /* Pandora Box 3D Vault Illustration */
-    .pandora-box-wrap {
+    /* 3D Celestial Pandora Box Relic Display */
+    .pandora-relic-stage {
       position: relative;
-      width: 120px;
-      height: 105px;
-      margin: 0 auto 20px;
+      width: 136px;
+      height: 136px;
+      margin: 0 auto 16px;
       display: grid;
       place-items: center;
-      perspective: 800px;
     }
 
-    .pandora-chest {
-      position: relative;
-      width: 88px;
-      height: 76px;
-      transform-style: preserve-3d;
-      transition: transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .chest-lid {
+    .pandora-astrolabe-ring {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 30px;
-      background: linear-gradient(135deg, #2d1d3d 0%, #1c182c 100%);
-      border: 1.5px solid rgba(244, 114, 182, 0.55);
-      border-radius: 8px 8px 4px 4px;
-      box-shadow: 0 4px 16px rgba(244, 114, 182, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      transform-origin: top center;
-      transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 900ms ease;
-      display: grid;
-      place-items: center;
-      z-index: 2;
-    }
-
-    .lid-gem {
-      width: 12px;
-      height: 12px;
-      background: linear-gradient(135deg, #f472b6, #4cc4ea);
-      transform: rotate(45deg);
-      border-radius: 2px;
-      box-shadow: 0 0 12px #f472b6;
-      animation: gem-pulse 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes gem-pulse {
-      0% { box-shadow: 0 0 6px #f472b6; transform: rotate(45deg) scale(0.9); }
-      100% { box-shadow: 0 0 16px #4cc4ea, 0 0 24px #f472b6; transform: rotate(45deg) scale(1.15); }
-    }
-
-    .chest-body {
-      position: absolute;
-      bottom: 0;
-      left: 4px;
-      right: 4px;
-      height: 50px;
-      background: linear-gradient(180deg, #191626 0%, #0d0e14 100%);
-      border: 1.5px solid rgba(76, 196, 234, 0.45);
-      border-radius: 4px 4px 10px 10px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      display: grid;
-      place-items: center;
-    }
-
-    .chest-core-lock {
-      width: 32px;
-      height: 32px;
+      inset: -4px;
       border-radius: 50%;
-      background: rgba(244, 114, 182, 0.12);
-      border: 1px solid rgba(244, 114, 182, 0.4);
-      display: grid;
-      place-items: center;
-      color: #f472b6;
-      box-shadow: 0 0 14px rgba(244, 114, 182, 0.3);
-      transition: transform 600ms ease, border-color 600ms ease, color 600ms ease;
-    }
-
-    /* Light pillar beam bursting when unlocked */
-    .pandora-light-pillar {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      width: 50px;
-      height: 0;
-      transform: translateX(-50%);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(76, 196, 234, 0.75) 40%, rgba(244, 114, 182, 0.55) 80%, transparent 100%);
-      border-radius: 50px 50px 0 0;
-      filter: blur(6px);
-      opacity: 0;
+      border: 1px dashed rgba(226, 180, 89, 0.35);
+      animation: pandora-astrolabe-spin 48s linear infinite;
       pointer-events: none;
-      transition: height 750ms cubic-bezier(0.16, 1, 0.3, 1), opacity 400ms ease;
-      z-index: 1;
     }
 
-    /* Shockwave ring */
+    .pandora-astrolabe-inner {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: 1px solid rgba(76, 196, 234, 0.25);
+      pointer-events: none;
+    }
+
+    .pandora-relic-halo {
+      position: absolute;
+      inset: 16px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(226, 180, 89, 0.22) 0%, rgba(76, 196, 234, 0.14) 50%, transparent 70%);
+      filter: blur(12px);
+      pointer-events: none;
+      animation: pandora-halo-breathe 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes pandora-astrolabe-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pandora-halo-breathe {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      100% { transform: scale(1.2); opacity: 1; }
+    }
+
+    .pandora-box-images {
+      position: relative;
+      width: 104px;
+      height: 104px;
+      z-index: 2;
+      animation: pandora-relic-float 4.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pandora-relic-float {
+      0% { transform: translateY(0px) rotate(-1deg); }
+      100% { transform: translateY(-6px) rotate(1.5deg); }
+    }
+
+    .pandora-box-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 20px;
+      transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1), filter 700ms ease;
+      filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 16px rgba(226, 180, 89, 0.3));
+    }
+
+    .pandora-box-img.box-closed {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .pandora-box-img.box-opened {
+      opacity: 0;
+      transform: scale(0.92);
+      filter: drop-shadow(0 0 28px rgba(226, 180, 89, 0.9)) drop-shadow(0 0 45px rgba(76, 196, 234, 0.8));
+    }
+
+    /* Shockwave ring & light beam when unlocking */
     .pandora-burst-ring {
       position: absolute;
       top: 50%;
@@ -1431,29 +1419,50 @@
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      border: 2px solid rgba(244, 114, 182, 0.85);
+      border: 2px solid rgba(226, 180, 89, 0.85);
       transform: translate(-50%, -50%) scale(0);
       opacity: 0;
       pointer-events: none;
+      z-index: 3;
+    }
+
+    .pandora-light-pillar {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      width: 60px;
+      height: 0;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(226, 180, 89, 0.85) 35%, rgba(76, 196, 234, 0.6) 75%, transparent 100%);
+      border-radius: 50px 50px 0 0;
+      filter: blur(8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: height 750ms cubic-bezier(0.16, 1, 0.3, 1), opacity 400ms ease;
+      z-index: 1;
     }
 
     /* Unlocking state animation (The Pandora Box Opening Climax) */
-    .pandora-dialog.unlocking .chest-lid {
-      transform: rotateX(-125deg);
-      box-shadow: 0 -10px 45px rgba(244, 114, 182, 0.7);
+    .pandora-dialog.unlocking .pandora-box-img.box-closed {
+      opacity: 0;
+      transform: scale(1.12);
+      filter: blur(6px);
     }
 
-    .pandora-dialog.unlocking .chest-core-lock {
-      transform: scale(1.25) rotate(360deg);
-      border-color: #4cc4ea;
-      color: #4cc4ea;
-      box-shadow: 0 0 28px #4cc4ea;
+    .pandora-dialog.unlocking .pandora-box-img.box-opened {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+
+    .pandora-dialog.unlocking .pandora-astrolabe-ring {
+      border-color: rgba(76, 196, 234, 0.8);
+      animation: pandora-astrolabe-spin 2s linear infinite;
     }
 
     .pandora-dialog.unlocking .pandora-light-pillar {
       height: 480px;
       opacity: 1;
-      filter: blur(3px);
+      filter: blur(4px);
     }
 
     .pandora-dialog.unlocking .pandora-burst-ring {
@@ -1462,7 +1471,7 @@
 
     @keyframes pandora-shockwave {
       0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(3.5); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(3.8); opacity: 0; }
     }
 
     /* Dialog Shake on error */
@@ -1482,15 +1491,15 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 3px 10px;
+      padding: 3px 12px;
       border-radius: var(--r-pill);
       font-family: var(--font-mono);
-      font-size: 10.5px;
+      font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: #f472b6;
-      background: rgba(244, 114, 182, 0.1);
-      border: 1px solid rgba(244, 114, 182, 0.25);
+      color: #e2b459;
+      background: rgba(226, 180, 89, 0.1);
+      border: 1px solid rgba(226, 180, 89, 0.3);
       margin-bottom: 12px;
     }
 
@@ -1498,8 +1507,8 @@
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      background: #f472b6;
-      box-shadow: 0 0 8px #f472b6;
+      background: #e2b459;
+      box-shadow: 0 0 8px #e2b459;
     }
 
     .pandora-meta h3 {
@@ -1507,7 +1516,7 @@
       font-weight: 600;
       letter-spacing: -0.02em;
       margin: 0 0 6px;
-      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+      background: linear-gradient(160deg, #ffffff 0%, #f6e5be 45%, #e2b459 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -1515,7 +1524,7 @@
     .pandora-meta p {
       font-size: 13.5px;
       color: var(--text-2);
-      margin: 0 0 24px;
+      margin: 0 0 22px;
       line-height: 1.5;
     }
 
@@ -1560,24 +1569,24 @@
     }
 
     .pin-slot.active {
-      border-color: #f472b6;
-      box-shadow: 0 0 12px rgba(244, 114, 182, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      background: rgba(244, 114, 182, 0.06);
+      border-color: #e2b459;
+      box-shadow: 0 0 14px rgba(226, 180, 89, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      background: rgba(226, 180, 89, 0.06);
     }
 
     .pin-slot.filled {
-      border-color: rgba(76, 196, 234, 0.6);
+      border-color: rgba(76, 196, 234, 0.75);
       background: rgba(76, 196, 234, 0.08);
-      box-shadow: 0 0 14px rgba(76, 196, 234, 0.3);
+      box-shadow: 0 0 14px rgba(76, 196, 234, 0.35);
     }
 
     .pin-slot.filled::before {
       content: '';
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #f472b6, #4cc4ea);
-      box-shadow: 0 0 8px #4cc4ea;
+      background: linear-gradient(135deg, #e2b459, #4cc4ea);
+      box-shadow: 0 0 10px #e2b459;
     }
 
     .pin-slot.error {
@@ -1600,7 +1609,8 @@
     }
 
     .pandora-status.success {
-      color: #4cc4ea;
+      color: #e2b459;
+      text-shadow: 0 0 12px rgba(226, 180, 89, 0.5);
     }
 
     .pandora-actions {
@@ -1613,13 +1623,13 @@
       max-width: 280px;
       padding: 12px 20px;
       border-radius: var(--r-pill);
-      background: linear-gradient(135deg, rgba(244, 114, 182, 0.9) 0%, rgba(76, 196, 234, 0.9) 100%);
-      color: #05070a;
+      background: linear-gradient(135deg, #e2b459 0%, #f5cf7a 50%, #4cc4ea 100%);
+      color: #06080b;
       font-weight: 600;
       font-size: 14px;
       border: none;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(244, 114, 182, 0.3);
+      box-shadow: 0 4px 20px rgba(226, 180, 89, 0.35);
       transition: all 220ms ease;
       display: inline-flex;
       align-items: center;
@@ -1629,8 +1639,8 @@
 
     .pandora-submit-btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 8px 28px rgba(76, 196, 234, 0.45);
-      filter: brightness(1.08);
+      box-shadow: 0 8px 28px rgba(226, 180, 89, 0.55), 0 0 20px rgba(76, 196, 234, 0.35);
+      filter: brightness(1.06);
     }
 
     .pandora-submit-btn:active {
@@ -1757,9 +1767,9 @@
     }
 
     .monogram-pill.cc-pill {
-      color: #f472b6;
-      border-color: rgba(244, 114, 182, 0.3);
-      background: rgba(244, 114, 182, 0.08);
+      color: #e2b459;
+      border-color: rgba(226, 180, 89, 0.35);
+      background: rgba(226, 180, 89, 0.08);
     }
 
     .monogram-pill.lk-pill {
@@ -1777,7 +1787,7 @@
 
     @keyframes pulse-knot {
       0%, 100% { opacity: 0.4; transform: scale(0.95); }
-      50% { opacity: 0.9; transform: scale(1.1); filter: drop-shadow(0 0 4px rgba(244, 114, 182, 0.6)); }
+      50% { opacity: 0.9; transform: scale(1.1); filter: drop-shadow(0 0 4px rgba(226, 180, 89, 0.6)); }
     }
 
     .keepsake-badge {
@@ -2392,36 +2402,29 @@
     <div class="pandora-backdrop" id="pandoraBackdrop"></div>
 
     <div class="pandora-dialog" id="pandoraDialog">
-      <button class="pandora-close" id="pandoraClose" type="button" aria-label="关闭秘境">✕</button>
+      <button class="pandora-close" id="pandoraClose" type="button" aria-label="关闭密匣">✕</button>
 
-      <!-- The Pandora's Box 3D Vault Graphic -->
-      <div class="pandora-box-wrap" id="pandoraBoxWrap">
+      <!-- 3D Celestial Pandora Box Relic Stage -->
+      <div class="pandora-relic-stage" id="pandoraRelicStage">
+        <div class="pandora-astrolabe-ring" aria-hidden="true"></div>
+        <div class="pandora-astrolabe-inner" aria-hidden="true"></div>
+        <div class="pandora-relic-halo" aria-hidden="true"></div>
         <div class="pandora-light-pillar" id="pandoraLightPillar" aria-hidden="true"></div>
         <div class="pandora-burst-ring" id="pandoraBurstRing" aria-hidden="true"></div>
 
-        <div class="pandora-chest" id="pandoraChest">
-          <div class="chest-lid" id="chestLid">
-            <div class="lid-gem"></div>
-          </div>
-          <div class="chest-body">
-            <div class="chest-core-lock" id="chestLock">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                <circle cx="12" cy="16" r="1.5" fill="currentColor"></circle>
-              </svg>
-            </div>
-          </div>
+        <div class="pandora-box-images">
+          <img src="./assets/pandora/box-closed.webp" alt="Pandora Vault Closed" class="pandora-box-img box-closed" id="boxClosedImg" />
+          <img src="./assets/pandora/box-opened.webp" alt="Pandora Vault Opened" class="pandora-box-img box-opened" id="boxOpenedImg" />
         </div>
       </div>
 
       <div class="pandora-meta">
         <div class="pandora-badge">
           <span class="pandora-badge-dot"></span>
-          <span>PANDORA GATEWAY · 潘多拉之匣</span>
+          <span>CHRONO RELIC · 潘多拉星穹之匣</span>
         </div>
-        <h3 id="pandoraTitle">开启私密空间</h3>
-        <p id="pandoraDesc">输入同频密钥，开启属于 CC 与 Linkai 的秘境</p>
+        <h3 id="pandoraTitle">时空密匣 · 潘多拉之钥</h3>
+        <p id="pandoraDesc">输入 6 位同频星律密钥，唤醒沉睡的星穹密藏</p>
       </div>
 
       <!-- 6-digit PIN Slot Input -->
@@ -2437,11 +2440,11 @@
         </div>
       </div>
 
-      <div class="pandora-status" id="pandoraStatus">输入 6 位密钥解锁</div>
+      <div class="pandora-status" id="pandoraStatus">输入 6 位同频密钥解锁</div>
 
       <div class="pandora-actions">
         <button type="button" class="pandora-submit-btn" id="pandoraSubmit">
-          <span>解构并开启</span>
+          <span>唤醒密匣</span>
           <span aria-hidden="true">✦</span>
         </button>
       </div>
@@ -3544,7 +3547,7 @@
       });
       if (pandoraStatus) {
         pandoraStatus.className = "pandora-status";
-        pandoraStatus.textContent = val.length === 6 ? "按回车或点击按钮开启" : "输入 6 位密钥解锁";
+        pandoraStatus.textContent = val.length === 6 ? "按回车或点击按钮唤醒" : "输入 6 位同频密钥解锁";
       }
     }
 
@@ -3557,14 +3560,14 @@
         pandoraDialog.classList.add("unlocking");
         if (pandoraStatus) {
           pandoraStatus.className = "pandora-status success";
-          pandoraStatus.textContent = "✦ 密钥对齐 · 潘多拉宝盒正在开启...";
+          pandoraStatus.textContent = "✦ 密匣共振对齐 · 星穹之扉正在洞开...";
         }
         sessionStorage.setItem("pandora_unlocked", PANDORA_CODE);
         try { localStorage.setItem("pandora_unlocked", PANDORA_CODE); } catch(e){}
 
         setTimeout(() => {
           window.location.href = "./pandora/";
-        }, 1100);
+        }, 1200);
       } else {
         pandoraDialog.classList.remove("shake");
         void pandoraDialog.offsetWidth;
@@ -3572,7 +3575,7 @@
         pandoraSlots.forEach((s) => s.classList.add("error"));
         if (pandoraStatus) {
           pandoraStatus.className = "pandora-status error";
-          pandoraStatus.textContent = "⚠ 密钥未对齐 · 频率未能共振";
+          pandoraStatus.textContent = "⚠ 密钥未对齐 · 星律未能共振";
         }
         setTimeout(() => {
           if (pandoraInput) {

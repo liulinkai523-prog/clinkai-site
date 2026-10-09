@@ -9,14 +9,14 @@
   <meta name="robots" content="noindex, nofollow" />
 
   <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b0f14' stroke='rgba(244,114,182,0.45)' stroke-width='2'/%3E%3Cpath d='M18 16v32h32' stroke='%23f472b6' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M31 35L47 19' stroke='%234cc4ea' stroke-width='5.5' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='47' cy='19' r='5' fill='%234cc4ea'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b0f14' stroke='rgba(226,180,89,0.5)' stroke-width='2'/%3E%3Cpath d='M18 16v32h32' stroke='%23e2b459' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M31 35L47 19' stroke='%234cc4ea' stroke-width='5.5' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='47' cy='19' r='5' fill='%234cc4ea'/%3E%3C/svg%3E" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
-    /* ============ Tokens (Obsidian, Rose & Electric Cyan) ============ */
+    /* ============ Tokens (Obsidian, Celestial Gold & Starlight Cyan) ============ */
     :root {
       color-scheme: dark;
       --bg: #08090b;
@@ -33,9 +33,11 @@
       --text-3: #75818d;
 
       --accent: #4cc4ea;
-      --rose: #f472b6;
-      --gold: #fbbf24;
-      --purple: #c084fc;
+      --gold: #e2b459;
+      --gold-light: #f5cf7a;
+      --rose: #e2b459; /* refined celestial gold */
+      --amber: #f59e0b;
+      --emerald: #10b981;
 
       --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: "Geist Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -78,9 +80,9 @@
       pointer-events: none;
       z-index: 0;
       background:
-        radial-gradient(700px 450px at 20% 15%, rgba(244, 114, 182, 0.08), transparent 70%),
+        radial-gradient(700px 450px at 20% 15%, rgba(226, 180, 89, 0.08), transparent 70%),
         radial-gradient(800px 500px at 80% 85%, rgba(76, 196, 234, 0.08), transparent 70%),
-        radial-gradient(600px 400px at 50% 50%, rgba(192, 132, 252, 0.04), transparent 70%);
+        radial-gradient(600px 400px at 50% 50%, rgba(245, 207, 122, 0.04), transparent 70%);
     }
 
     .container {
@@ -125,9 +127,9 @@
     .pill-cc {
       padding: 3px 8px;
       border-radius: var(--r-sm);
-      background: rgba(244, 114, 182, 0.12);
-      border: 1px solid rgba(244, 114, 182, 0.35);
-      color: var(--rose);
+      background: rgba(226, 180, 89, 0.12);
+      border: 1px solid rgba(226, 180, 89, 0.35);
+      color: var(--gold);
       font-weight: 600;
       font-size: 12px;
     }
@@ -162,8 +164,8 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: var(--rose);
-      box-shadow: 0 0 8px var(--rose);
+      background: var(--gold);
+      box-shadow: 0 0 8px var(--gold);
       animation: pulse-dot 2.2s infinite;
     }
 
@@ -218,9 +220,9 @@
     }
 
     .btn-audio.playing {
-      background: rgba(244, 114, 182, 0.12);
-      border-color: rgba(244, 114, 182, 0.4);
-      color: var(--rose);
+      background: rgba(226, 180, 89, 0.12);
+      border-color: rgba(226, 180, 89, 0.4);
+      color: var(--gold);
     }
 
     /* ============ Hero Section ============ */
@@ -230,74 +232,62 @@
     }
 
     .hero-chest-wrap {
-      width: 140px;
-      height: 120px;
-      margin: 0 auto 24px;
+      width: 160px;
+      height: 150px;
+      margin: 0 auto 20px;
       position: relative;
-      perspective: 900px;
-    }
-
-    .hero-chest {
-      width: 100px;
-      height: 84px;
-      margin: 0 auto;
-      position: relative;
-      transform-style: preserve-3d;
-    }
-
-    .hero-lid {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 32px;
-      background: linear-gradient(135deg, #351a44 0%, #1f1a30 100%);
-      border: 1.5px solid rgba(244, 114, 182, 0.65);
-      border-radius: 8px 8px 4px 4px;
-      box-shadow: 0 4px 20px rgba(244, 114, 182, 0.35);
-      transform-origin: top center;
-      transform: rotateX(-110deg);
       display: grid;
       place-items: center;
-      transition: transform 900ms ease;
     }
 
-    .hero-lid-gem {
-      width: 14px;
-      height: 14px;
-      background: linear-gradient(135deg, #f472b6, #4cc4ea);
-      transform: rotate(45deg);
-      border-radius: 3px;
-      box-shadow: 0 0 16px #f472b6;
-    }
-
-    .hero-chest-body {
+    .hero-astrolabe-ring {
       position: absolute;
-      bottom: 0;
-      left: 4px;
-      right: 4px;
-      height: 54px;
-      background: linear-gradient(180deg, #221832 0%, #0e1017 100%);
-      border: 1.5px solid rgba(76, 196, 234, 0.5);
-      border-radius: 4px 4px 12px 12px;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 28px rgba(244, 114, 182, 0.18);
-      display: grid;
-      place-items: center;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px dashed rgba(226, 180, 89, 0.35);
+      animation: pandora-astrolabe-spin 48s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pandora-astrolabe-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .hero-relic-art {
+      position: relative;
+      width: 124px;
+      height: 124px;
+      z-index: 2;
+      animation: hero-relic-float 4.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes hero-relic-float {
+      0% { transform: translateY(0px) rotate(-1deg); }
+      100% { transform: translateY(-7px) rotate(1.5deg); }
+    }
+
+    .hero-relic-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 24px rgba(226, 180, 89, 0.75)) drop-shadow(0 0 45px rgba(76, 196, 234, 0.55));
     }
 
     .hero-beam {
       position: absolute;
-      bottom: 30px;
+      bottom: 24px;
       left: 50%;
-      width: 70px;
-      height: 220px;
+      width: 76px;
+      height: 230px;
       transform: translateX(-50%);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(76, 196, 234, 0.45) 45%, rgba(244, 114, 182, 0.3) 80%, transparent 100%);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(226, 180, 89, 0.5) 40%, rgba(76, 196, 234, 0.3) 75%, transparent 100%);
       border-radius: 50px 50px 0 0;
-      filter: blur(10px);
+      filter: blur(12px);
       opacity: 0.85;
       pointer-events: none;
       animation: beam-breathe 3.5s ease-in-out infinite alternate;
+      z-index: 1;
     }
 
     @keyframes beam-breathe {
@@ -315,9 +305,9 @@
       font-size: 11.5px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: #f472b6;
-      background: rgba(244, 114, 182, 0.08);
-      border: 1px solid rgba(244, 114, 182, 0.25);
+      color: #e2b459;
+      background: rgba(226, 180, 89, 0.08);
+      border: 1px solid rgba(226, 180, 89, 0.28);
       margin-bottom: 16px;
     }
 
@@ -333,7 +323,7 @@
     }
 
     .hero-title .x-gradient {
-      background: linear-gradient(135deg, #f472b6, #4cc4ea);
+      background: linear-gradient(135deg, #e2b459, #4cc4ea);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       padding: 0 0.1em;
@@ -354,7 +344,7 @@
       padding: 28px 32px;
       border-radius: var(--r-xl);
       background: linear-gradient(165deg, rgba(22, 18, 30, 0.8) 0%, rgba(13, 16, 21, 0.9) 100%);
-      border: 1px solid rgba(244, 114, 182, 0.2);
+      border: 1px solid rgba(226, 180, 89, 0.22);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.12),
         0 20px 48px -12px rgba(0, 0, 0, 0.7);
@@ -407,7 +397,7 @@
 
     .chrono-sub {
       font-size: 13px;
-      color: var(--rose);
+      color: var(--gold);
       font-family: var(--font-mono);
       display: flex;
       align-items: center;
@@ -454,9 +444,9 @@
     }
 
     .memory-card:hover {
-      border-color: rgba(244, 114, 182, 0.4);
+      border-color: rgba(226, 180, 89, 0.45);
       transform: translateY(-3px);
-      box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.8), 0 0 24px rgba(244, 114, 182, 0.12);
+      box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.8), 0 0 24px rgba(226, 180, 89, 0.14);
     }
 
     .memory-card.cyan:hover {
@@ -522,7 +512,7 @@
     }
 
     .note-textarea:focus {
-      border-color: rgba(244, 114, 182, 0.5);
+      border-color: rgba(226, 180, 89, 0.55);
     }
 
     .note-toolbar {
@@ -630,12 +620,12 @@
     .vault-locked-dialog {
       width: 100%;
       max-width: 420px;
-      background: linear-gradient(165deg, #181224 0%, #0d0f14 100%);
-      border: 1px solid rgba(244, 114, 182, 0.3);
+      background: linear-gradient(165deg, #151820 0%, #0a0d12 100%);
+      border: 1px solid rgba(226, 180, 89, 0.32);
       border-radius: var(--r-xl);
       padding: 40px 32px;
       text-align: center;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(244, 114, 182, 0.15);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.95), 0 0 45px rgba(226, 180, 89, 0.16);
     }
 
     .hidden { display: none !important; }
@@ -658,12 +648,12 @@
   <div class="vault-locked-screen hidden" id="lockGate">
     <div class="vault-locked-dialog">
       <div style="font-size: 40px; margin-bottom: 12px;">🔒</div>
-      <div class="hero-badge">PANDORA LOCKED · 潘多拉秘境未解锁</div>
+      <div class="hero-badge">PANDORA LOCKED · 潘多拉秘匣未唤醒</div>
       <h2 style="margin: 0 0 10px; font-size: 22px;">请输入同频密钥</h2>
       <p style="color: var(--text-2); font-size: 13.5px; margin: 0 0 24px;">本区域为 CC × Linkai 专属私密空间，需验证密码访问</p>
-      <input type="password" id="gateInput" placeholder="输入 6 位密钥" maxlength="6" style="width: 100%; padding: 14px; text-align: center; font-family: var(--font-mono); font-size: 18px; border-radius: var(--r-md); border: 1.5px solid rgba(244,114,182,0.4); background: rgba(255,255,255,0.04); color: #fff; outline: none; margin-bottom: 16px;" autofocus />
+      <input type="password" id="gateInput" placeholder="输入 6 位密钥" maxlength="6" style="width: 100%; padding: 14px; text-align: center; font-family: var(--font-mono); font-size: 18px; border-radius: var(--r-md); border: 1.5px solid rgba(226,180,89,0.35); background: rgba(255,255,255,0.04); color: #fff; outline: none; margin-bottom: 16px;" autofocus />
       <div id="gateError" style="font-family: var(--font-mono); font-size: 12px; color: #f87171; min-height: 18px; margin-bottom: 16px;"></div>
-      <button type="button" id="gateBtn" class="btn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #f472b6, #4cc4ea); color: #000; font-weight: 600; font-size: 14px; border: none; justify-content: center;">解锁宝盒 ✦</button>
+      <button type="button" id="gateBtn" class="btn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #e2b459, #4cc4ea); color: #000; font-weight: 600; font-size: 14px; border: none; justify-content: center;">唤醒密匣 ✦</button>
       <div style="margin-top: 20px;">
         <a href="../" style="color: var(--text-3); font-size: 12px; text-decoration: none; font-family: var(--font-mono);">← 返回公共主页</a>
       </div>
@@ -702,17 +692,13 @@
       <section class="hero">
         <div class="hero-chest-wrap">
           <div class="hero-beam"></div>
-          <div class="hero-chest">
-            <div class="hero-lid">
-              <div class="hero-lid-gem"></div>
-            </div>
-            <div class="hero-chest-body">
-              <span style="font-size: 20px; color: var(--rose);">✦</span>
-            </div>
+          <div class="hero-astrolabe-ring"></div>
+          <div class="hero-relic-art">
+            <img src="../assets/pandora/box-opened.webp" alt="Opened Pandora Box Vault" class="hero-relic-img" />
           </div>
         </div>
 
-        <div class="hero-badge">PANDORA VAULT · 宝盒已启</div>
+        <div class="hero-badge">✦ CHRONO VAULT · 密匣已启 ✦</div>
         <h1 class="hero-title">CC<span class="x-gradient">×</span>Linkai</h1>
         <p class="hero-lead">
           浩瀚网络世界里，属于我们的一方小小自留地。<br />
@@ -818,13 +804,13 @@
           <div class="note-toolbar">
             <div class="color-picker">
               <span style="font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-right: 4px;">光晕色彩:</span>
-              <span class="color-dot active" data-color="rose" style="background: #f472b6;"></span>
+              <span class="color-dot active" data-color="gold" style="background: #e2b459;"></span>
               <span class="color-dot" data-color="cyan" style="background: #4cc4ea;"></span>
-              <span class="color-dot" data-color="gold" style="background: #fbbf24;"></span>
-              <span class="color-dot" data-color="purple" style="background: #c084fc;"></span>
+              <span class="color-dot" data-color="amber" style="background: #f59e0b;"></span>
+              <span class="color-dot" data-color="emerald" style="background: #10b981;"></span>
             </div>
-            <button type="button" class="btn btn-ghost" id="addNoteBtn" style="border-color: rgba(244,114,182,0.4); color: var(--rose);">
-              <span>封存进宝盒</span>
+            <button type="button" class="btn btn-ghost" id="addNoteBtn" style="border-color: rgba(226,180,89,0.4); color: var(--gold);">
+              <span>封存进密匣</span>
               <span>✦</span>
             </button>
           </div>
@@ -937,12 +923,12 @@
 
     // ============ Secret Notes Wall ============
     const DEFAULT_NOTES = [
-      { text: "在这个充满随机扰动的世界里，感谢你成为我不可撼动的常数项。", color: "rose", date: "2024-05-20" },
+      { text: "在这个充满随机扰动的世界里，感谢你成为我不可撼动的常数项。", color: "gold", date: "2024-05-20" },
       { text: "今天天气很好，突然想起你，连敲代码的指尖都变得轻快了起来。", color: "cyan", date: "2024-08-15" },
-      { text: "约定好了：未来的每一站风景，我们都要并肩一起走过。", color: "gold", date: "2024-10-07" }
+      { text: "约定好了：未来的每一站风景，我们都要并肩一起走过。", color: "amber", date: "2024-10-07" }
     ];
 
-    let currentNoteColor = "rose";
+    let currentNoteColor = "gold";
     const colorDots = document.querySelectorAll(".color-dot");
     colorDots.forEach(dot => {
       dot.addEventListener("click", () => {
@@ -972,10 +958,10 @@
       if (!list) return;
       const notes = getNotes();
       const colorBorders = {
-        rose: "rgba(244, 114, 182, 0.4)",
-        cyan: "rgba(76, 196, 234, 0.4)",
-        gold: "rgba(251, 191, 36, 0.4)",
-        purple: "rgba(192, 132, 252, 0.4)"
+        gold: "rgba(226, 180, 89, 0.45)",
+        cyan: "rgba(76, 196, 234, 0.45)",
+        amber: "rgba(245, 158, 11, 0.45)",
+        emerald: "rgba(16, 185, 129, 0.45)"
       };
 
       list.innerHTML = notes.map((n, idx) => `
@@ -1040,7 +1026,7 @@
           radius: Math.random() * 1.4 + 0.3,
           alpha: Math.random() * 0.7 + 0.2,
           speed: Math.random() * 0.015 + 0.005,
-          color: Math.random() > 0.5 ? "#f472b6" : "#4cc4ea"
+          color: Math.random() > 0.5 ? "#e2b459" : "#4cc4ea"
         });
       }
 
