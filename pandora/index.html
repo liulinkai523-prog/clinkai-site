@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CC × Linkai · 潘多拉秘境 — Linkai</title>
+  <meta name="description" content="CC × Linkai 的私密自留地 · 潘多拉之匣" />
+  <meta name="theme-color" content="#08090b" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b0f14' stroke='rgba(244,114,182,0.45)' stroke-width='2'/%3E%3Cpath d='M18 16v32h32' stroke='%23f472b6' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M31 35L47 19' stroke='%234cc4ea' stroke-width='5.5' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='47' cy='19' r='5' fill='%234cc4ea'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============ Tokens (Obsidian, Rose & Electric Cyan) ============ */
+    :root {
+      color-scheme: dark;
+      --bg: #08090b;
+      --bg-raise: #0c0e12;
+      --surface: #101318;
+      --surface-2: #161b22;
+      --surface-3: #1d232c;
+
+      --line: rgba(226, 236, 245, 0.08);
+      --line-strong: rgba(226, 236, 245, 0.16);
+
+      --text: #eef2f5;
+      --text-2: #a5b0ba;
+      --text-3: #75818d;
+
+      --accent: #4cc4ea;
+      --rose: #f472b6;
+      --gold: #fbbf24;
+      --purple: #c084fc;
+
+      --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "Geist Mono", ui-monospace, Menlo, Consolas, monospace;
+
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 18px;
+      --r-xl: 26px;
+      --r-pill: 9999px;
+
+      --ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Ambient Starlight Background */
+    #starCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(700px 450px at 20% 15%, rgba(244, 114, 182, 0.08), transparent 70%),
+        radial-gradient(800px 500px at 80% 85%, rgba(76, 196, 234, 0.08), transparent 70%),
+        radial-gradient(600px 400px at 50% 50%, rgba(192, 132, 252, 0.04), transparent 70%);
+    }
+
+    .container {
+      width: min(1080px, 100% - 40px);
+      margin-inline: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ============ Header Nav ============ */
+    .nav {
+      position: sticky;
+      top: 16px;
+      z-index: 50;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 18px;
+      border-radius: var(--r-pill);
+      background: rgba(13, 16, 21, 0.82);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .monogram-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .pill-cc {
+      padding: 3px 8px;
+      border-radius: var(--r-sm);
+      background: rgba(244, 114, 182, 0.12);
+      border: 1px solid rgba(244, 114, 182, 0.35);
+      color: var(--rose);
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .pill-knot {
+      font-size: 11px;
+      color: var(--text-3);
+    }
+
+    .pill-lk {
+      padding: 3px 8px;
+      border-radius: var(--r-sm);
+      background: rgba(76, 196, 234, 0.12);
+      border: 1px solid rgba(76, 196, 234, 0.35);
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .nav-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--text-3);
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--rose);
+      box-shadow: 0 0 8px var(--rose);
+      animation: pulse-dot 2.2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--r-pill);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 180ms ease;
+      border: 1px solid transparent;
+      outline: none;
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--line);
+      color: var(--text-2);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    .btn-audio {
+      background: rgba(76, 196, 234, 0.08);
+      border-color: rgba(76, 196, 234, 0.25);
+      color: var(--accent);
+    }
+
+    .btn-audio:hover {
+      background: rgba(76, 196, 234, 0.16);
+      border-color: rgba(76, 196, 234, 0.45);
+    }
+
+    .btn-audio.playing {
+      background: rgba(244, 114, 182, 0.12);
+      border-color: rgba(244, 114, 182, 0.4);
+      color: var(--rose);
+    }
+
+    /* ============ Hero Section ============ */
+    .hero {
+      padding: 60px 0 40px;
+      text-align: center;
+    }
+
+    .hero-chest-wrap {
+      width: 140px;
+      height: 120px;
+      margin: 0 auto 24px;
+      position: relative;
+      perspective: 900px;
+    }
+
+    .hero-chest {
+      width: 100px;
+      height: 84px;
+      margin: 0 auto;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+
+    .hero-lid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: linear-gradient(135deg, #351a44 0%, #1f1a30 100%);
+      border: 1.5px solid rgba(244, 114, 182, 0.65);
+      border-radius: 8px 8px 4px 4px;
+      box-shadow: 0 4px 20px rgba(244, 114, 182, 0.35);
+      transform-origin: top center;
+      transform: rotateX(-110deg);
+      display: grid;
+      place-items: center;
+      transition: transform 900ms ease;
+    }
+
+    .hero-lid-gem {
+      width: 14px;
+      height: 14px;
+      background: linear-gradient(135deg, #f472b6, #4cc4ea);
+      transform: rotate(45deg);
+      border-radius: 3px;
+      box-shadow: 0 0 16px #f472b6;
+    }
+
+    .hero-chest-body {
+      position: absolute;
+      bottom: 0;
+      left: 4px;
+      right: 4px;
+      height: 54px;
+      background: linear-gradient(180deg, #221832 0%, #0e1017 100%);
+      border: 1.5px solid rgba(76, 196, 234, 0.5);
+      border-radius: 4px 4px 12px 12px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 28px rgba(244, 114, 182, 0.18);
+      display: grid;
+      place-items: center;
+    }
+
+    .hero-beam {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      width: 70px;
+      height: 220px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(76, 196, 234, 0.45) 45%, rgba(244, 114, 182, 0.3) 80%, transparent 100%);
+      border-radius: 50px 50px 0 0;
+      filter: blur(10px);
+      opacity: 0.85;
+      pointer-events: none;
+      animation: beam-breathe 3.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes beam-breathe {
+      0% { opacity: 0.55; transform: translateX(-50%) scaleX(0.9); }
+      100% { opacity: 0.95; transform: translateX(-50%) scaleX(1.15); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      border-radius: var(--r-pill);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f472b6;
+      background: rgba(244, 114, 182, 0.08);
+      border: 1px solid rgba(244, 114, 182, 0.25);
+      margin-bottom: 16px;
+    }
+
+    h1.hero-title {
+      font-size: clamp(2.5rem, 1.8rem + 4vw, 4.5rem);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin: 0 0 16px;
+      background: linear-gradient(160deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-title .x-gradient {
+      background: linear-gradient(135deg, #f472b6, #4cc4ea);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      padding: 0 0.1em;
+    }
+
+    p.hero-lead {
+      font-size: clamp(16px, 1.1vw, 19px);
+      color: var(--text-2);
+      max-width: 580px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+
+    /* ============ Chronometer ============ */
+    .chronometer-panel {
+      max-width: 720px;
+      margin: 0 auto 60px;
+      padding: 28px 32px;
+      border-radius: var(--r-xl);
+      background: linear-gradient(165deg, rgba(22, 18, 30, 0.8) 0%, rgba(13, 16, 21, 0.9) 100%);
+      border: 1px solid rgba(244, 114, 182, 0.2);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 20px 48px -12px rgba(0, 0, 0, 0.7);
+      text-align: center;
+    }
+
+    .chrono-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 16px;
+    }
+
+    .chrono-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .chrono-box {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 16px 8px 12px;
+    }
+
+    .chrono-val {
+      font-family: var(--font-mono);
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 600;
+      line-height: 1;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+      background: linear-gradient(180deg, #fff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .chrono-unit {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .chrono-sub {
+      font-size: 13px;
+      color: var(--rose);
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* ============ Memory Constellations (Bento Grid) ============ */
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-desc {
+      color: var(--text-3);
+      font-size: 14px;
+      margin: 0 0 24px;
+    }
+
+    .bento-memories {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 60px;
+    }
+
+    .memory-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      position: relative;
+      transition: all 260ms ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 180px;
+      overflow: hidden;
+    }
+
+    .memory-card:hover {
+      border-color: rgba(244, 114, 182, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.8), 0 0 24px rgba(244, 114, 182, 0.12);
+    }
+
+    .memory-card.cyan:hover {
+      border-color: rgba(76, 196, 234, 0.45);
+      box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.8), 0 0 24px rgba(76, 196, 234, 0.12);
+    }
+
+    .memory-card.gold:hover {
+      border-color: rgba(251, 191, 36, 0.45);
+      box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.8), 0 0 24px rgba(251, 191, 36, 0.12);
+    }
+
+    .memory-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--text-3);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .memory-title {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--text);
+      margin: 0 0 12px;
+    }
+
+    .memory-sub {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-3);
+      margin-top: auto;
+    }
+
+    /* ============ Secret Notes Wall ============ */
+    .notes-section {
+      margin-bottom: 60px;
+    }
+
+    .note-creator {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .note-textarea {
+      width: 100%;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      padding: 12px 14px;
+      resize: none;
+      outline: none;
+      transition: border-color 180ms ease;
+    }
+
+    .note-textarea:focus {
+      border-color: rgba(244, 114, 182, 0.5);
+    }
+
+    .note-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .color-picker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .color-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 180ms ease;
+    }
+
+    .color-dot.active {
+      transform: scale(1.2);
+      border-color: #fff;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .note-item {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 20px;
+      position: relative;
+      animation: note-in 300ms ease;
+    }
+
+    @keyframes note-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .note-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+      margin: 0 0 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .note-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-3);
+    }
+
+    .note-del {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      font-size: 12px;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    .note-del:hover {
+      color: #ef4444;
+    }
+
+    /* ============ Footer ============ */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 32px 0 50px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    /* ============ Access Lock Screen (Overlay if not unlocked) ============ */
+    .vault-locked-screen {
+      position: fixed;
+      inset: 0;
+      background: #08090b;
+      z-index: 99999;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .vault-locked-dialog {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(165deg, #181224 0%, #0d0f14 100%);
+      border: 1px solid rgba(244, 114, 182, 0.3);
+      border-radius: var(--r-xl);
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(244, 114, 182, 0.15);
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 768px) {
+      .bento-memories { grid-template-columns: 1fr; }
+      .chrono-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav { padding: 10px 14px; }
+      .nav-status { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Starlight Canvas -->
+  <canvas id="starCanvas"></canvas>
+  <div class="ambient-glow" aria-hidden="true"></div>
+
+  <!-- Locked Screen (Guards against direct link peeking without passkey) -->
+  <div class="vault-locked-screen hidden" id="lockGate">
+    <div class="vault-locked-dialog">
+      <div style="font-size: 40px; margin-bottom: 12px;">🔒</div>
+      <div class="hero-badge">PANDORA LOCKED · 潘多拉秘境未解锁</div>
+      <h2 style="margin: 0 0 10px; font-size: 22px;">请输入同频密钥</h2>
+      <p style="color: var(--text-2); font-size: 13.5px; margin: 0 0 24px;">本区域为 CC × Linkai 专属私密空间，需验证密码访问</p>
+      <input type="password" id="gateInput" placeholder="输入 6 位密钥" maxlength="6" style="width: 100%; padding: 14px; text-align: center; font-family: var(--font-mono); font-size: 18px; border-radius: var(--r-md); border: 1.5px solid rgba(244,114,182,0.4); background: rgba(255,255,255,0.04); color: #fff; outline: none; margin-bottom: 16px;" autofocus />
+      <div id="gateError" style="font-family: var(--font-mono); font-size: 12px; color: #f87171; min-height: 18px; margin-bottom: 16px;"></div>
+      <button type="button" id="gateBtn" class="btn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #f472b6, #4cc4ea); color: #000; font-weight: 600; font-size: 14px; border: none; justify-content: center;">解锁宝盒 ✦</button>
+      <div style="margin-top: 20px;">
+        <a href="../" style="color: var(--text-3); font-size: 12px; text-decoration: none; font-family: var(--font-mono);">← 返回公共主页</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Sanctuary View -->
+  <div id="sanctuaryView">
+    <div class="container">
+      <!-- Nav -->
+      <nav class="nav">
+        <div class="nav-left">
+          <div class="monogram-tag">
+            <span class="pill-cc">CC</span>
+            <span class="pill-knot">✦</span>
+            <span class="pill-lk">Linkai</span>
+          </div>
+          <div class="nav-status">
+            <span class="status-dot"></span>
+            <span>SHARED FREQUENCY</span>
+          </div>
+        </div>
+        <div class="nav-right">
+          <button type="button" class="btn btn-audio" id="audioToggle" title="宇宙共鸣音律">
+            <span id="audioIcon">♫</span>
+            <span id="audioText">音律</span>
+          </button>
+          <button type="button" class="btn btn-ghost" id="lockBtn" title="重新锁定宝盒">
+            <span>🔒 锁上</span>
+          </button>
+          <a class="btn btn-ghost" href="../">← 主页</a>
+        </div>
+      </nav>
+
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-chest-wrap">
+          <div class="hero-beam"></div>
+          <div class="hero-chest">
+            <div class="hero-lid">
+              <div class="hero-lid-gem"></div>
+            </div>
+            <div class="hero-chest-body">
+              <span style="font-size: 20px; color: var(--rose);">✦</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-badge">PANDORA VAULT · 宝盒已启</div>
+        <h1 class="hero-title">CC<span class="x-gradient">×</span>Linkai</h1>
+        <p class="hero-lead">
+          浩瀚网络世界里，属于我们的一方小小自留地。<br />
+          在具体而微的日子里，把每一次并肩漫步，都存进永不褪色的星河。
+        </p>
+
+        <!-- Live Chronometer -->
+        <div class="chronometer-panel">
+          <div class="chrono-label">✦ 持续同频 · 相伴时间记录 ✦</div>
+          <div class="chrono-grid">
+            <div class="chrono-box">
+              <div class="chrono-val" id="daysVal">0</div>
+              <div class="chrono-unit">Days · 天</div>
+            </div>
+            <div class="chrono-box">
+              <div class="chrono-val" id="hoursVal">00</div>
+              <div class="chrono-unit">Hours · 时</div>
+            </div>
+            <div class="chrono-box">
+              <div class="chrono-val" id="minutesVal">00</div>
+              <div class="chrono-unit">Mins · 分</div>
+            </div>
+            <div class="chrono-box">
+              <div class="chrono-val" id="secondsVal">00</div>
+              <div class="chrono-unit">Secs · 秒</div>
+            </div>
+          </div>
+          <div class="chrono-sub">
+            <span>✦ 无论时空如何膨胀，你是我唯一确定的引力解 ✦</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Memory Constellations -->
+      <section>
+        <div class="section-title">
+          <span>✦ 星海记忆胶囊</span>
+          <span style="font-size: 13px; font-family: var(--font-mono); color: var(--text-3); font-weight: normal;">/ MEMORY CAPSULES</span>
+        </div>
+        <p class="section-desc">定格每一个平常却闪闪发光的具体瞬间。</p>
+
+        <div class="bento-memories">
+          <div class="memory-card">
+            <div>
+              <div class="memory-tag">01 · 日常风景</div>
+              <div class="memory-title">“保持好奇，并肩漫步，把具体的日子过成风景。”</div>
+            </div>
+            <div class="memory-sub">✦ 漫步在每一个平常的日子里</div>
+          </div>
+
+          <div class="memory-card cyan">
+            <div>
+              <div class="memory-tag">02 · 人间烟火</div>
+              <div class="memory-title">“油锅刺啦作响，你切菜我翻炒，油烟味里藏着世间最踏实的安心。”</div>
+            </div>
+            <div class="memory-sub">✦ 厨房里热气腾腾的灶台</div>
+          </div>
+
+          <div class="memory-card gold">
+            <div>
+              <div class="memory-tag">03 · 时空引力</div>
+              <div class="memory-title">“在浩瀚的时空坐标系里，你是我唯一确定的引力解。”</div>
+            </div>
+            <div class="memory-sub">✦ 相对论引力场方程 · 唯一定解</div>
+          </div>
+
+          <div class="memory-card cyan">
+            <div>
+              <div class="memory-tag">04 · 宁静风港</div>
+              <div class="memory-title">“窗外电闪雷鸣狂风肆虐，窗内炉火暖黄，只要在一起便万事无惊。”</div>
+            </div>
+            <div class="memory-sub">✦ 暴风雨夜紧闭的窗扉</div>
+          </div>
+
+          <div class="memory-card">
+            <div>
+              <div class="memory-tag">05 · 默契心跳</div>
+              <div class="memory-title">“人声鼎沸的聚会中穿过人群对视一笑，就完成了只有我们懂的万语千言。”</div>
+            </div>
+            <div class="memory-sub">✦ 无声对视里的心照不宣</div>
+          </div>
+
+          <div class="memory-card gold">
+            <div>
+              <div class="memory-tag">06 · 漫游世界</div>
+              <div class="memory-title">“漫长公路延伸至地平线，你在副驾剥好的橘子，是旅途最甜的补给。”</div>
+            </div>
+            <div class="memory-sub">✦ 驾驶座与副驾的默契</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Secret Notes Wall -->
+      <section class="notes-section">
+        <div class="section-title">
+          <span>✦ 秘密便签与留言板</span>
+          <span style="font-size: 13px; font-family: var(--font-mono); color: var(--text-3); font-weight: normal;">/ WHISPER NOTES</span>
+        </div>
+        <p class="section-desc">留给彼此的悄悄话，永久封存于本地宝盒中。</p>
+
+        <div class="note-creator">
+          <textarea id="noteInput" class="note-textarea" placeholder="写下一句想留给对方的话..."></textarea>
+          <div class="note-toolbar">
+            <div class="color-picker">
+              <span style="font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-right: 4px;">光晕色彩:</span>
+              <span class="color-dot active" data-color="rose" style="background: #f472b6;"></span>
+              <span class="color-dot" data-color="cyan" style="background: #4cc4ea;"></span>
+              <span class="color-dot" data-color="gold" style="background: #fbbf24;"></span>
+              <span class="color-dot" data-color="purple" style="background: #c084fc;"></span>
+            </div>
+            <button type="button" class="btn btn-ghost" id="addNoteBtn" style="border-color: rgba(244,114,182,0.4); color: var(--rose);">
+              <span>封存进宝盒</span>
+              <span>✦</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="notes-grid" id="notesList">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div>CC × Linkai · 961007 · 永不消逝的电波</div>
+        <div style="margin-top: 6px; opacity: 0.6;">Exclusive Sanctuary · All frequencies aligned</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // ============ Access Guard ============
+    const PANDORA_CODE = "961007";
+    const lockGate = document.getElementById("lockGate");
+    const sanctuaryView = document.getElementById("sanctuaryView");
+    const gateInput = document.getElementById("gateInput");
+    const gateBtn = document.getElementById("gateBtn");
+    const gateError = document.getElementById("gateError");
+    const lockBtn = document.getElementById("lockBtn");
+
+    function isUnlocked() {
+      try {
+        return sessionStorage.getItem("pandora_unlocked") === PANDORA_CODE ||
+               localStorage.getItem("pandora_unlocked") === PANDORA_CODE;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function checkAuth() {
+      if (isUnlocked()) {
+        lockGate.classList.add("hidden");
+        sanctuaryView.classList.remove("hidden");
+      } else {
+        lockGate.classList.remove("hidden");
+        sanctuaryView.classList.add("hidden");
+        if (gateInput) gateInput.focus();
+      }
+    }
+
+    function verifyGate() {
+      if (gateInput.value.trim() === PANDORA_CODE) {
+        sessionStorage.setItem("pandora_unlocked", PANDORA_CODE);
+        try { localStorage.setItem("pandora_unlocked", PANDORA_CODE); } catch(e){}
+        gateError.textContent = "";
+        checkAuth();
+      } else {
+        gateError.textContent = "⚠ 密钥不匹配，请重新输入";
+        gateInput.value = "";
+        gateInput.focus();
+      }
+    }
+
+    if (gateBtn) gateBtn.addEventListener("click", verifyGate);
+    if (gateInput) {
+      gateInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") verifyGate();
+      });
+    }
+
+    if (lockBtn) {
+      lockBtn.addEventListener("click", () => {
+        try {
+          sessionStorage.removeItem("pandora_unlocked");
+          localStorage.removeItem("pandora_unlocked");
+        } catch(e){}
+        checkAuth();
+      });
+    }
+
+    // Run auth check initially
+    checkAuth();
+
+    // ============ Live Chronometer ============
+    // Base milestone date: e.g. 2023-10-07 or custom
+    const BASE_DATE = new Date("2023-10-07T00:00:00");
+    const daysEl = document.getElementById("daysVal");
+    const hoursEl = document.getElementById("hoursVal");
+    const minsEl = document.getElementById("minutesVal");
+    const secsEl = document.getElementById("secondsVal");
+
+    function updateChronometer() {
+      const now = new Date();
+      const diff = Math.max(0, now - BASE_DATE);
+      const totalSecs = Math.floor(diff / 1000);
+
+      const days = Math.floor(totalSecs / 86400);
+      const hours = Math.floor((totalSecs % 86400) / 3600);
+      const mins = Math.floor((totalSecs % 3600) / 60);
+      const secs = totalSecs % 60;
+
+      if (daysEl) daysEl.textContent = days;
+      if (hoursEl) hoursEl.textContent = String(hours).padStart(2, "0");
+      if (minsEl) minsEl.textContent = String(mins).padStart(2, "0");
+      if (secsEl) secsEl.textContent = String(secs).padStart(2, "0");
+    }
+
+    setInterval(updateChronometer, 1000);
+    updateChronometer();
+
+    // ============ Secret Notes Wall ============
+    const DEFAULT_NOTES = [
+      { text: "在这个充满随机扰动的世界里，感谢你成为我不可撼动的常数项。", color: "rose", date: "2024-05-20" },
+      { text: "今天天气很好，突然想起你，连敲代码的指尖都变得轻快了起来。", color: "cyan", date: "2024-08-15" },
+      { text: "约定好了：未来的每一站风景，我们都要并肩一起走过。", color: "gold", date: "2024-10-07" }
+    ];
+
+    let currentNoteColor = "rose";
+    const colorDots = document.querySelectorAll(".color-dot");
+    colorDots.forEach(dot => {
+      dot.addEventListener("click", () => {
+        colorDots.forEach(d => d.classList.remove("active"));
+        dot.classList.add("active");
+        currentNoteColor = dot.dataset.color;
+      });
+    });
+
+    function getNotes() {
+      try {
+        const stored = localStorage.getItem("pandora_notes");
+        return stored ? JSON.parse(stored) : DEFAULT_NOTES;
+      } catch(e) {
+        return DEFAULT_NOTES;
+      }
+    }
+
+    function saveNotes(notes) {
+      try {
+        localStorage.setItem("pandora_notes", JSON.stringify(notes));
+      } catch(e){}
+    }
+
+    function renderNotes() {
+      const list = document.getElementById("notesList");
+      if (!list) return;
+      const notes = getNotes();
+      const colorBorders = {
+        rose: "rgba(244, 114, 182, 0.4)",
+        cyan: "rgba(76, 196, 234, 0.4)",
+        gold: "rgba(251, 191, 36, 0.4)",
+        purple: "rgba(192, 132, 252, 0.4)"
+      };
+
+      list.innerHTML = notes.map((n, idx) => `
+        <div class="note-item" style="border-color: ${colorBorders[n.color] || 'var(--line)'};">
+          <div class="note-text">${esc(n.text)}</div>
+          <div class="note-meta">
+            <span>✦ ${esc(n.date)}</span>
+            <button class="note-del" onclick="deleteNote(${idx})" title="删除">✕</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function esc(s="") {
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    window.deleteNote = function(idx) {
+      const notes = getNotes();
+      notes.splice(idx, 1);
+      saveNotes(notes);
+      renderNotes();
+    };
+
+    const addNoteBtn = document.getElementById("addNoteBtn");
+    const noteInput = document.getElementById("noteInput");
+
+    if (addNoteBtn && noteInput) {
+      addNoteBtn.addEventListener("click", () => {
+        const text = noteInput.value.trim();
+        if (!text) return;
+        const notes = getNotes();
+        const d = new Date();
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        notes.unshift({ text, color: currentNoteColor, date: dateStr });
+        saveNotes(notes);
+        noteInput.value = "";
+        renderNotes();
+      });
+    }
+
+    renderNotes();
+
+    // ============ Starlight Canvas Animation ============
+    const canvas = document.getElementById("starCanvas");
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      let stars = [];
+      const count = 75;
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.4 + 0.3,
+          alpha: Math.random() * 0.7 + 0.2,
+          speed: Math.random() * 0.015 + 0.005,
+          color: Math.random() > 0.5 ? "#f472b6" : "#4cc4ea"
+        });
+      }
+
+      function renderStars() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => {
+          s.alpha += s.speed;
+          if (s.alpha > 0.9 || s.alpha < 0.2) s.speed = -s.speed;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+          ctx.fillStyle = s.color;
+          ctx.globalAlpha = Math.max(0, Math.min(1, s.alpha));
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(renderStars);
+      }
+      renderStars();
+    }
+
+    // ============ Ethereal Ambient Sound Generator (Web Audio API) ============
+    let audioCtx = null;
+    let isPlayingAudio = false;
+    let activeOscillators = [];
+    const audioToggle = document.getElementById("audioToggle");
+    const audioText = document.getElementById("audioText");
+
+    function startAmbientSound() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      // Warm celestial chords (F major 9 / Cosmic resonance: F3, A3, C4, E4, G4)
+      const freqs = [174.61, 220.00, 261.63, 329.63, 392.00];
+      const masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+      masterGain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 2.5);
+      masterGain.connect(audioCtx.destination);
+
+      activeOscillators = freqs.map((f, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = i % 2 === 0 ? "sine" : "triangle";
+        osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+        // Slight detune for lush spatial chorus
+        osc.detune.setValueAtTime((i - 2) * 5, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        osc.connect(gain);
+        gain.connect(masterGain);
+        osc.start();
+        return { osc, gain, masterGain };
+      });
+    }
+
+    function stopAmbientSound() {
+      if (activeOscillators.length) {
+        activeOscillators.forEach(o => {
+          try {
+            o.masterGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.2);
+            setTimeout(() => o.osc.stop(), 1300);
+          } catch(e){}
+        });
+        activeOscillators = [];
+      }
+    }
+
+    if (audioToggle) {
+      audioToggle.addEventListener("click", () => {
+        if (!isPlayingAudio) {
+          startAmbientSound();
+          isPlayingAudio = true;
+          audioToggle.classList.add("playing");
+          audioText.textContent = "音律 · 响";
+        } else {
+          stopAmbientSound();
+          isPlayingAudio = false;
+          audioToggle.classList.remove("playing");
+          audioText.textContent = "音律";
+        }
+      });
+    }
+  </script>
+</body>
+</html>
