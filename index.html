@@ -1937,7 +1937,7 @@
               </div>
 
               <div class="keepsake-footer">
-                <span class="keepsake-counter" id="keepsakeCounter">01 / 04</span>
+                <span class="keepsake-counter" id="keepsakeCounter">01 / 99</span>
                 <div class="keepsake-action">
                   <span class="cycle-glyph" aria-hidden="true">↻</span>
                   <span data-i18n="cc.cycle">Cycle</span>
@@ -2036,17 +2036,801 @@
     // ============ CC Easter Egg Quotes & Cycling ============
     const CC_QUOTES = {
       zh: [
-        { text: "“在浩瀚的时空坐标系里，你是我唯一确定的引力解。”", sub: "✦ 相对论引力场方程 · 唯一定解" },
-        { text: "“保持好奇，并肩漫步，把具体的日子过成风景。”", sub: "✦ 漫步在每一个平常的日子里" },
-        { text: "“宇宙万物皆在膨胀远离，唯有爱让两个星系彼此靠近。”", sub: "✦ 克服熵增与红移的微小奇迹" },
-        { text: "“代码能写出无限逻辑，而有些羁绊，无需任何条件语句。”", sub: "✦ 无需 if / else，始终恒真" }
-      ],
+        {
+                "text": "“在浩瀚的时空坐标系里，你是我唯一确定的引力解。”",
+                "sub": "✦ 相对论引力场方程 · 唯一定解"
+        },
+        {
+                "text": "“保持好奇，并肩漫步，把具体的日子过成风景。”",
+                "sub": "✦ 漫步在每一个平常的日子里"
+        },
+        {
+                "text": "“宇宙万物皆在膨胀远离，唯有爱让两个星系彼此靠近。”",
+                "sub": "✦ 克服熵增与红移的微小奇迹"
+        },
+        {
+                "text": "“代码能写出无限逻辑，而有些羁绊，无需任何条件语句。”",
+                "sub": "✦ 无需 if / else，始终恒真"
+        },
+        {
+                "text": "“世界喧嚣纷繁，幸好我们总能调到同一频率。”",
+                "sub": "✦ 无线电调谐 · 专属私密波段"
+        },
+        {
+                "text": "“所谓避风港，不过是每次回头时你都在那个视线交汇处。”",
+                "sub": "✦ 视线落点处的绝对安全感"
+        },
+        {
+                "text": "“哪怕跨越数万光年，星光也能准确落入仰望者的眼眸。”",
+                "sub": "✦ 漫长光阴里的定点抵达"
+        },
+        {
+                "text": "“在无数随机扰动的变量中，你是我不可撼动的常数项。”",
+                "sub": "✦ 动荡系统里的稳定锚点"
+        },
+        {
+                "text": "“两个微观粒子曾在一处相逢，便注定在宇宙两端瞬时呼应。”",
+                "sub": "✦ 量子纠缠与跨距响应"
+        },
+        {
+                "text": "“亿万年前宇宙大爆炸的回响，至今仍在为我们播放永不落幕的背景白噪音。”",
+                "sub": "✦ 宇宙微波背景辐射"
+        },
+        {
+                "text": "“光线越过事件视界便无法折返，但爱是唯一能穿透引力深井的信标。”",
+                "sub": "✦ 黑洞事件视界外的归途"
+        },
+        {
+                "text": "“像千万光年外的脉冲星，我的心跳永远遵循属于你的毫秒节拍。”",
+                "sub": "✦ 脉冲星的周期律动"
+        },
+        {
+                "text": "“借由你的目光加速，我才拥有飞向更深空星辰的全部勇气。”",
+                "sub": "✦ 行星引力弹弓效应"
+        },
+        {
+                "text": "“如果文明终将消散在深空，我希望镀金唱片里刻下的是你轻笑的声音。”",
+                "sub": "✦ 旅行者号携带的金唱片"
+        },
+        {
+                "text": "“月球用十亿年面向地球，而我的目光也早已对你完成潮汐锁定。”",
+                "sub": "✦ 潮汐锁定的恒久注视"
+        },
+        {
+                "text": "“即使时空发生曲折，漫漫光迹最终也会借由引力透镜汇聚到你身边。”",
+                "sub": "✦ 引力透镜的聚焦"
+        },
+        {
+                "text": "“我们体内每一颗铁原子，都来自数十亿年前同一颗超新星的壮烈绽放。”",
+                "sub": "✦ 星尘的浪漫宿命"
+        },
+        {
+                "text": "“烈风掠过极地冰原，却撞击出漫天绚烂的极光，正如你闯入我的平静岁月。”",
+                "sub": "✦ 太阳风与极光交织"
+        },
+        {
+                "text": "“在空间与时间被压缩为奇点之前，一定早已写好了我们注定重聚的密语。”",
+                "sub": "✦ 奇点之前的唯一存在"
+        },
+        {
+                "text": "“在所有平行宇宙的分支路径里，我最庆幸的是在这个世界与你并肩。”",
+                "sub": "✦ 多世界诠释与必然相遇"
+        },
+        {
+                "text": "“两点之间最短的并非直线，而是因为有你而弯曲折叠的温柔测地线。”",
+                "sub": "✦ 空间曲率与最短测地线"
+        },
+        {
+                "text": "“再强大的推进器也无法让我逃离，因为你的引力场正是我想要的全部宇宙。”",
+                "sub": "✦ 逃逸速度与心之归宿"
+        },
+        {
+                "text": "“纵使行至太阳系最荒凉的冰封边缘，一想到你，心头便升起融融暖阳。”",
+                "sub": "✦ 柯伊伯带边缘的守望"
+        },
+        {
+                "text": "“虽然群星都在向红端漂移，你向我走来时，天地皆是一片澄澈的蓝移。”",
+                "sub": "✦ 宇宙红移中的蓝移守候"
+        },
+        {
+                "text": "“对你发出的每一个信号，都拥有最高的优先级与零延迟的回响。”",
+                "sub": "✦ 零丢包与零延迟回响"
+        },
+        {
+                "text": "“无需多言，每一次指尖相触，都是系统正在发送不可中断的心跳信号。”",
+                "sub": "✦ 心跳保活机制"
+        },
+        {
+                "text": "“在纷繁复杂的对象生命周期里，你是我宇宙里全局唯一的单例。”",
+                "sub": "✦ 单例模式的唯一实例"
+        },
+        {
+                "text": "“即使世界宣告主线程阻塞，爱你的事件循环也会永远保活运转。”",
+                "sub": "✦ 永不退出的事件循环"
+        },
+        {
+                "text": "“全世界都可以验证我的公开签名，但解开内心深处所有秘密的私钥只有你有。”",
+                "sub": "✦ 非对称加密与唯一定向密钥"
+        },
+        {
+                "text": "“即便周遭世界充斥不可信节点，我们之间早已达成无条件拜占庭共识。”",
+                "sub": "✦ 拜占庭容错下的绝对共识"
+        },
+        {
+                "text": "“那些有你陪伴的黄昏，早已被永久烧录在不可篡改的固件 ROM 之中。”",
+                "sub": "✦ 不可磨灭的只读存储"
+        },
+        {
+                "text": "“时光流逝或许会丢失细枝末节，但关于你的笑容永远是无损高清存储。”",
+                "sub": "✦ 无损压缩的生活细节"
+        },
+        {
+                "text": "“外层环境如何变化已不重要，你是我无论何时何地都能捕获的永恒作用域。”",
+                "sub": "✦ 闭包函数的永恒作用域"
+        },
+        {
+                "text": "“最完美的默契，是不用任何文档说明，彼此配合时依然零警告、零报错。”",
+                "sub": "✦ 零编译警告的默契"
+        },
+        {
+                "text": "“与你走过的每一个瞬间，要么全心全意提交，绝不中途回滚。”",
+                "sub": "✦ 事务提交与绝对原子性"
+        },
+        {
+                "text": "“像紧密缠绕的双绞线，相互抵消外界全部电磁干扰，只传输清澈的彼此。”",
+                "sub": "✦ 双绞线的抗噪守护"
+        },
+        {
+                "text": "“这份羁绊以终身为期开源，无限制赋予彼此全部信任与温柔。”",
+                "sub": "✦ 终身维护的开源协议"
+        },
+        {
+                "text": "“当你疲惫想要休息时，我是随时无缝切换、为你兜底的高可用集群。”",
+                "sub": "✦ 高可用集群的主备守候"
+        },
+        {
+                "text": "“只要想到你的名字，所有疲劳与焦虑都会瞬间命中缓存，化为平静。”",
+                "sub": "✦ 纳秒级缓存加速"
+        },
+        {
+                "text": "“哪怕身处不同经纬度，只要目光交汇，我们的逻辑时钟便彻底完成同步。”",
+                "sub": "✦ 分布式系统的全局时钟"
+        },
+        {
+                "text": "“代码里所有变量皆有生命周期，唯独对你的深情永远被标记为不可回收的根节点。”",
+                "sub": "✦ 垃圾回收器无法释放的引用"
+        },
+        {
+                "text": "“屏幕前敲击千千万万行代码，最动人的输出始终是抬起头时你端来的温水。”",
+                "sub": "✦ 极客的最美终端输出"
+        },
+        {
+                "text": "“晚风吹散一天的疲惫，而并肩走过的长街就是归途。”",
+                "sub": "✦ 橘色夕阳与重叠的影子"
+        },
+        {
+                "text": "“生活无需宏大叙事，两碗热汤和一句闲聊已足够动人。”",
+                "sub": "✦ 烟火人间里的微温日常"
+        },
+        {
+                "text": "“新的一天始于磨豆机低沉的嗡鸣，和你半梦半醒时顺手递来的马克杯。”",
+                "sub": "✦ 清晨咖啡升起的白雾"
+        },
+        {
+                "text": "“伞面虽小，但倾斜向你的那三十度，是我最本能的身体语言。”",
+                "sub": "✦ 细雨淅沥下的同撑一把伞"
+        },
+        {
+                "text": "“在新鲜面包与打折水果香气中推车漫步，是平凡生活里最踏实的幸福。”",
+                "sub": "✦ 超市货架间的推车漫游"
+        },
+        {
+                "text": "“我们一起浇灌的小盆栽又冒了绿尖，日子在安静注视中悄悄抽条拔节。”",
+                "sub": "✦ 阳台绿植抽出的新芽"
+        },
+        {
+                "text": "“左耳是你，右耳是歌，晚班地铁的晃动也变得有了韵律。”",
+                "sub": "✦ 分享同一副耳机的旋律"
+        },
+        {
+                "text": "“油锅刺啦作响，你切菜我翻炒，油烟味里藏着世间最踏实的安心。”",
+                "sub": "✦ 厨房里热气腾腾的灶台"
+        },
+        {
+                "text": "“阳光晒透棉织物的清甜香气，扑进被窝时，整座世界都柔软了下来。”",
+                "sub": "✦ 换季时洗晒干净的被单"
+        },
+        {
+                "text": "“台灯一盏，你读你的书卷，我敲我的键盘，不发一言却心安如恒。”",
+                "sub": "✦ 深夜阅读时的无声对坐"
+        },
+        {
+                "text": "“路过无名小馆咬下的第一口热点心，对视一眼，就懂得了彼此的雀跃。”",
+                "sub": "✦ 街角小店偶遇的惊喜味道"
+        },
+        {
+                "text": "“泛黄相纸定格了某年吹过海风的侧脸，岁月流转，可爱分毫未减。”",
+                "sub": "✦ 翻箱倒柜找出的拍立得照片"
+        },
+        {
+                "text": "“出门前留下一句‘记得吃早餐’，墨迹未干便已温热了整个早晨。”",
+                "sub": "✦ 冰箱贴上歪歪扭扭的便签"
+        },
+        {
+                "text": "“窗外树影摇曳，窗内呼吸匀长，醒来时发现你正安稳睡在身旁。”",
+                "sub": "✦ 假日午后沉沉的补觉"
+        },
+        {
+                "text": "“不需要特殊的纪念日，一朵小花就能点亮餐桌上一整个礼拜的心情。”",
+                "sub": "✦ 散步时顺路买下的一束小雏菊"
+        },
+        {
+                "text": "“聊些毫无逻辑的荒唐怪话，直到笑出眼泪，困意在安心中悄然降临。”",
+                "sub": "✦ 睡前胡乱闲聊的无厘头笑声"
+        },
+        {
+                "text": "“窗外电闪雷鸣狂风肆虐，窗内炉火暖黄，只要在一起便万事无惊。”",
+                "sub": "✦ 暴风雨夜紧闭的窗扉"
+        },
+        {
+                "text": "“收拾行囊准备下一站出发，两个人的物品依偎在一起，就是流动的家。”",
+                "sub": "✦ 行李箱里整整齐齐的衣物"
+        },
+        {
+                "text": "“漫长公路延伸至地平线，你在副驾剥好的橘子，是旅途最甜的补给。”",
+                "sub": "✦ 驾驶座与副驾的默契"
+        },
+        {
+                "text": "“当你身处迷茫与困顿时，别怕，我永远是你回头便能辨认的灯塔。”",
+                "sub": "✦ 穿透迷雾的灯塔光束"
+        },
+        {
+                "text": "“正因为知道身后有你稳稳接住我，我才敢肆无忌惮地奔向远方旷野。”",
+                "sub": "✦ 跨越山海的底气与从容"
+        },
+        {
+                "text": "“见过你光芒万丈的时刻，也拥抱过你脆弱无助的黑夜，因而更加深爱。”",
+                "sub": "✦ 见证彼此蜕变的漫长岁月"
+        },
+        {
+                "text": "“世界总急着评判与说教，而我只负责站在你身旁，听你倾倒全部烦恼。”",
+                "sub": "✦ 不争对错的温柔倾听"
+        },
+        {
+                "text": "“哪怕暴雨连绵浇透所有期待，只要彼此握紧双手，废墟里也能开出花来。”",
+                "sub": "✦ 共同经历低谷时的破土萌芽"
+        },
+        {
+                "text": "“这个世界很大很奇妙，最棒的事情，莫过于每一次惊叹都有你一同见证。”",
+                "sub": "✦ 探索未知的同行伙伴"
+        },
+        {
+                "text": "“人声鼎沸的聚会中穿过人群对视一笑，就完成了只有我们懂的万语千言。”",
+                "sub": "✦ 无声对视里的心照不宣"
+        },
+        {
+                "text": "“像舒婷笔下的橡树与木棉，各自站立在土地上，根在地下紧紧握住。”",
+                "sub": "✦ 彼此独立又根脉相连的乔木"
+        },
+        {
+                "text": "“在所有人面前你必须做个成熟大人，但在我这里，你可以永远做回小孩。”",
+                "sub": "✦ 允许彼此拥有脆弱的角落"
+        },
+        {
+                "text": "“每一个原本模糊零碎的念头，在你专注倾听的眼神里，都生长出了轮廓。”",
+                "sub": "✦ 成为彼此灵感的催化剂"
+        },
+        {
+                "text": "“齿轮磨合偶有摩擦声响，但每一次重归平顺，都让前行的步伐愈发坚定。”",
+                "sub": "✦ 坦诚面对分歧后的紧紧拥抱"
+        },
+        {
+                "text": "“世间道理千条万缕，而我的准则很简单：毫无保留地偏向你这一边。”",
+                "sub": "✦ 岁月沉淀出的无条件偏爱"
+        },
+        {
+                "text": "“浪漫不是一瞬间的焰火绚烂，而是数十年如一日细水长流的守候与珍惜。”",
+                "sub": "✦ 一同抵御漫长时光的侵蚀"
+        },
+        {
+                "text": "“因为被你如此温柔珍重地爱过，我才逐渐学会了如何真正热爱这个世界。”",
+                "sub": "✦ 在对方眼里看见更好的自己"
+        },
+        {
+                "text": "“外界风雨如晦变幻莫测，但只要关上门，这里就是谁也无法攻破的城池。”",
+                "sub": "✦ 共同构筑的心灵堡垒"
+        },
+        {
+                "text": "“你只管放手做你想做的事，任何时候转过身，我都准备好了一桌热饭。”",
+                "sub": "✦ 互为后盾的从容与底气"
+        },
+        {
+                "text": "“爱不是彼此凝视绑缚，而是并肩眺望同一个方向时，彼此羽翼更加舒展。”",
+                "sub": "✦ 彼此成全的宽广胸怀"
+        },
+        {
+                "text": "“所谓奇迹，不过是由无数个‘有你真好’的寻常瞬间汇聚而成的星河。”",
+                "sub": "✦ 平凡日子里积攒的微小奇迹"
+        },
+        {
+                "text": "“四季更迭，风霜雨雪，只要掌心还留着你的温度，前路便永远光明灿烂。”",
+                "sub": "✦ 无论顺境逆境的掌心温热"
+        },
+        {
+                "text": "“面对庞大而虚无的宇宙，爱一个具体的人，就是赋予生命意义的全部答案。”",
+                "sub": "✦ 对抗世界虚无的具象解药"
+        },
+        {
+                "text": "“我们划着同一柄木桨，在时间的长河里顺流而下，惊涛骇浪也成了风景。”",
+                "sub": "✦ 岁月长河里的双人独木舟"
+        },
+        {
+                "text": "“潮水或许会抚平白沙上的脚印，但我们一同走过的记忆早已融入海风。”",
+                "sub": "✦ 遗留在沙滩上的并列足迹"
+        },
+        {
+                "text": "“从万米高空俯瞰人间星火，最亮的那一盏，永远亮在有你等候的窗前。”",
+                "sub": "✦ 夜航机舷窗外的万家灯火"
+        },
+        {
+                "text": "“走过最漫长的长夜之后，第一缕晨曦落下的方向，正映照着你的笑意。”",
+                "sub": "✦ 荒原尽头升起的初升朝阳"
+        },
+        {
+                "text": "“单音或许清脆孤单，但与你同奏的那一刻，旋律才真正拥有了灵魂。”",
+                "sub": "✦ 乐谱里不可或缺的和弦配位"
+        },
+        {
+                "text": "“像林深处的两片树叶，在风中互相致意，在泥土深处分享同一汪泉水。”",
+                "sub": "✦ 古老林间轻吻微风的树叶"
+        },
+        {
+                "text": "“千百年前工匠描摹的深情，如今在我们的每一次相视中重新活了过来。”",
+                "sub": "✦ 博物馆古老画卷上的双人印记"
+        },
+        {
+                "text": "“仰望无垠星空，身边是你；低头深渊万丈，身旁亦是你，便再无所畏惧。”",
+                "sub": "✦ 山脊线上的璀璨银河倒影"
+        },
+        {
+                "text": "“候鸟跨越半个地球只为赴一场春天的约会，而我跨越千山只为走向你。”",
+                "sub": "✦ 候鸟迁徙万里的笃定归途"
+        },
+        {
+                "text": "“听冰层裂开第一声清脆欢响，就像你唤我名字时，心中悄然涌动的融融春意。”",
+                "sub": "✦ 漫长冬天过后解冻的溪流"
+        },
+        {
+                "text": "“在快餐化的信息时代，有些话只配用最慢的方式，郑重写进有你的余生。”",
+                "sub": "✦ 永不褪色的手写信笺"
+        },
+        {
+                "text": "“当原本晦暗的世界突然被丁达尔效应照亮，我知道，是你走进了我的视线。”",
+                "sub": "✦ 穿透云层落下的丁达尔光束"
+        },
+        {
+                "text": "“外面的世界争分夺秒奔忙不休，只有在你怀里，时间才温柔地放慢了脚步。”",
+                "sub": "✦ 尘世喧嚣里的一座静止钟表"
+        },
+        {
+                "text": "“哪怕大地经历整整一个冰期的严寒，只要你的一滴甘霖，我依然能破土抽芽。”",
+                "sub": "✦ 穿越冰川时代幸存的种子"
+        },
+        {
+                "text": "“山川会剥蚀，河流会改道，但刻在灵魂深处的这抹温度，千百年后依然滚烫。”",
+                "sub": "✦ 岁月无法风化的深情纹理"
+        },
+        {
+                "text": "“两颗恒星绕着共同质心永恒起舞，引力是唯一的弦，缠绕出全宇宙最美的轨迹。”",
+                "sub": "✦ 遥远深空里的双星互绕系统"
+        },
+        {
+                "text": "“假若宇宙行至热寂与终末，只要在最后一秒握住你的手，便不枉此生漫漫旅程。”",
+                "sub": "✦ 宇宙终章那一刻的平静凝视"
+        },
+        {
+                "text": "“99 句絮语只是这方小天地的缩影，而我们并肩书写的故事，才刚刚展开序章。”",
+                "sub": "✦ 始终同频，未完待续"
+        }
+],
       en: [
-        { text: "“In the boundless spacetime coordinate system, you are my only certain gravitational solution.”", sub: "✦ Gravitational field equations · Unique solution" },
-        { text: "“Staying curious, walking side by side, turning everyday moments into scenery.”", sub: "✦ Wandering through every ordinary day" },
-        { text: "“While the universe expands and drifts apart, only love pulls two galaxies closer.”", sub: "✦ Overcoming cosmic entropy and redshift" },
-        { text: "“Code can express infinite logic, but some bonds need no conditional statements.”", sub: "✦ Always true, without if or else" }
-      ]
+        {
+                "text": "“In the boundless spacetime coordinate system, you are my only certain gravitational solution.”",
+                "sub": "✦ Gravitational field equations · Unique solution"
+        },
+        {
+                "text": "“Staying curious, walking side by side, turning everyday moments into scenery.”",
+                "sub": "✦ Wandering through every ordinary day"
+        },
+        {
+                "text": "“While the universe expands and drifts apart, only love pulls two galaxies closer.”",
+                "sub": "✦ Overcoming cosmic entropy and redshift"
+        },
+        {
+                "text": "“Code can express infinite logic, but some bonds need no conditional statements.”",
+                "sub": "✦ Always true, without if or else"
+        },
+        {
+                "text": "“In a noisy world, I am grateful we always tune into the exact same frequency.”",
+                "sub": "✦ Radio tuning · Exclusive wavelength"
+        },
+        {
+                "text": "“A haven is simply knowing that whenever I look back, you are right there where our eyes meet.”",
+                "sub": "✦ Absolute reassurance in a shared glance"
+        },
+        {
+                "text": "“Even after traveling tens of thousands of light-years, starlight lands precisely in the gazer's eyes.”",
+                "sub": "✦ Targeted arrival across boundless time"
+        },
+        {
+                "text": "“Among infinite random variables, you remain my unshakeable constant.”",
+                "sub": "✦ The stabilizing anchor in a turbulent system"
+        },
+        {
+                "text": "“Two particles once entangled are destined to echo each other across opposite ends of the universe.”",
+                "sub": "✦ Quantum entanglement & instant resonance"
+        },
+        {
+                "text": "“The echo of the Big Bang billions of years ago still hums our unending background soundtrack.”",
+                "sub": "✦ Cosmic microwave background radiation"
+        },
+        {
+                "text": "“Light cannot return past the event horizon, but love is the only beacon piercing gravity's deep well.”",
+                "sub": "✦ Returning from beyond the event horizon"
+        },
+        {
+                "text": "“Like a pulsar light-years away, my heartbeat keeps time to your millisecond rhythm.”",
+                "sub": "✦ Rhythmic beat of the pulsar"
+        },
+        {
+                "text": "“Using your gaze as a gravitational slingshot, I found the momentum to voyage into deeper space.”",
+                "sub": "✦ Planetary gravitational slingshot"
+        },
+        {
+                "text": "“If civilizations eventually fade into deep space, I want the golden record to hold the sound of your laugh.”",
+                "sub": "✦ Voyager's Golden Record"
+        },
+        {
+                "text": "“The moon has faced Earth for billions of years; my gaze is likewise tidally locked to you.”",
+                "sub": "✦ Eternal gaze of tidal locking"
+        },
+        {
+                "text": "“Even when spacetime bends, gravitational lensing still bends every stray ray toward you.”",
+                "sub": "✦ Focus of the gravitational lens"
+        },
+        {
+                "text": "“Every iron atom in our veins originated from the cataclysmic bloom of the same ancient supernova.”",
+                "sub": "✦ The romantic destiny of stardust"
+        },
+        {
+                "text": "“Solar winds swept icy skies and ignited dancing auroras, just as you illuminated my quiet days.”",
+                "sub": "✦ Solar winds weaving the aurora"
+        },
+        {
+                "text": "“Before space and time collapsed into a singularity, our reunion was already whispered into the void.”",
+                "sub": "✦ Singular presence before time began"
+        },
+        {
+                "text": "“Across infinite parallel universes, my greatest joy is walking side by side with you in this one.”",
+                "sub": "✦ Many-worlds interpretation & inevitable meeting"
+        },
+        {
+                "text": "“The shortest path between two points isn't a line, but the gentle geodesic warped by your presence.”",
+                "sub": "✦ Spacetime curvature & gentle geodesics"
+        },
+        {
+                "text": "“No escape velocity could carry me away; your gravitational field is the entire universe I seek.”",
+                "sub": "✦ Escape velocity & home of the heart"
+        },
+        {
+                "text": "“Even at the frozen edge of the Kuiper Belt, the thought of you kindles a dawn within.”",
+                "sub": "✦ Vigil along the Kuiper Belt"
+        },
+        {
+                "text": "“Though the cosmos drifts toward redshift, your approach bathes my world in brilliant blueshift.”",
+                "sub": "✦ Blueshifted solace in an expanding cosmos"
+        },
+        {
+                "text": "“Every packet sent to you carries the highest priority and zero-latency acknowledgment.”",
+                "sub": "✦ Zero packet loss & instantaneous echo"
+        },
+        {
+                "text": "“Without words, every touch of fingers sends an unshakeable heartbeat pulse.”",
+                "sub": "✦ Keep-alive heartbeat mechanism"
+        },
+        {
+                "text": "“Amid messy object lifecycles, you are the singular, globally unique instance in my universe.”",
+                "sub": "✦ The singleton instance across runtime"
+        },
+        {
+                "text": "“Even if the world blocks the main thread, the event loop of caring for you runs uninterrupted.”",
+                "sub": "✦ An event loop that never halts"
+        },
+        {
+                "text": "“The world can verify my public key, but only you hold the private key to unlock my inner thoughts.”",
+                "sub": "✦ Asymmetric crypto & private key"
+        },
+        {
+                "text": "“Even surrounded by untrusted nodes, we maintain unconditional Byzantine fault tolerance.”",
+                "sub": "✦ Absolute Byzantine consensus"
+        },
+        {
+                "text": "“Those dusks spent with you have long been burned indelibly into tamper-proof firmware ROM.”",
+                "sub": "✦ Permanent read-only memory"
+        },
+        {
+                "text": "“Time may discard incidental noise, but your smile is archived in lossless high fidelity.”",
+                "sub": "✦ Lossless compression of daily life"
+        },
+        {
+                "text": "“Outer contexts may shift, but you remain the eternal scope captured within my closure.”",
+                "sub": "✦ Eternal closure scope"
+        },
+        {
+                "text": "“True synergy needs no documentation—working together with zero warnings, zero errors.”",
+                "sub": "✦ Zero-warning harmony"
+        },
+        {
+                "text": "“Every moment shared with you is committed unconditionally—never rolled back.”",
+                "sub": "✦ Atomic transaction commitment"
+        },
+        {
+                "text": "“Like twisted pair cables intertwined, canceling outside interference to transmit pure signal.”",
+                "sub": "✦ Shielded twisted pair pairing"
+        },
+        {
+                "text": "“This bond is licensed for a lifetime, granting full trust and tenderness without restriction.”",
+                "sub": "✦ Lifetime open-source license"
+        },
+        {
+                "text": "“Whenever you need rest, I am your high-availability standby, ready to support without fail.”",
+                "sub": "✦ High-availability failover cluster"
+        },
+        {
+                "text": "“Just thinking of your name hits an instant cache, turning exhaustion into serene focus.”",
+                "sub": "✦ Nanosecond cache acceleration"
+        },
+        {
+                "text": "“Even across different timezones, our logical clocks synchronize the moment our eyes meet.”",
+                "sub": "✦ Distributed global wall clock"
+        },
+        {
+                "text": "“All variables have lifecycles, yet my love for you is rooted where no garbage collector can touch.”",
+                "sub": "✦ Root reference immune to garbage collection"
+        },
+        {
+                "text": "“After typing thousands of lines, the sweetest output is looking up to find the warm water you brought.”",
+                "sub": "✦ The purest terminal output"
+        },
+        {
+                "text": "“The evening breeze scatters the day's fatigue; the long street walked together is home.”",
+                "sub": "✦ Amber sunset and overlapping shadows"
+        },
+        {
+                "text": "“Life needs no grand narrative; two bowls of warm soup and quiet banter are plenty.”",
+                "sub": "✦ Gentle warmth amid everyday life"
+        },
+        {
+                "text": "“A new day begins with the grinder's low hum and the mug you hand me while half-awake.”",
+                "sub": "✦ Steam curling from morning coffee"
+        },
+        {
+                "text": "“The umbrella is small, but tilting it thirty degrees toward you is my most instinctive gesture.”",
+                "sub": "✦ Sharing an umbrella in quiet drizzle"
+        },
+        {
+                "text": "“Wandering the aisles between fresh bread and ripe fruit is life's most grounded happiness.”",
+                "sub": "✦ Drifting with the supermarket cart"
+        },
+        {
+                "text": "“The plant we watered sprouted another leaf; time grows tenderly beneath our quiet gaze.”",
+                "sub": "✦ Fresh green leaves on the balcony"
+        },
+        {
+                "text": "“You in my left ear, melody in my right; the evening train's swaying turns into rhythm.”",
+                "sub": "✦ Sharing a pair of earphones"
+        },
+        {
+                "text": "“The pan sizzles as you chop and I stir; kitchen steam holds the earth's truest peace.”",
+                "sub": "✦ Sizzling warmth above the stove"
+        },
+        {
+                "text": "“Sun-dried cotton sheets smelling of daylight; diving into bed softens the whole world.”",
+                "sub": "✦ Fresh sunlit sheets after seasonal change"
+        },
+        {
+                "text": "“Under a single lamp, you with your book and me at my keys; silent yet deeply at ease.”",
+                "sub": "✦ Quiet reading late into the night"
+        },
+        {
+                "text": "“A first bite at an unnamed street stall; one glance between us confirms the quiet delight.”",
+                "sub": "✦ Unexpected treats at a corner bistro"
+        },
+        {
+                "text": "“A faded polaroid of your wind-swept profile by the sea; years pass, but your charm never fades.”",
+                "sub": "✦ Unearthing polaroids from long ago"
+        },
+        {
+                "text": "“A scrawled note on the fridge saying 'eat breakfast' warms the morning before ink can dry.”",
+                "sub": "✦ Crooked sticky notes on the fridge"
+        },
+        {
+                "text": "“Shadows of trees dance on the window; waking from an afternoon nap to find you beside me.”",
+                "sub": "✦ Heavy weekend afternoon slumber"
+        },
+        {
+                "text": "“No anniversary needed; a simple bunch of daisies brightens the dinner table for a week.”",
+                "sub": "✦ Daisies bought on a whim during a walk"
+        },
+        {
+                "text": "“Trading silly bedtime stories until tears of laughter flow and quiet sleep arrives.”",
+                "sub": "✦ Nonsense laughter before drifting off"
+        },
+        {
+                "text": "“Thunder roars against the glass outside, but warm lamplight within keeps every storm at bay.”",
+                "sub": "✦ Windows closed against stormy nights"
+        },
+        {
+                "text": "“Packing suitcases for our next journey; our things folded side by side make anywhere a home.”",
+                "sub": "✦ Neatly packed luggage for the next trip"
+        },
+        {
+                "text": "“The open road reaches toward the horizon; the orange you peel in the passenger seat is pure sweetness.”",
+                "sub": "✦ Tacit rhythm between driver and passenger"
+        },
+        {
+                "text": "“When mist obscures your way, never fear; look back and I am always the lighthouse you recognize.”",
+                "sub": "✦ A beam piercing the thickest fog"
+        },
+        {
+                "text": "“Because I know you will catch me, I find the daring courage to sprint across open plains.”",
+                "sub": "✦ Quiet confidence across hills and seas"
+        },
+        {
+                "text": "“I have witnessed you shining bright and held you on fragile nights; loved you more for both.”",
+                "sub": "✦ Long seasons witnessing each other's growth"
+        },
+        {
+                "text": "“The world is eager to lecture; I am here simply to stand beside you and hear your heart out.”",
+                "sub": "✦ Gentle listening without judgment"
+        },
+        {
+                "text": "“Even when storms drown expectations, our clasped hands can coax flowers from stone.”",
+                "sub": "✦ Buds breaking stone through the deepest valley"
+        },
+        {
+                "text": "“The world is wide and wondrous, made better because every gasp of awe is shared with you.”",
+                "sub": "✦ Companions exploring the unknown"
+        },
+        {
+                "text": "“Across a crowded, clamorous room, a single knowing smile says everything.”",
+                "sub": "✦ A shared glance across crowded rooms"
+        },
+        {
+                "text": "“Standing distinct beneath the sky, like two great trees whose roots entwine invisibly below.”",
+                "sub": "✦ Independent boughs with entwined roots"
+        },
+        {
+                "text": "“You must be an adult for the world, but with me, you can always just be a kid.”",
+                "sub": "✦ A sanctuary where vulnerability is safe"
+        },
+        {
+                "text": "“Every vague fragment of an idea finds form and courage under your attentive gaze.”",
+                "sub": "✦ The catalyst for every spark of inspiration"
+        },
+        {
+                "text": "“Gears may grind in the tuning, but every smoothed rhythm drives us forward stronger.”",
+                "sub": "✦ Tight embrace after resolving discord"
+        },
+        {
+                "text": "“The world has a thousand doctrines; my compass is simple: I stand squarely on your side.”",
+                "sub": "✦ Unconditional favor polished by the years"
+        },
+        {
+                "text": "“Romance isn't fireworks in a single flash, but decades of gentle streams, cherished daily.”",
+                "sub": "✦ Guarding each other against the erosion of time"
+        },
+        {
+                "text": "“Because of how tenderly you love me, I learned at last how to love the wider world.”",
+                "sub": "✦ Discovering a better self in your eyes"
+        },
+        {
+                "text": "“Outside winds may shift wildly, but once the latch clicks, this home is an impregnable fort.”",
+                "sub": "✦ The fortress of calm we built together"
+        },
+        {
+                "text": "“Chase whatever dream calls you; turn around at any moment and a warm meal awaits.”",
+                "sub": "✦ Steadfast ground supporting every flight"
+        },
+        {
+                "text": "“Love isn't gazing solely at each other, but watching the same horizon as our wings unfold.”",
+                "sub": "✦ Shared wings lifting both toward the horizon"
+        },
+        {
+                "text": "“Miracles are just constellations gathered from countless ordinary moments of 'glad you're here'.”",
+                "sub": "✦ Little wonders gathered from common days"
+        },
+        {
+                "text": "“Through shifting seasons, frost or sun, warmth in your palm keeps the road ahead bright.”",
+                "sub": "✦ Palm-to-palm warmth through every season"
+        },
+        {
+                "text": "“Facing a vast, empty cosmos, loving one concrete person gives life all its answers.”",
+                "sub": "✦ The concrete antidote to cosmic void"
+        },
+        {
+                "text": "“Paddling with a single oar down the river of time, rapids themselves become the scenery.”",
+                "sub": "✦ A two-person canoe on the river of time"
+        },
+        {
+                "text": "“Tides may smooth our footprints on the sand, but our journey is woven into the sea wind.”",
+                "sub": "✦ Paired footprints beside the rising tide"
+        },
+        {
+                "text": "“From thirty thousand feet, looking down on earthly sparks, the brightest shines where you wait.”",
+                "sub": "✦ City lights seen through a night-flight window"
+        },
+        {
+                "text": "“After the longest winter night, the very first sunbeam rises to illuminate your smile.”",
+                "sub": "✦ Morning sun breaking over the frontier"
+        },
+        {
+                "text": "“A single note may ring clear, but only when played with you does the melody gain a soul.”",
+                "sub": "✦ Harmonious chords completing the score"
+        },
+        {
+                "text": "“Like two leaves deep in the woods, whispering in the wind, sharing the same spring below.”",
+                "sub": "✦ Leaves whispering in an ancient canopy"
+        },
+        {
+                "text": "“Ancient brushstrokes of devotion come alive again each time our glances meet.”",
+                "sub": "✦ Immortal portraits in quiet gallery halls"
+        },
+        {
+                "text": "“Stars overhead, and you beside me; abysses below, and you still beside me—fear vanishes.”",
+                "sub": "✦ Milky Way mirrored along the mountain ridge"
+        },
+        {
+                "text": "“Migratory birds cross half the globe for spring's appointment; I cross thousands of miles for you.”",
+                "sub": "✦ Certain journey of migratory flight"
+        },
+        {
+                "text": "“The first crisp crack of thawing ice echoes the warm spring in my chest when you call my name.”",
+                "sub": "✦ Spring streams thawing after a long freeze"
+        },
+        {
+                "text": "“In an era of fleeting pings, some words deserve only the slowest ink, written into our shared life.”",
+                "sub": "✦ Hand-penned letters that never fade"
+        },
+        {
+                "text": "“When cloudy gray suddenly fragments into Tyndall beams, I know you have walked into view.”",
+                "sub": "✦ Sunbeams breaking through low cloud cover"
+        },
+        {
+                "text": "“The world outside races relentlessly; only in your embrace does time pause to breathe.”",
+                "sub": "✦ A clock standing still amid the rush"
+        },
+        {
+                "text": "“Even through the chill of an ice age, one drop of your rain can wake the dormant seed in me.”",
+                "sub": "✦ Seeds outlasting an entire ice age"
+        },
+        {
+                "text": "“Mountains erode and rivers shift, but this warmth etched into our souls remains ablaze.”",
+                "sub": "✦ Timeless grain that weather cannot wear"
+        },
+        {
+                "text": "“Two stars dance around a common barycenter, gravity the sole string weaving beauty through space.”",
+                "sub": "✦ Binary stars orbiting their shared heart"
+        },
+        {
+                "text": "“If the universe reaches heat death, holding your hand in the final second redeems the journey.”",
+                "sub": "✦ Calm gaze at the universe's final chapter"
+        },
+        {
+                "text": "“These 99 whispers are just a glimpse; the real story we write together has only begun.”",
+                "sub": "✦ On the same wavelength · To be continued"
+        }
+]
     };
 
     let currentQuoteIdx = 0;
@@ -2063,8 +2847,19 @@
         subEl.textContent = q.sub;
       }
       if (counterEl) {
-        counterEl.textContent = `0${(currentQuoteIdx % quotes.length) + 1} / 0${quotes.length}`;
+        const cur = String((currentQuoteIdx % quotes.length) + 1).padStart(2, "0");
+        const total = String(quotes.length).padStart(2, "0");
+        counterEl.textContent = `${cur} / ${total}`;
       }
+    }
+
+    function getRandomQuoteIdx(length) {
+      if (length <= 1) return 0;
+      let next;
+      do {
+        next = Math.floor(Math.random() * length);
+      } while (next === currentQuoteIdx);
+      return next;
     }
 
     function setLang(lang) {
@@ -2156,7 +2951,10 @@
         setTimeout(() => ripple.remove(), 700);
       }
 
-      // Smooth quote transition
+      // Smooth quote transition (random generation)
+      const currentLang = document.documentElement.lang === "zh-CN" ? "zh" : "en";
+      const quotes = CC_QUOTES[currentLang] || CC_QUOTES.en;
+
       if (keepsakeQuote && keepsakeSub) {
         keepsakeQuote.style.opacity = "0";
         keepsakeQuote.style.transform = "translateY(3px)";
@@ -2164,7 +2962,7 @@
         keepsakeSub.style.transform = "translateY(3px)";
 
         setTimeout(() => {
-          currentQuoteIdx++;
+          currentQuoteIdx = getRandomQuoteIdx(quotes.length);
           updateWhisperQuote();
           keepsakeQuote.style.opacity = "1";
           keepsakeQuote.style.transform = "translateY(0)";
@@ -2172,7 +2970,7 @@
           keepsakeSub.style.transform = "translateY(0)";
         }, 140);
       } else {
-        currentQuoteIdx++;
+        currentQuoteIdx = getRandomQuoteIdx(quotes.length);
         updateWhisperQuote();
       }
     }
