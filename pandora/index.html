@@ -232,62 +232,161 @@
     }
 
     .hero-chest-wrap {
-      width: 160px;
-      height: 150px;
+      width: 260px;
+      height: 240px;
       margin: 0 auto 20px;
       position: relative;
       display: grid;
       place-items: center;
+      perspective: 1000px;
+    }
+
+    .hero-ground-shadow {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      width: 160px;
+      height: 26px;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 45%, transparent 75%);
+      filter: blur(6px);
+      pointer-events: none;
+      z-index: 1;
+      animation: hero-shadow-breathe 4.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes hero-shadow-breathe {
+      0% { transform: translateX(-50%) scale(1); opacity: 0.9; }
+      100% { transform: translateX(-50%) scale(0.85); opacity: 0.55; }
+    }
+
+    .hero-ground-pedestal {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      width: 180px;
+      height: 42px;
+      transform: translateX(-50%) rotateX(68deg);
+      border-radius: 50%;
+      border: 1px dashed rgba(226, 180, 89, 0.4);
+      box-shadow: 0 0 20px rgba(226, 180, 89, 0.25), inset 0 0 16px rgba(76, 196, 234, 0.2);
+      pointer-events: none;
+      z-index: 1;
+      animation: hero-pedestal-spin 36s linear infinite;
+    }
+
+    @keyframes hero-pedestal-spin {
+      from { transform: translateX(-50%) rotateX(68deg) rotate(0deg); }
+      to { transform: translateX(-50%) rotateX(68deg) rotate(360deg); }
     }
 
     .hero-astrolabe-ring {
       position: absolute;
-      inset: 0;
+      top: 48%;
+      left: 50%;
+      width: 210px;
+      height: 210px;
+      transform: translate(-50%, -50%);
       border-radius: 50%;
-      border: 1px dashed rgba(226, 180, 89, 0.35);
-      animation: pandora-astrolabe-spin 48s linear infinite;
+      border: 1px dashed rgba(226, 180, 89, 0.3);
+      animation: pandora-astrolabe-spin 55s linear infinite;
       pointer-events: none;
-    }
-
-    @keyframes pandora-astrolabe-spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      z-index: 1;
     }
 
     .hero-relic-art {
       position: relative;
-      width: 124px;
-      height: 124px;
+      width: 210px;
+      height: 210px;
       z-index: 2;
       animation: hero-relic-float 4.5s ease-in-out infinite alternate;
     }
 
     @keyframes hero-relic-float {
       0% { transform: translateY(0px) rotate(-1deg); }
-      100% { transform: translateY(-7px) rotate(1.5deg); }
+      100% { transform: translateY(-10px) rotate(1.5deg); }
     }
 
     .hero-relic-img {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 24px rgba(226, 180, 89, 0.75)) drop-shadow(0 0 45px rgba(76, 196, 234, 0.55));
+      border-radius: 0;
+      mix-blend-mode: screen;
+      -webkit-mask-image: radial-gradient(circle 50% at 50% 50%, #000 48%, rgba(0,0,0,0.85) 62%, rgba(0,0,0,0.3) 76%, transparent 88%);
+      mask-image: radial-gradient(circle 50% at 50% 50%, #000 48%, rgba(0,0,0,0.85) 62%, rgba(0,0,0,0.3) 76%, transparent 88%);
+      filter: drop-shadow(0 0 35px rgba(226, 180, 89, 0.95)) drop-shadow(0 0 55px rgba(76, 196, 234, 0.8));
     }
 
     .hero-beam {
       position: absolute;
       bottom: 24px;
       left: 50%;
-      width: 76px;
-      height: 230px;
+      width: 110px;
+      height: 320px;
       transform: translateX(-50%);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(226, 180, 89, 0.5) 40%, rgba(76, 196, 234, 0.3) 75%, transparent 100%);
-      border-radius: 50px 50px 0 0;
-      filter: blur(12px);
-      opacity: 0.85;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(226, 180, 89, 0.6) 35%, rgba(76, 196, 234, 0.35) 70%, transparent 100%);
+      border-radius: 60px 60px 0 0;
+      filter: blur(14px);
+      opacity: 0.88;
       pointer-events: none;
       animation: beam-breathe 3.5s ease-in-out infinite alternate;
       z-index: 1;
+      mix-blend-mode: screen;
+    }
+
+    /* Foreground Floating Dust Sparks */
+    .pandora-spark {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 4;
+      animation: spark-float 3.5s ease-in-out infinite alternate;
+    }
+
+    .spark-1 {
+      top: 25%;
+      left: 18%;
+      width: 3.5px;
+      height: 3.5px;
+      background: #e2b459;
+      box-shadow: 0 0 8px #e2b459, 0 0 14px #e2b459;
+      animation-delay: 0.2s;
+    }
+
+    .spark-2 {
+      top: 65%;
+      right: 16%;
+      width: 4px;
+      height: 4px;
+      background: #4cc4ea;
+      box-shadow: 0 0 10px #4cc4ea, 0 0 16px #4cc4ea;
+      animation-delay: 1.1s;
+    }
+
+    .spark-3 {
+      top: 38%;
+      right: 22%;
+      width: 3px;
+      height: 3px;
+      background: #f5cf7a;
+      box-shadow: 0 0 8px #f5cf7a;
+      animation-delay: 2s;
+    }
+
+    .spark-4 {
+      bottom: 28%;
+      left: 24%;
+      width: 3px;
+      height: 3px;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
+      animation-delay: 0.8s;
+    }
+
+    @keyframes spark-float {
+      0% { transform: translateY(0) scale(0.8); opacity: 0.4; }
+      100% { transform: translateY(-8px) scale(1.2); opacity: 1; }
     }
 
     @keyframes beam-breathe {
@@ -692,10 +791,16 @@
       <section class="hero">
         <div class="hero-chest-wrap">
           <div class="hero-beam"></div>
-          <div class="hero-astrolabe-ring"></div>
+          <div class="hero-ground-shadow" aria-hidden="true"></div>
+          <div class="hero-ground-pedestal" aria-hidden="true"></div>
+          <div class="hero-astrolabe-ring" aria-hidden="true"></div>
           <div class="hero-relic-art">
             <img src="../assets/pandora/box-opened.webp" alt="Opened Pandora Box Vault" class="hero-relic-img" />
           </div>
+          <span class="pandora-spark spark-1" aria-hidden="true"></span>
+          <span class="pandora-spark spark-2" aria-hidden="true"></span>
+          <span class="pandora-spark spark-3" aria-hidden="true"></span>
+          <span class="pandora-spark spark-4" aria-hidden="true"></span>
         </div>
 
         <div class="hero-badge">✦ CHRONO VAULT · 密匣已启 ✦</div>
