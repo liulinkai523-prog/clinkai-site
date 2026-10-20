@@ -1,0 +1,3412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linkai — Building small things with curiosity & craft</title>
+  <meta name="description" content="Linkai's personal studio — small tools, AI experiments, and notes on what I learn." />
+  <meta name="theme-color" content="#08090b" />
+  <link rel="canonical" href="https://linkai.codes/" />
+
+  <!-- Open Graph / social preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://linkai.codes/" />
+  <meta property="og:title" content="LINKAI | Learn · Build · Observe" />
+  <meta property="og:description" content="Personal projects, AI experiments, learning and observations." />
+  <meta property="og:image" content="https://linkai.codes/linkai-card.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="LINKAI | Learn · Build · Observe" />
+  <meta name="twitter:description" content="Personal projects, AI experiments, learning and observations." />
+  <meta name="twitter:image" content="https://linkai.codes/linkai-card.jpg" />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b0d10' stroke='rgba(255,255,255,0.18)' stroke-width='2'/%3E%3Cpath d='M18 16v32h32' stroke='%23eef2f5' stroke-width='5.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M31 35L47 19' stroke='%235ec2e6' stroke-width='5' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='47' cy='19' r='4.5' fill='%235ec2e6'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet" />
+  <!-- 本地自托管精简版「京华老宋体」(KingHwa_OldSong) 首屏子集预加载 -->
+  <link rel="preload" href="./assets/fonts/KingHwa_OldSong.subset.woff2" as="font" type="font/woff2" crossorigin />
+
+  <!-- Umami Analytics -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="13eda13d-5f65-4331-8d25-6f1e560ad92b"></script>
+
+  <style>
+    /* ============ Direction A: Restrained Light & Shadow · Craft Studio Tokens ============ */
+    :root {
+      color-scheme: dark;
+
+      --bg: #08090b;
+      --bg-raise: #0b0d10;
+      --surface: #0e1014;
+      --surface-2: #13161c;
+      --surface-3: #191d24;
+
+      --line-subtle: rgba(255, 255, 255, 0.045);
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.15);
+
+      --text: #f2f4f7;
+      --text-2: #9ba3ae;
+      --text-3: #646d78;
+
+      --accent: #5ec2e6;
+      --accent-soft: rgba(94, 194, 230, 0.1);
+      --accent-line: rgba(94, 194, 230, 0.32);
+
+      --gold: #d4b475;
+      --gold-soft: rgba(212, 180, 117, 0.12);
+      --gold-line: rgba(212, 180, 117, 0.35);
+
+      --emerald: #34d399;
+      --emerald-soft: rgba(52, 211, 153, 0.1);
+      --emerald-line: rgba(52, 211, 153, 0.28);
+
+      --font-sans: "Geist", "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      --font-serif: "Instrument Serif", Georgia, serif;
+
+      --r-xs: 6px;
+      --r-sm: 10px;
+      --r-md: 14px;
+      --r-lg: 18px;
+      --r-xl: 24px;
+      --r-pill: 9999px;
+
+      --inner-hi: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      --shadow-card: 0 20px 44px -20px rgba(0, 0, 0, 0.85), 0 4px 12px -2px rgba(0, 0, 0, 0.5);
+
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-snap: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+
+      --container: 1080px;
+      --gutter: clamp(20px, 4.5vw, 48px);
+      --section-gap: clamp(96px, 11vw, 156px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    :focus-visible {
+      outline: 1.5px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: var(--r-xs);
+    }
+
+    ::selection { background: rgba(94, 194, 230, 0.18); color: #fff; }
+
+    .container {
+      width: min(var(--container), 100% - var(--gutter) * 2);
+      margin-inline: auto;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-3);
+    }
+
+    .serif-italic {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      color: #e4e8ee;
+      letter-spacing: -0.01em;
+      padding-right: 0.04em;
+    }
+
+    /* Inline English Serif Italic inside Chinese headlines */
+    .en-inline {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.14em;
+      letter-spacing: -0.01em;
+      color: #f4f6f9;
+      padding: 0 0.06em;
+    }
+
+    /* ============ 京华老宋体 (KingHwa_OldSong) Unified Local WOFF2 ============ */
+    @font-face {
+      font-family: "KingHwa_OldSong";
+      src: url("./assets/fonts/KingHwa_OldSong.subset.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+      font-display: block;
+    }
+
+    :root {
+      --font-zh-art: "KingHwa_OldSong", "Instrument Serif", Georgia, serif;
+    }
+
+    html:lang(zh-CN) .hero h1,
+    html:lang(zh-CN) .about-statement,
+    html:lang(zh-CN) .contact-section h2,
+    html:lang(zh-CN) .cc-subtitle,
+    html:lang(zh-CN) .titanium-quote,
+    html:lang(zh-CN) .cclk-dedication,
+    html:lang(zh-CN) .card-head h2,
+    html:lang(zh-CN) .card-head h3 {
+      font-family: var(--font-zh-art);
+      font-weight: 400;
+    }
+
+    html:lang(zh-CN) .hero h1 {
+      font-size: clamp(2.35rem, 4.8vw, 4.1rem);
+      line-height: 1.28;
+      letter-spacing: 0.04em;
+      color: #d6dde6;
+    }
+
+    html:lang(zh-CN) .about-statement {
+      font-size: clamp(1.7rem, 3vw, 2.55rem);
+      line-height: 1.42;
+      letter-spacing: 0.04em;
+      color: #cbd4df;
+    }
+
+    html:lang(zh-CN) .cclk-dedication,
+    html:lang(zh-CN) .card-head h2,
+    html:lang(zh-CN) .card-head h3 {
+      font-size: 1.42rem;
+      letter-spacing: 0.03em;
+    }
+
+    html:lang(zh-CN) .serif-italic {
+      font-family: var(--font-zh-art);
+      font-style: normal;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      background: linear-gradient(180deg, #ffffff 0%, #ead6b3 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding-right: 0;
+    }
+
+    /* ============ Subtle Studio Ambient (No cheesy laser shafts) ============ */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(900px 420px at 50% -120px, var(--ambient-tint, rgba(255, 255, 255, 0.035)), transparent 70%);
+      transition: background 600ms ease;
+    }
+
+    /* ============ Top Swiss Hairline Navigation ============ */
+    .header-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8, 9, 11, 0.8);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: baseline;
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      user-select: none;
+    }
+
+    .logo-dot {
+      color: var(--accent);
+      margin-left: 1px;
+      transition: transform 240ms ease, color 240ms ease;
+    }
+
+    .logo:hover .logo-dot {
+      transform: scale(1.25);
+      color: #fff;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 14px;
+    }
+
+    .nav-links a {
+      color: var(--text-2);
+      transition: color 180ms ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    /* Language Switch */
+    .lang-switch {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px;
+      border-radius: var(--r-pill);
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+
+    .lang-switch button {
+      min-width: 32px;
+      height: 26px;
+      padding: 0 9px;
+      border: 0;
+      border-radius: var(--r-pill);
+      background: transparent;
+      color: var(--text-3);
+      font: 500 11.5px/1 var(--font-mono);
+      cursor: pointer;
+      transition: color 160ms ease, background-color 160ms ease;
+    }
+
+    .lang-switch button:hover { color: var(--text); }
+
+    .lang-switch button[aria-pressed="true"] {
+      background: var(--surface-3);
+      color: var(--text);
+      box-shadow: var(--inner-hi);
+    }
+
+    /* ============ Asymmetric Editorial Hero + Tactile Dial ============ */
+    .hero {
+      position: relative;
+      z-index: 1;
+      padding: clamp(56px, 8vw, 96px) 0 clamp(44px, 6vw, 68px);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: clamp(32px, 5vw, 72px);
+      align-items: center;
+    }
+
+    .hero h1 {
+      margin: 0 0 18px;
+      font-size: clamp(2.65rem, 5.6vw, 4.75rem);
+      font-weight: 560;
+      line-height: 1.04;
+      letter-spacing: -0.042em;
+      color: var(--text);
+      text-wrap: balance;
+    }
+
+    .hero h1 .serif-italic {
+      font-size: 1.08em;
+    }
+
+    .hero-index {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .hero-index-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .hero .lead {
+      margin: 0;
+      max-width: 37rem;
+      font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      color: var(--text-2);
+      line-height: 1.65;
+      text-wrap: pretty;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 40px;
+      padding: 0 18px;
+      border-radius: var(--r-pill);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 140ms var(--ease-snap), background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: #f2f4f7;
+      color: #08090b;
+      box-shadow: 0 2px 12px rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-primary:hover {
+      background: #ffffff;
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.22);
+    }
+
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--text-2);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--inner-hi);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.28);
+      background: var(--surface-2);
+    }
+
+    .btn .arrow { transition: transform 180ms var(--ease-snap); }
+    .btn:hover .arrow { transform: translate(2px, -2px); }
+
+    /* ============ Tactile Studio Optics Dimmer & Flashlight Dial ============ */
+    .flashlight-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 40;
+      opacity: 0;
+      background: radial-gradient(
+        340px circle at var(--fx, 50vw) var(--fy, 35vh),
+        transparent 0%,
+        rgba(5, 6, 8, 0.55) 48%,
+        rgba(4, 5, 7, 0.88) 100%
+      );
+      transition: opacity 450ms ease;
+    }
+
+    body[data-optics="flashlight"] .flashlight-overlay {
+      opacity: 1;
+    }
+
+    .dial-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+    }
+
+    .dial-housing {
+      position: relative;
+      width: 176px;
+      height: 176px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 32%, #1a1e26 0%, #0d1015 65%, #07080b 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow:
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.14),
+        inset 0 -10px 24px rgba(0, 0, 0, 0.85),
+        0 24px 48px -12px rgba(0, 0, 0, 0.9),
+        0 0 36px -8px var(--dial-glow, rgba(94, 194, 230, 0.2));
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: transform 200ms var(--ease-snap), border-color 240ms ease, box-shadow 300ms ease;
+    }
+
+    .dial-housing:hover {
+      border-color: rgba(255, 255, 255, 0.24);
+      box-shadow:
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.18),
+        inset 0 -10px 24px rgba(0, 0, 0, 0.85),
+        0 28px 56px -12px rgba(0, 0, 0, 0.95),
+        0 0 42px -6px var(--dial-glow, rgba(94, 194, 230, 0.35));
+    }
+
+    .dial-housing:active {
+      transform: scale(0.96);
+    }
+
+    .dial-ticks {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .dial-rotor {
+      position: relative;
+      width: 122px;
+      height: 122px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 30%, #20252f 0%, #11141a 70%, #0a0c10 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        0 8px 18px rgba(0, 0, 0, 0.8);
+      display: grid;
+      place-items: center;
+      transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .dial-notch {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 4px;
+      border-radius: 99px;
+      background: var(--dial-color, #f3c6a8);
+      box-shadow: 0 0 12px var(--dial-color, #f3c6a8);
+      transition: background 240ms ease, box-shadow 240ms ease;
+    }
+
+    .dial-center-icon {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(212, 180, 117, 0.1);
+      border: 1px solid rgba(243, 198, 168, 0.35);
+      color: #f3c6a8;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      box-shadow: 0 0 16px rgba(243, 198, 168, 0.25);
+      transition: transform 240ms ease, background 240ms ease, border-color 240ms ease;
+    }
+
+    .dial-housing:hover .dial-center-icon {
+      transform: scale(1.12);
+      background: rgba(243, 198, 168, 0.2);
+      border-color: #f3c6a8;
+    }
+
+    .dial-housing.is-playing {
+      --dial-glow: rgba(243, 198, 168, 0.42);
+      border-color: rgba(243, 198, 168, 0.4);
+    }
+
+    .dial-housing.is-playing .dial-rotor {
+      animation: dialTurntableSpin 9s linear infinite;
+    }
+
+    @keyframes dialTurntableSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .dial-matrix {
+      width: 84px;
+      height: 84px;
+    }
+
+    .dial-readout {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      color: var(--text-2);
+      padding: 5px 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      transition: color 240ms ease, border-color 240ms ease;
+    }
+
+    .dial-unit:hover .dial-readout {
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+      .dial-unit {
+        display: none;
+      }
+    }
+
+    /* ============ Bento Work Grid (Museum-Grade Micro-UIs) ============ */
+    .work-section {
+      position: relative;
+      z-index: 1;
+      padding-bottom: var(--section-gap);
+    }
+
+    .bento {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      grid-template-rows: auto auto;
+      gap: 16px;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      padding: 26px 28px;
+      border-radius: var(--r-lg);
+      background:
+        radial-gradient(480px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.035), transparent 60%),
+        var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--inner-hi), var(--shadow-card);
+      transition: border-color 240ms ease, transform 280ms var(--ease-out), box-shadow 280ms ease;
+    }
+
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-2px);
+    }
+
+    .card.tuned-highlight {
+      border-color: var(--accent-line);
+      box-shadow: var(--inner-hi), 0 0 0 1px var(--accent-line), var(--shadow-card);
+    }
+
+    .card-avalon {
+      grid-row: span 2;
+      min-height: 460px;
+      padding-bottom: 0;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      z-index: 2;
+    }
+
+    .card-head h2, .card-head h3 {
+      margin: 0;
+      font-size: 1.32rem;
+      font-weight: 550;
+      letter-spacing: -0.024em;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-head .arrow {
+      font-size: 0.85em;
+      color: var(--text-3);
+      transition: transform 180ms var(--ease-snap), color 180ms ease;
+    }
+
+    .card:hover .card-head .arrow {
+      color: var(--text);
+      transform: translate(2px, -2px);
+    }
+
+    .card-desc {
+      margin: 8px 0 0;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--text-2);
+      max-width: 44ch;
+      z-index: 2;
+    }
+
+    /* --- Card 1: Avalon Borderless Open Stage + Cohesive 2-Deck Switcher --- */
+    .avalon-stage {
+      position: relative;
+      flex: 1;
+      min-height: 332px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      margin-inline: -28px;
+      padding: 16px 28px 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(340px 200px at 50% 52%, var(--stage-glow, rgba(212, 180, 117, 0.14)), transparent 75%);
+      transition: background 500ms ease;
+    }
+
+    .avalon-stage[data-active-deck="ds"] {
+      --stage-glow: rgba(168, 85, 247, 0.15);
+    }
+
+    /* Full-width open fan container (Zero inner boxes, zero separation!) */
+    .avalon-decks-viewport {
+      position: relative;
+      width: 100%;
+      height: 236px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .avalon-deck-hand {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px) scale(0.96);
+      transition:
+        opacity 420ms var(--ease-out),
+        transform 480ms var(--ease-reveal);
+    }
+
+    .avalon-deck-hand.is-active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .fan-card {
+      position: absolute;
+      width: 124px;
+      aspect-ratio: 54 / 85.5;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #090b0f;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow:
+        0 20px 42px -10px rgba(0, 0, 0, 0.92),
+        0 4px 12px rgba(0, 0, 0, 0.7),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+      /* Balatro-style continuous parting physics driven by CSS variables */
+      transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) rotate(var(--rot, 0deg)) scale(var(--sc, 1));
+      z-index: var(--zi, 1);
+      pointer-events: none;
+      transition:
+        transform 440ms cubic-bezier(0.2, 0.9, 0.25, 1),
+        border-color 300ms ease,
+        box-shadow 300ms ease,
+        filter 300ms ease;
+      will-change: transform;
+    }
+
+    .fan-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        130deg,
+        rgba(255, 255, 255, 0.22) 0%,
+        transparent 38%,
+        rgba(212, 180, 117, 0.16) 100%
+      );
+      mix-blend-mode: screen;
+      opacity: 0.48;
+      pointer-events: none;
+      transition: opacity 300ms ease;
+    }
+
+    .fan-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(1.1) contrast(1.05) saturate(1.06);
+      transition: filter 300ms ease;
+    }
+
+    /* Default resting CSS variables so all 5 cards are fanned before JS runs */
+    .fan-c1 { --tx: -136px; --ty: 18px; --rot: -14deg; --sc: 0.94; --zi: 8; }
+    .fan-c2 { --tx: -68px;  --ty: 6px;  --rot: -7deg;  --sc: 0.96; --zi: 9; }
+    .fan-c3 { --tx: 0px;    --ty: -5px; --rot: 0deg;   --sc: 1.03; --zi: 10; }
+    .fan-c4 { --tx: 68px;   --ty: 6px;  --rot: 7deg;   --sc: 0.96; --zi: 9; }
+    .fan-c5 { --tx: 136px;  --ty: 18px; --rot: 14deg;  --sc: 0.94; --zi: 8; }
+
+    .fan-card.is-active {
+      border-color: rgba(230, 201, 138, 0.88);
+      box-shadow:
+        0 28px 56px -8px rgba(0, 0, 0, 0.96),
+        0 0 32px -4px rgba(212, 180, 117, 0.35),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+    }
+
+    .avalon-stage[data-active-deck="ds"] .fan-card.is-active {
+      border-color: rgba(216, 180, 254, 0.85);
+      box-shadow:
+        0 28px 56px -8px rgba(0, 0, 0, 0.96),
+        0 0 32px -4px rgba(168, 85, 247, 0.38),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+    }
+
+    .fan-card.is-active img {
+      filter: brightness(1.18) contrast(1.08) saturate(1.12);
+    }
+
+    .fan-card.is-active::after {
+      opacity: 0.85;
+    }
+
+    .fan-card.is-dimmed {
+      filter: brightness(0.76) saturate(0.9);
+    }
+
+    /* Minimalist Bottom Bar: Deck Switcher Pills + Print Spec */
+    .avalon-bottom-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 6;
+    }
+
+    .deck-switcher {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .deck-switch-btn {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--text-3);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.05em;
+      padding: 4px 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+    }
+
+    .deck-switch-btn:hover {
+      color: var(--text-2);
+    }
+
+    .deck-switch-btn.is-active {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .deck-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      opacity: 0.5;
+      transition: opacity 200ms ease, box-shadow 200ms ease;
+    }
+
+    .deck-switch-btn.is-active .deck-dot {
+      opacity: 1;
+    }
+
+    .deck-dot--naruto {
+      background: var(--gold);
+      box-shadow: 0 0 6px var(--gold);
+    }
+
+    .deck-dot--ds {
+      background: #c084fc;
+      box-shadow: 0 0 6px #c084fc;
+    }
+
+    .spec-pill {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--text-3);
+      white-space: nowrap;
+    }
+
+    /* --- Card 2: Turnitin Forensic Micro-UI --- */
+    .badge-verified {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--emerald);
+      background: var(--emerald-soft);
+      border: 1px solid var(--emerald-line);
+      padding: 4px 10px;
+      border-radius: var(--r-xs);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .forensic-box {
+      margin-top: 20px;
+      padding: 16px 18px;
+      border-radius: var(--r-md);
+      background: var(--bg-raise);
+      border: 1px solid var(--line);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+    }
+
+    .forensic-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-3);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .forensic-chain {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chain-node {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text);
+      background: var(--surface-2);
+      border: 1px solid var(--line-strong);
+      padding: 7px 12px;
+      border-radius: var(--r-xs);
+      box-shadow: var(--inner-hi);
+      transition: border-color 220ms ease, background-color 220ms ease;
+    }
+
+    .card:hover .chain-node:last-child {
+      border-color: var(--emerald-line);
+      color: #fff;
+    }
+
+    .chain-arrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    /* --- Card 3: IELTS Dictation Cadence Micro-UI --- */
+    .ielts-ui {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 22px;
+      align-items: center;
+      padding-top: 6px;
+    }
+
+    .cadence-metric {
+      padding-right: 22px;
+      border-right: 1px solid var(--line);
+    }
+
+    .cadence-num {
+      font-family: var(--font-sans);
+      font-size: 2.6rem;
+      font-weight: 560;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cadence-sub {
+      margin-top: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--text-3);
+    }
+
+    .waveform-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .waveform-bars {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 36px;
+    }
+
+    .waveform-bars span {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 2px;
+      height: var(--h, 25%);
+      transition: height 260ms ease, background-color 260ms ease;
+    }
+
+    .waveform-bars span.hi {
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(94, 194, 230, 0.35);
+    }
+
+    .card:hover .waveform-bars span.hi {
+      animation: wave-pulse 640ms ease-in-out infinite alternate;
+    }
+
+    @keyframes wave-pulse {
+      0% { transform: scaleY(0.65); }
+      100% { transform: scaleY(1.22); }
+    }
+
+    .typo-diff {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-3);
+    }
+
+    .typo-diff del {
+      text-decoration: line-through;
+      color: var(--text-3);
+    }
+
+    .typo-diff ins {
+      text-decoration: none;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid rgba(94, 194, 230, 0.24);
+    }
+
+    /* --- Secondary Micro-Tools Strip (X Unfollow Helper & Link AI) --- */
+    .micro-strip {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .micro-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 24px;
+      border-radius: var(--r-md);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--inner-hi);
+      transition: border-color 200ms ease, transform 200ms var(--ease-out);
+    }
+
+    .micro-card:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-1px);
+    }
+
+    .micro-card-title {
+      font-weight: 540;
+      font-size: 15px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .micro-card-desc {
+      font-size: 13.5px;
+      color: var(--text-3);
+      margin-top: 3px;
+    }
+
+    /* ============ Section Divider ============ */
+    .hairline-divider {
+      border: 0;
+      height: 1px;
+      background: var(--line);
+      margin: 0;
+    }
+
+    /* ============ About & De-boxed Swiss NOW List ============ */
+    .about-section {
+      position: relative;
+      z-index: 1;
+      padding-block: var(--section-gap);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: clamp(36px, 6vw, 84px);
+      align-items: start;
+    }
+
+    .about-statement {
+      margin: 0;
+      font-size: clamp(1.85rem, 3.3vw, 2.85rem);
+      font-weight: 520;
+      line-height: 1.18;
+      letter-spacing: -0.032em;
+      color: var(--text);
+      text-wrap: balance;
+    }
+
+    .about-statement .serif-italic {
+      font-size: 1.08em;
+      color: #d5dce4;
+    }
+
+    .now-table {
+      width: 100%;
+    }
+
+    .now-header {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .now-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .now-row {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 20px;
+      align-items: baseline;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--line);
+      transition: border-color 200ms ease;
+    }
+
+    .now-row:hover {
+      border-bottom-color: var(--line-strong);
+    }
+
+    .now-time {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-3);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .now-title {
+      font-size: 17px;
+      font-weight: 520;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .now-sub {
+      font-size: 13.5px;
+      color: var(--text-2);
+    }
+
+    /* ============ CC & LK: Editorial Keepsake & Self-Playing Grand Piano Keyboard ============ */
+    .cc-section {
+      position: relative;
+      z-index: 1;
+      padding-block: var(--section-gap);
+    }
+
+    .cclk-editorial-wrap {
+      display: grid;
+      grid-template-columns: 0.88fr 1.12fr;
+      gap: 44px;
+      align-items: center;
+    }
+
+    /* Left Column: Pure Editorial Dedication */
+    .cclk-editorial {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .cclk-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .cclk-pulse {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #f3c6a8;
+      box-shadow: 0 0 10px #f3c6a8;
+      animation: pulseGlow 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.55; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .cclk-title {
+      margin: 0 0 20px;
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.75rem, 4.4vw, 3.65rem);
+      line-height: 0.98;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .cclk-amp {
+      appearance: none;
+      background: transparent;
+      border: 0;
+      padding: 0 4px;
+      margin: 0;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 0.82em;
+      color: var(--gold);
+      font-weight: 400;
+      line-height: 1;
+      cursor: pointer;
+      position: relative;
+      display: inline-block;
+      transition: color 280ms ease, transform 360ms var(--ease-snap), text-shadow 280ms ease;
+    }
+
+    .cclk-amp:hover {
+      color: #f7dfc0;
+      transform: translateY(-2px) scale(1.08);
+      text-shadow: 0 0 18px rgba(243, 198, 168, 0.75), 0 0 32px rgba(212, 180, 117, 0.45);
+    }
+
+    .cclk-amp:active {
+      transform: scale(0.94);
+    }
+
+    .cclk-dedication {
+      margin: 0 0 14px;
+      font-family: var(--font-sans);
+      font-size: clamp(1.35rem, 2.15vw, 1.72rem);
+      font-weight: 520;
+      line-height: 1.35;
+      letter-spacing: -0.025em;
+      color: #f2f4f8;
+    }
+
+    html:lang(zh-CN) .cclk-dedication {
+      font-family: var(--font-zh-art);
+      font-size: clamp(1.32rem, 2.05vw, 1.62rem);
+      font-weight: 400;
+      line-height: 1.62;
+      letter-spacing: 0.03em;
+    }
+
+    .cclk-note {
+      margin: 0 0 26px;
+      font-size: 14px;
+      line-height: 1.72;
+      color: var(--text-2);
+      max-width: 44ch;
+    }
+
+    .cclk-btn {
+      appearance: none;
+      height: 40px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(212, 180, 117, 0.32);
+      background: rgba(212, 180, 117, 0.08);
+      color: #f0dec0;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      transition: all 220ms var(--ease-out);
+    }
+
+    .cclk-btn:hover {
+      background: rgba(212, 180, 117, 0.16);
+      border-color: rgba(212, 180, 117, 0.58);
+      transform: translateY(-1px);
+      color: #fff;
+    }
+
+    .cclk-btn.is-playing {
+      background: linear-gradient(135deg, rgba(243, 198, 168, 0.24), rgba(212, 180, 117, 0.22));
+      border-color: #f3c6a8;
+      color: #fff;
+      box-shadow: 0 0 24px -4px rgba(243, 198, 168, 0.45);
+    }
+
+    .music-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 11px;
+    }
+
+    .music-bars i {
+      display: block;
+      width: 2px;
+      height: 4px;
+      border-radius: 1px;
+      background: currentColor;
+      transition: height 150ms ease;
+    }
+
+    .cclk-btn.is-playing .music-bars i:nth-child(1) { animation: eqBar 0.7s ease-in-out infinite alternate; }
+    .cclk-btn.is-playing .music-bars i:nth-child(2) { animation: eqBar 0.5s ease-in-out 0.15s infinite alternate; }
+    .cclk-btn.is-playing .music-bars i:nth-child(3) { animation: eqBar 0.65s ease-in-out 0.3s infinite alternate; }
+
+    @keyframes eqBar {
+      0% { height: 3px; }
+      100% { height: 11px; }
+    }
+
+    /* Right Column: Steinway Spirio / Studio Grand Piano Console */
+    .piano-chassis {
+      position: relative;
+      border-radius: 20px;
+      background:
+        radial-gradient(520px circle at 50% 0%, rgba(212, 180, 117, 0.08), transparent 70%),
+        linear-gradient(180deg, #12151c 0%, #090b0f 100%);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 30px 64px -18px rgba(0, 0, 0, 0.92);
+      padding: 20px 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .piano-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .piano-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      color: var(--text-2);
+    }
+
+    .piano-led {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(212, 180, 117, 0.45);
+      transition: all 200ms ease;
+    }
+
+    .piano-chassis.is-playing .piano-led {
+      background: #f3c6a8;
+      box-shadow: 0 0 10px #f3c6a8;
+    }
+
+    .piano-readout {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(212, 180, 117, 0.08);
+      border: 1px solid rgba(212, 180, 117, 0.22);
+    }
+
+    /* Fallboard Voice Split Strip (LK Left Hand vs CC Right Hand) */
+    .piano-fallboard {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 14px;
+      border-radius: 8px 8px 3px 3px;
+      background: linear-gradient(180deg, #07080b 0%, #0d1016 100%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 2px solid rgba(168, 52, 52, 0.65); /* Classic Steinway red felt strip under fallboard */
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.12em;
+      color: rgba(242, 244, 247, 0.72);
+    }
+
+    .piano-hand-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .piano-dot-lk {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #d4b475;
+      box-shadow: 0 0 6px #d4b475;
+    }
+
+    .piano-dot-cc {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #f3c6a8;
+      box-shadow: 0 0 6px #f3c6a8;
+    }
+
+    /* Recessed Piano Keybed (19 White Keys F3..C6 + 13 Black Keys) */
+    .piano-keybed {
+      position: relative;
+      height: 164px;
+      border-radius: 4px 4px 10px 10px;
+      background: #050608;
+      padding: 4px 5px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow:
+        inset 0 6px 14px rgba(0, 0, 0, 0.9),
+        0 10px 24px -8px rgba(0, 0, 0, 0.85);
+      overflow: hidden;
+    }
+
+    .piano-white-row {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(19, 1fr);
+      gap: 2px;
+      z-index: 1;
+    }
+
+    /* Warm Ivory White Key */
+    .piano-key-white {
+      position: relative;
+      height: 100%;
+      border: 0;
+      padding: 0 0 8px;
+      border-radius: 2px 2px 5px 5px;
+      background: linear-gradient(180deg, #dfdcd4 0%, #f5f2eb 18%, #eeeae0 90%, #d8d2c5 100%);
+      border-bottom: 5px solid #b5ae9e;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 2px 4px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      cursor: pointer;
+      outline: none;
+      transform-origin: top center;
+      transition:
+        transform 90ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-bottom-width 90ms ease,
+        background 110ms ease,
+        box-shadow 110ms ease;
+    }
+
+    .piano-key-white:hover {
+      background: linear-gradient(180deg, #e8e4dc 0%, #fbf9f5 20%, #f3efe6 100%);
+    }
+
+    /* Pressed White Key — LK (Warm Champagne Gold) vs CC (Rose Gold Blush) */
+    .piano-key-white.is-active {
+      transform: translateY(3px);
+      border-bottom-width: 2px;
+    }
+
+    .piano-key-white[data-voice="lk"].is-active {
+      background: linear-gradient(180deg, #ead7b3 0%, #f7e6c4 45%, #e2bf7d 100%);
+      border-bottom-color: #b4904e;
+      box-shadow:
+        0 0 18px rgba(212, 180, 117, 0.65),
+        inset 0 0 10px rgba(212, 180, 117, 0.45);
+    }
+
+    .piano-key-white[data-voice="cc"].is-active {
+      background: linear-gradient(180deg, #f5d8c8 0%, #fce8dc 45%, #f3bfa3 100%);
+      border-bottom-color: #c9886b;
+      box-shadow:
+        0 0 20px rgba(243, 198, 168, 0.75),
+        inset 0 0 10px rgba(243, 198, 168, 0.5);
+    }
+
+    .piano-key-label {
+      font-family: var(--font-mono);
+      font-size: 7.5px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: rgba(40, 38, 34, 0.42);
+      pointer-events: none;
+    }
+
+    .piano-key-white.is-c-anchor .piano-key-label {
+      color: rgba(20, 18, 15, 0.78);
+    }
+
+    /* Raised Ebony Black Key */
+    .piano-key-black {
+      position: absolute;
+      top: 4px;
+      width: 3.35%;
+      height: 58%;
+      z-index: 3;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: 0;
+      border-bottom: 6px solid #050608;
+      border-radius: 0 0 4px 4px;
+      background: linear-gradient(180deg, #2a2e37 0%, #15181f 78%, #0b0d12 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        2px 5px 8px rgba(0, 0, 0, 0.65),
+        -1px 4px 6px rgba(0, 0, 0, 0.45);
+      cursor: pointer;
+      outline: none;
+      padding: 0;
+      transition:
+        transform 85ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-bottom-width 85ms ease,
+        background 110ms ease,
+        box-shadow 110ms ease;
+    }
+
+    .piano-key-black:hover {
+      background: linear-gradient(180deg, #353a45 0%, #1c2029 80%, #10131a 100%);
+    }
+
+    .piano-key-black.is-active {
+      transform: translateX(-50%) translateY(3px);
+      border-bottom-width: 3px;
+      background: linear-gradient(180deg, #f3c6a8 0%, #d49b78 65%, #9e6b4b 100%);
+      border-color: #fde4d2;
+      border-bottom-color: #6d462e;
+      box-shadow:
+        0 0 16px rgba(243, 198, 168, 0.75),
+        0 3px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    .piano-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--text-3);
+    }
+
+    @media (max-width: 900px) {
+      .cclk-editorial-wrap {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+      .piano-keybed {
+        height: 138px;
+      }
+      .piano-key-label {
+        font-size: 6.5px;
+      }
+    }
+
+    /* ============ Minimalist Contact & Footer ============ */
+    .contact-section {
+      position: relative;
+      z-index: 1;
+      padding-block: calc(var(--section-gap) * 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .contact-section h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.85rem, 3.2vw, 2.75rem);
+      font-weight: 540;
+      letter-spacing: -0.035em;
+    }
+
+    .contact-section p {
+      margin: 0;
+      color: var(--text-2);
+      font-size: 15px;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 0 44px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ============ Nocturne Piano Cipher Modal (Replaces Old Pandora Loot Box) ============ */
+    .pandora-modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 280ms ease;
+    }
+
+    .pandora-modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .pandora-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 6, 9, 0.86);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .pandora-dialog {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 470px;
+      border-radius: 22px;
+      background:
+        radial-gradient(460px circle at 50% 0%, rgba(212, 180, 117, 0.1), transparent 70%),
+        linear-gradient(180deg, #12151c 0%, #090b0f 100%);
+      border: 1px solid rgba(212, 180, 117, 0.28);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 36px 72px -16px rgba(0, 0, 0, 0.96);
+      padding: 28px 26px 24px;
+      text-align: center;
+      transform: scale(0.95) translateY(10px);
+      transition: transform 320ms var(--ease-snap), border-color 280ms ease;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .pandora-modal-overlay.open .pandora-dialog {
+      transform: scale(1) translateY(0);
+    }
+
+    .pandora-dialog.unlocking {
+      border-color: rgba(243, 198, 168, 0.75);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 48px -10px rgba(243, 198, 168, 0.35),
+        0 36px 72px -16px rgba(0, 0, 0, 0.96);
+    }
+
+    @keyframes modalShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-7px); }
+      40% { transform: translateX(7px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+
+    .pandora-dialog.shake {
+      animation: modalShake 380ms ease;
+    }
+
+    .pandora-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-2);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      transition: all 180ms ease;
+    }
+
+    .pandora-close:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .pandora-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 11px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      background: rgba(212, 180, 117, 0.09);
+      border: 1px solid rgba(212, 180, 117, 0.24);
+      margin-bottom: 10px;
+    }
+
+    .pandora-meta h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      font-weight: 550;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    html:lang(zh-CN) .pandora-meta h3 {
+      font-family: var(--font-zh-art);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+
+    .pandora-meta p {
+      margin: 0 0 18px;
+      font-size: 12.5px;
+      color: var(--text-2);
+    }
+
+    /* 5-Line Musical Staff Window (Replaces Old PIN Slots & Treasure Chest) */
+    .cipher-staff-window {
+      position: relative;
+      height: 88px;
+      border-radius: 12px;
+      background:
+        radial-gradient(260px circle at 50% 50%, rgba(212, 180, 117, 0.08), transparent 75%),
+        #06070a;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.85);
+      margin-bottom: 14px;
+      padding: 0 16px 0 46px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* 5 Horizontal Staff Lines */
+    .cipher-staff-lines {
+      position: absolute;
+      inset: 18px 14px 22px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .cipher-staff-lines i {
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: rgba(212, 180, 117, 0.16);
+    }
+
+    .cipher-clef {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-54%);
+      font-family: var(--font-serif);
+      font-size: 38px;
+      line-height: 1;
+      color: rgba(212, 180, 117, 0.72);
+      text-shadow: 0 0 14px rgba(212, 180, 117, 0.25);
+      pointer-events: none;
+    }
+
+    .cipher-slots {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+    }
+
+    .cipher-slot {
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding-bottom: 5px;
+    }
+
+    /* Empty rest marker in the center of the staff */
+    .cipher-slot::before {
+      content: "";
+      position: absolute;
+      top: 46%;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-50%);
+      transition: all 180ms ease;
+    }
+
+    .cipher-slot.active::before {
+      width: 7px;
+      height: 7px;
+      background: transparent;
+      border: 1.5px solid var(--gold);
+      box-shadow: 0 0 10px rgba(212, 180, 117, 0.45);
+    }
+
+    .cipher-slot.filled::before {
+      opacity: 0;
+    }
+
+    /* Plotted Golden Quarter Note on Staff when Filled */
+    .cipher-note-glyph {
+      position: absolute;
+      top: var(--note-y, 45%);
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.4);
+      opacity: 0;
+      transition: transform 220ms var(--ease-snap), opacity 180ms ease, top 200ms ease;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Oval tilted notehead + vertical stem */
+    .cipher-note-head {
+      width: 11px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fff 0%, #f3c6a8 55%, #d4b475 100%);
+      transform: rotate(-22deg);
+      box-shadow: 0 0 12px rgba(243, 198, 168, 0.8);
+      position: relative;
+    }
+
+    .cipher-note-head::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 3px;
+      width: 1.5px;
+      height: 20px;
+      background: linear-gradient(180deg, #fff, #d4b475);
+      transform: rotate(22deg);
+      transform-origin: bottom right;
+      border-radius: 1px;
+    }
+
+    .cipher-slot.filled .cipher-note-glyph {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .cipher-slot.error .cipher-note-head {
+      background: #f87171;
+      box-shadow: 0 0 12px rgba(248, 113, 113, 0.8);
+    }
+
+    .cipher-slot.error .cipher-note-head::after {
+      background: #f87171;
+    }
+
+    .cipher-slot-idx {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      letter-spacing: 0.06em;
+      color: rgba(242, 244, 247, 0.28);
+      transition: color 180ms ease;
+    }
+
+    .cipher-slot.filled .cipher-slot-idx {
+      color: var(--gold);
+    }
+
+    /* 10-Key Numbered Grand Piano Cipher Keyboard (1..9, 0) */
+    .cipher-piano-wrap {
+      border-radius: 10px;
+      background: #050608;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 5px 7px;
+      box-shadow:
+        inset 0 5px 12px rgba(0, 0, 0, 0.9),
+        0 10px 22px -8px rgba(0, 0, 0, 0.8);
+      margin-bottom: 14px;
+    }
+
+    .cipher-fallboard {
+      height: 18px;
+      margin: -4px -5px 4px;
+      padding: 0 10px;
+      background: linear-gradient(180deg, #07080b 0%, #0d1016 100%);
+      border-bottom: 2px solid rgba(168, 52, 52, 0.68);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      letter-spacing: 0.12em;
+      color: rgba(242, 244, 247, 0.45);
+    }
+
+    .cipher-keybed {
+      position: relative;
+      height: 118px;
+    }
+
+    .cipher-white-row {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 2.5px;
+      z-index: 1;
+    }
+
+    .cipher-key-white {
+      position: relative;
+      height: 100%;
+      border: 0;
+      border-radius: 2px 2px 5px 5px;
+      background: linear-gradient(180deg, #dfdcd4 0%, #f5f2eb 18%, #eeeae0 88%, #d8d2c5 100%);
+      border-bottom: 5px solid #b5ae9e;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        0 2px 4px rgba(0, 0, 0, 0.45);
+      padding: 7px 0 7px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      outline: none;
+      transition:
+        transform 85ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-bottom-width 85ms ease,
+        background 110ms ease,
+        box-shadow 110ms ease;
+    }
+
+    .cipher-key-white:hover {
+      background: linear-gradient(180deg, #e8e5dd 0%, #fcfaf6 22%, #f4f0e7 100%);
+    }
+
+    .cipher-key-white:active,
+    .cipher-key-white.is-pressed {
+      transform: translateY(3px);
+      border-bottom-width: 2px;
+      background: linear-gradient(180deg, #f5d8c8 0%, #fce8dc 45%, #e8bc96 100%);
+      border-bottom-color: #b8845c;
+      box-shadow:
+        0 0 18px rgba(243, 198, 168, 0.72),
+        inset 0 0 8px rgba(212, 180, 117, 0.45);
+    }
+
+    .cipher-key-pitch {
+      font-family: var(--font-mono);
+      font-size: 7.5px;
+      color: rgba(30, 28, 24, 0.38);
+      letter-spacing: -0.02em;
+    }
+
+    .cipher-key-num {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: #1c1915;
+      line-height: 1;
+    }
+
+    /* Raised Ebony Black Keys inside Cipher Modal */
+    .cipher-key-black {
+      position: absolute;
+      top: 0;
+      width: 6.2%;
+      height: 58%;
+      z-index: 3;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-top: 0;
+      border-bottom: 5px solid #050608;
+      border-radius: 0 0 4px 4px;
+      background: linear-gradient(180deg, #2b2f38 0%, #15181f 78%, #0a0c10 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        2px 5px 8px rgba(0, 0, 0, 0.65);
+      cursor: pointer;
+      outline: none;
+      padding: 0 0 5px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      color: rgba(242, 244, 247, 0.55);
+      transition:
+        transform 80ms ease,
+        border-bottom-width 80ms ease,
+        background 110ms ease;
+    }
+
+    .cipher-key-black:hover {
+      background: linear-gradient(180deg, #373c48 0%, #1d212a 80%, #10131a 100%);
+      color: #fff;
+    }
+
+    .cipher-key-black:active,
+    .cipher-key-black.is-pressed {
+      transform: translateX(-50%) translateY(3px);
+      border-bottom-width: 2px;
+      background: linear-gradient(180deg, #d4b475 0%, #9e7f47 100%);
+      color: #08090b;
+    }
+
+    .pandora-status {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-3);
+      margin-bottom: 14px;
+      min-height: 18px;
+    }
+
+    .pandora-status.error { color: #f87171; }
+    .pandora-status.success { color: var(--gold); }
+
+    .cipher-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .cipher-clear-btn {
+      height: 38px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-2);
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      cursor: pointer;
+      transition: all 180ms ease;
+    }
+
+    .cipher-clear-btn:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .pandora-submit-btn {
+      flex: 1;
+      max-width: 220px;
+      height: 38px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f3c6a8 0%, #d4b475 100%);
+      color: #08090b;
+      font-weight: 600;
+      font-size: 13px;
+      border: 0;
+      cursor: pointer;
+      box-shadow: 0 6px 20px -6px rgba(212, 180, 117, 0.5);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .pandora-submit-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px -6px rgba(243, 198, 168, 0.65);
+    }
+
+    /* ============ Responsive ============ */
+    @media (max-width: 920px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .dial-unit { align-items: flex-start; margin-top: 8px; }
+      .bento { grid-template-columns: 1fr; }
+      .card-avalon { grid-row: span 1; }
+      .micro-strip { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .cc-grid { grid-template-columns: 1fr; }
+      .titanium-stage { justify-content: flex-start; }
+      .titanium-card { transform: rotate(-1.5deg); }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .ielts-ui { grid-template-columns: 1fr; gap: 14px; }
+      .cadence-metric { border-right: 0; border-bottom: 1px solid var(--line); padding-right: 0; padding-bottom: 12px; }
+      .now-row { grid-template-columns: 1fr; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient" id="ambient" aria-hidden="true"></div>
+  <div class="flashlight-overlay" id="flashlightOverlay" aria-hidden="true"></div>
+
+  <!-- ============ Top Swiss Hairline Header ============ -->
+  <header class="header-wrap">
+    <div class="container nav">
+      <a class="logo" href="#top" aria-label="Linkai home">
+        Linkai<span class="logo-dot">.</span>
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#work" data-i18n="nav.projects">Work</a>
+          <a href="#about" data-i18n="nav.about">About</a>
+          <a href="#cc" data-i18n="nav.cc">CC</a>
+          <a href="#contact" data-i18n="nav.cta">Contact</a>
+        </nav>
+        <div class="lang-switch" role="group" aria-label="Language / 语言">
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="zh" aria-pressed="false" lang="zh-CN">中</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ============ Hero (Asymmetric Editorial Split + Tactile Dial) ============ -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-index">
+            <span class="hero-index-dot"></span>
+            <span data-i18n="hero.badge">INDEPENDENT BUILDING · CRAFTING TOOLS WITH AI · 2026</span>
+          </div>
+          <h1 data-i18n="hero.title">
+            Building small things<br />with <em class="serif-italic">curiosity &amp; craft.</em>
+          </h1>
+          <p class="lead" data-i18n="hero.lead">
+            Hi, I'm Linkai. I build small, well-crafted instruments born from everyday friction, explore with AI, and keep plaintext notes along the way.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#work" data-i18n="hero.cta">Explore work</a>
+            <a class="btn btn-ghost" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
+              GitHub <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tactile Starlight Vinyl / Music Box Dial (Jumps to CC & LK & Plays Nocturne) -->
+        <div class="dial-unit">
+          <div class="dial-housing" id="tactileDial" role="button" tabindex="0" title="Jump to CC & LK and play the Starlight Nocturne">
+            <svg class="dial-ticks" viewBox="0 0 160 160" aria-hidden="true">
+              <g stroke="rgba(255,255,255,0.22)" stroke-linecap="round">
+                <circle cx="80" cy="8" r="2.2" fill="#f3c6a8" stroke="none" />
+                <circle cx="131" cy="29" r="1.4" fill="rgba(255,255,255,0.45)" stroke="none" />
+                <circle cx="152" cy="80" r="2.2" fill="#f2f4f7" stroke="none" />
+                <circle cx="131" cy="131" r="1.4" fill="rgba(255,255,255,0.45)" stroke="none" />
+                <circle cx="80" cy="152" r="2.2" fill="#f2f4f7" stroke="none" />
+                <circle cx="29" cy="131" r="1.4" fill="rgba(255,255,255,0.45)" stroke="none" />
+                <circle cx="8" cy="80" r="2.2" fill="#f2f4f7" stroke="none" />
+                <circle cx="29" cy="29" r="1.4" fill="rgba(255,255,255,0.45)" stroke="none" />
+              </g>
+            </svg>
+            <div class="dial-rotor" id="dialRotor">
+              <span class="dial-notch"></span>
+              <svg class="dial-matrix" viewBox="0 0 84 84" aria-hidden="true" id="dialMatrixSvg"></svg>
+            </div>
+            <div class="dial-center-icon" id="dialCenterIcon" aria-hidden="true">▶</div>
+          </div>
+          <div class="dial-readout" id="dialReadout">✦ CC &amp; LK · STARLIGHT NOCTURNE</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Selected Work Bento (Authentic Micro-UIs) ============ -->
+    <section id="work" class="work-section">
+      <div class="container">
+        <div class="bento">
+          <!-- Card 1: Avalon Custom Decks (Museum Plinth) -->
+          <a class="card card-avalon" href="./avalon-cards/" data-channel="tabletop">
+            <div>
+              <div class="card-head">
+                <h2><span data-i18n="rt.title">Avalon Custom Decks</span> <span class="arrow" aria-hidden="true">↗</span></h2>
+                <span class="mono">TABLETOP VAULT</span>
+              </div>
+              <p class="card-desc" data-i18n="rt.desc">
+                Bespoke 300 DPI print-master decks for The Resistance: Avalon — featuring Demon Slayer &amp; Naruto Shippuden with physical 3D foil inspection.
+              </p>
+            </div>
+
+            <div class="avalon-stage" id="avalonStage" data-active-deck="naruto">
+              <div class="avalon-decks-viewport" aria-hidden="true">
+                <!-- Hand 1: 100% Pure Naruto Shippuden Deck (5 Cohesive Bottom-Title Cards) -->
+                <div class="avalon-deck-hand is-active" data-deck-panel="naruto">
+                  <div class="fan-card fan-c1">
+                    <img src="./avalon-cards/cards/naruto/characters/02_Percival_Uchiha_Sasuke.webp" alt="" />
+                  </div>
+                  <div class="fan-card fan-c2">
+                    <img src="./avalon-cards/cards/naruto/characters/07_Morgana_Uchiha_Obito.webp" alt="" />
+                  </div>
+                  <div class="fan-card fan-c3">
+                    <img src="./avalon-cards/cards/naruto/characters/01_Merlin_Uchiha_Itachi.webp" alt="" />
+                  </div>
+                  <div class="fan-card fan-c4">
+                    <img src="./avalon-cards/cards/naruto/characters/08_Assassin_Pain.webp" alt="" />
+                  </div>
+                  <div class="fan-card fan-c5">
+                    <img src="./avalon-cards/cards/naruto/characters/09_Mordred_Uchiha_Madara.webp" alt="" />
+                  </div>
+                </div>
+
+                <!-- Hand 2: 100% Pure Demon Slayer Deck (5 Cohesive Top-Title Cards) -->
+                <div class="avalon-deck-hand" data-deck-panel="ds">
+                  <div class="fan-card fan-c1">
+                    <img src="./avalon-cards/cards/demon_slayer/characters/02_Percival_Kanao_Print_Master_v1.webp" alt="" />
+                  </div>
+                  <div class="fan-card fan-c2">
+                    <img src="./avalon-cards/cards/demon_slayer/characters/03_Morgana_Doma_Print_Master_v1.webp" alt="" />
+                  </div>
+                  <div class="fan-card fan-c3">
+                    <img src="./avalon-cards/cards/demon_slayer/characters/01_Merlin_Shinobu_Print_Master_v1.webp" alt="" />
+                  </div>
+                  <div class="fan-card fan-c4">
+                    <img src="./avalon-cards/cards/demon_slayer/characters/04_Assassin_Muzan_Print_Master_v1.webp" alt="" />
+                  </div>
+                  <div class="fan-card fan-c5">
+                    <img src="./avalon-cards/cards/demon_slayer/characters/06_Mordred_Kokushibo_Print_Master_v1.webp" alt="" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="avalon-bottom-bar">
+                <div class="deck-switcher" role="tablist" aria-label="Switch Avalon Deck">
+                  <button type="button" class="deck-switch-btn is-active" data-deck-target="naruto">
+                    <span class="deck-dot deck-dot--naruto"></span>
+                    <span data-i18n="rt.deck2">NARUTO · 23</span>
+                  </button>
+                  <button type="button" class="deck-switch-btn" data-deck-target="ds">
+                    <span class="deck-dot deck-dot--ds"></span>
+                    <span data-i18n="rt.deck1">DEMON SLAYER · 23</span>
+                  </button>
+                </div>
+                <span class="spec-pill" data-i18n="rt.tag">300 DPI · CMYK</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Card 2: Turnitin Forensic Check (Metadata Chain Micro-UI) -->
+          <a class="card" href="./turnitin-check/" data-channel="lab">
+            <div>
+              <div class="card-head">
+                <h3><span data-i18n="tt.title">Turnitin Forensic Check</span> <span class="arrow" aria-hidden="true">↗</span></h3>
+                <span class="badge-verified">0-LEAK VERIFIED</span>
+              </div>
+              <p class="card-desc" data-i18n="tt.desc">
+                Client-side PDF forensic analyzer verifying metadata chains, timestamp continuity, and producer fingerprints locally.
+              </p>
+            </div>
+
+            <div class="forensic-box" aria-hidden="true">
+              <div class="forensic-label">
+                <span>Metadata Chain</span>
+                <span>SHA-256 · LOCAL</span>
+              </div>
+              <div class="forensic-chain">
+                <span class="chain-node">CreationDate</span>
+                <span class="chain-arrow">→</span>
+                <span class="chain-node">ModDate</span>
+                <span class="chain-arrow">→</span>
+                <span class="chain-node">XMP Fingerprint</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Card 3: IELTS Dictation Lab (Cadence + Diff Micro-UI) -->
+          <a class="card" href="./ielts-lab/" data-channel="lab">
+            <div>
+              <div class="card-head">
+                <h3><span data-i18n="ielts.title">IELTS Dictation Lab</span> <span class="arrow" aria-hidden="true">↗</span></h3>
+                <span class="mono">1,925 CORE WORDS</span>
+              </div>
+              <p class="card-desc" data-i18n="ielts.desc">
+                Cambridge past-exam core answer words trained at real exam cadence with instant spelling diff and Anki export.
+              </p>
+            </div>
+
+            <div class="ielts-ui" aria-hidden="true">
+              <div class="cadence-metric">
+                <div class="cadence-num">4.1s</div>
+                <div class="cadence-sub">CADENCE</div>
+              </div>
+              <div class="waveform-wrap">
+                <div class="waveform-bars">
+                  <span style="--h:22%"></span><span style="--h:35%"></span><span style="--h:68%" class="hi"></span>
+                  <span style="--h:95%" class="hi"></span><span style="--h:55%" class="hi"></span><span style="--h:80%" class="hi"></span>
+                  <span style="--h:30%"></span><span style="--h:20%"></span><span style="--h:45%"></span>
+                  <span style="--h:30%"></span><span style="--h:25%"></span><span style="--h:75%" class="hi"></span>
+                  <span style="--h:100%" class="hi"></span><span style="--h:60%" class="hi"></span><span style="--h:88%" class="hi"></span>
+                  <span style="--h:42%" class="hi"></span><span style="--h:24%"></span><span style="--h:18%"></span>
+                </div>
+                <div class="typo-diff">
+                  <del>accomodation</del>
+                  <span>→</span>
+                  <ins>accommodation</ins>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><hr class="hairline-divider" /></div>
+
+    <!-- ============ About & De-boxed Swiss NOW Timeline ============ -->
+    <section id="about" class="about-section">
+      <div class="container about-grid">
+        <p class="about-statement" data-i18n="about.text">
+          Captivated by the distance between a <em class="serif-italic">spark of inspiration</em> and a <em class="serif-italic">truly handy tool.</em>
+        </p>
+
+        <div class="now-table">
+          <div class="now-header">
+            <span data-i18n="now.label">NOW</span>
+            <span id="nowDate">2026.10</span>
+          </div>
+          <ul class="now-list">
+            <li class="now-row">
+              <span class="now-time">2026.10</span>
+              <div>
+                <div class="now-title" data-i18n="now.1t">Bespoke Toolmaking</div>
+                <div class="now-sub" data-i18n="now.1d">Iterating on Turnitin analyzer &amp; IELTS Dictation Lab</div>
+              </div>
+            </li>
+            <li class="now-row">
+              <span class="now-time">2026.10</span>
+              <div>
+                <div class="now-title" data-i18n="now.2t">Language Patterns</div>
+                <div class="now-sub" data-i18n="now.2d">Distilling natural conversational patterns from reading</div>
+              </div>
+            </li>
+            <li class="now-row">
+              <span class="now-time">2026.10</span>
+              <div>
+                <div class="now-title" data-i18n="now.3t">Plaintext Observations</div>
+                <div class="now-sub" data-i18n="now.3d">Reflecting on everyday friction and keeping quiet notes</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><hr class="hairline-divider" /></div>
+
+    <!-- ============ CC & LK: Editorial Keepsake & Self-Playing Grand Piano Keyboard ============ -->
+    <section id="cc" class="cc-section">
+      <div class="container">
+        <div class="cclk-editorial-wrap">
+          <!-- Left: Pure Editorial Typography & Dedication -->
+          <div class="cclk-editorial">
+            <div class="cclk-eyebrow">
+              <span class="cclk-pulse"></span>
+              <span data-i18n="cc.status">DEDICATED TO MY WIFE · PERSONAL KEEPSAKE</span>
+            </div>
+
+            <h2 class="cclk-title">
+              <span>CC</span>
+              <button type="button" class="cclk-amp" id="pandoraTrigger" aria-label="Secret Gateway">&amp;</button>
+              <span>LK</span>
+            </h2>
+
+            <p class="cclk-dedication" data-i18n="cc.dedication">
+              Code is built for order,<br />yet you are the <em class="serif-italic">warmth and wonder</em> in all my everyday.
+            </p>
+
+            <p class="cclk-note" data-i18n="cc.desc">
+              Every quiet affection written for each other lives inside this self-playing duet piano: the lower register carries LK's warm left-hand bass, while the upper register sings CC's luminous right-hand melody. Press play, or glide across the keys to play freely.
+            </p>
+
+            <button type="button" class="cclk-btn" id="cclkMusicBtn">
+              <span class="music-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span id="cclkMusicLabel" data-i18n="cc.play">Listen to Starlight Nocturne</span>
+            </button>
+          </div>
+
+          <!-- Right: Tactile 32-Key Studio Grand Piano (F3 - C6) -->
+          <div class="piano-chassis" id="musicboxChassis">
+            <div class="piano-topbar">
+              <div class="piano-brand">
+                <span class="piano-led" aria-hidden="true"></span>
+                <span data-i18n="cc.brand">SPIRIO DUET · FOUR-HANDS PIANO (F3 – C6)</span>
+              </div>
+              <span class="piano-readout" id="cclkDistanceReadout" data-i18n="cc.standby">STANDBY · READY</span>
+            </div>
+
+            <div class="piano-fallboard">
+              <span class="piano-hand-tag">
+                <i class="piano-dot-lk"></i>
+                <span data-i18n="cc.handLk">LK · LEFT HAND BASS</span>
+              </span>
+              <span class="piano-hand-tag">
+                <span data-i18n="cc.handCc">CC · RIGHT HAND MELODY</span>
+                <i class="piano-dot-cc"></i>
+              </span>
+            </div>
+
+            <div class="piano-keybed" id="pianoKeybed" role="group" aria-label="Interactive Piano Keyboard">
+              <div class="piano-white-row" id="pianoWhiteRow"></div>
+              <div id="pianoBlackLayer"></div>
+            </div>
+
+            <div class="piano-foot">
+              <span data-i18n="cc.hint">✦ Click or hold and glide across the keys to play freely</span>
+              <span id="mbStepCounter">CC × LK</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><hr class="hairline-divider" /></div>
+
+    <!-- ============ Contact ============ -->
+    <section id="contact" class="container contact-section">
+      <div>
+        <h2 data-i18n="contact.title">Let's build something genuinely useful.</h2>
+        <p data-i18n="contact.desc">Open for conversations on software craft, observations, or small tools.</p>
+      </div>
+      <a class="btn btn-primary" href="https://github.com/liulinkai523-prog" target="_blank" rel="noreferrer">
+        <span data-i18n="contact.cta">Say hello on GitHub</span> <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+    </section>
+  </main>
+
+  <!-- ============ Nocturne Piano Cipher Modal (Opened via & in CC & LK) ============ -->
+  <div class="pandora-modal-overlay" id="pandoraModal" role="dialog" aria-modal="true" aria-labelledby="pandoraTitle" hidden>
+    <div class="pandora-backdrop" id="pandoraBackdrop"></div>
+    <div class="pandora-dialog" id="pandoraDialog">
+      <button class="pandora-close" id="pandoraClose" type="button" aria-label="Close">✕</button>
+
+      <div class="pandora-meta">
+        <div class="pandora-badge" data-i18n="cipher.badge">NOCTURNE CIPHER · 6-NOTE CADENCE</div>
+        <h3 id="pandoraTitle" data-i18n="cipher.title">Play the Secret Cadence</h3>
+        <p data-i18n="cipher.desc">Strike 6 numbered piano keys below (or type on your keyboard) to unlock the private archive</p>
+      </div>
+
+      <!-- 5-Line Musical Staff with 6 Note Slots -->
+      <div class="cipher-staff-window" aria-hidden="true">
+        <div class="cipher-staff-lines">
+          <i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <span class="cipher-clef">𝄞</span>
+        <div class="cipher-slots" id="cipherSlots">
+          <div class="cipher-slot active" data-index="0">
+            <div class="cipher-note-glyph"><span class="cipher-note-head"></span></div>
+            <span class="cipher-slot-idx">01</span>
+          </div>
+          <div class="cipher-slot" data-index="1">
+            <div class="cipher-note-glyph"><span class="cipher-note-head"></span></div>
+            <span class="cipher-slot-idx">02</span>
+          </div>
+          <div class="cipher-slot" data-index="2">
+            <div class="cipher-note-glyph"><span class="cipher-note-head"></span></div>
+            <span class="cipher-slot-idx">03</span>
+          </div>
+          <div class="cipher-slot" data-index="3">
+            <div class="cipher-note-glyph"><span class="cipher-note-head"></span></div>
+            <span class="cipher-slot-idx">04</span>
+          </div>
+          <div class="cipher-slot" data-index="4">
+            <div class="cipher-note-glyph"><span class="cipher-note-head"></span></div>
+            <span class="cipher-slot-idx">05</span>
+          </div>
+          <div class="cipher-slot" data-index="5">
+            <div class="cipher-note-glyph"><span class="cipher-note-head"></span></div>
+            <span class="cipher-slot-idx">06</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10-Key Numbered Grand Piano Keyboard (1..9, 0) + Backspace Black Key -->
+      <div class="cipher-piano-wrap">
+        <div class="cipher-fallboard">
+          <span>STEINWAY SPIRIO · CIPHER LOCK</span>
+          <span>CC × LK</span>
+        </div>
+        <div class="cipher-keybed" id="cipherKeybed">
+          <div class="cipher-white-row" id="cipherWhiteRow"></div>
+          <div id="cipherBlackLayer"></div>
+        </div>
+      </div>
+
+      <div class="pandora-status" id="pandoraStatus" data-i18n="cipher.status">Awaiting 6-note cadence...</div>
+
+      <div class="cipher-actions">
+        <button type="button" class="cipher-clear-btn" id="pandoraClear" data-i18n="cipher.clear"> backspace ⌫</button>
+        <button type="button" class="pandora-submit-btn" id="pandoraSubmit" data-i18n="cipher.submit">Unlock Archive ✦</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container footer-inner">
+      <span class="mono">© <span id="year"></span> Linkai</span>
+      <a class="mono" href="https://linkai.codes">linkai.codes</a>
+    </div>
+  </footer>
+
+  <script id="mainScript">
+    const now = new Date();
+    document.getElementById("year").textContent = now.getFullYear();
+
+    // Build radial dot-matrix inside the Studio Optics rotary dial
+    const matrixSvg = document.getElementById("dialMatrixSvg");
+    if (matrixSvg) {
+      const cx = 42, cy = 42;
+      const rings = [
+        { r: 16, count: 14 },
+        { r: 22, count: 20 },
+        { r: 28, count: 26 },
+        { r: 34, count: 32 }
+      ];
+      let dotsHtml = "";
+      rings.forEach((ring) => {
+        for (let i = 0; i < ring.count; i++) {
+          const deg = (i / ring.count) * 360;
+          const rad = (deg - 90) * (Math.PI / 180);
+          const x = (cx + ring.r * Math.cos(rad)).toFixed(1);
+          const y = (cy + ring.r * Math.sin(rad)).toFixed(1);
+          const isLit = deg >= 0 && deg <= 220;
+          const opacity = isLit ? (0.25 + (1 - deg / 260) * 0.65).toFixed(2) : "0.08";
+          const radius = deg < 55 ? "1.35" : "1.05";
+          dotsHtml += `<circle cx="${x}" cy="${y}" r="${radius}" fill="rgba(242,244,247,${opacity})" />`;
+        }
+      });
+      matrixSvg.innerHTML = dotsHtml;
+    }
+
+    // Tactile Starlight Turntable Dial -> Smooth-scrolls to #cc & immediately plays the Nocturne
+    const dialHousing = document.getElementById("tactileDial");
+    const dialReadout = document.getElementById("dialReadout");
+    const dialCenterIcon = document.getElementById("dialCenterIcon");
+
+    window.__syncOpticsLang = (playing = false) => {
+      const isZh = document.documentElement.lang === "zh-CN";
+      if (dialReadout) {
+        dialReadout.textContent = playing
+          ? (isZh ? "♪ 正在为 CC 演奏 · 星轨夜曲" : "♪ PLAYING · STARLIGHT NOCTURNE")
+          : (isZh ? "✦ CC & LK · 聆听星轨夜曲" : "✦ CC & LK · STARLIGHT NOCTURNE");
+      }
+      if (dialCenterIcon) {
+        dialCenterIcon.textContent = playing ? "❚❚" : "▶";
+      }
+      if (dialHousing) {
+        dialHousing.classList.toggle("is-playing", playing);
+      }
+    };
+
+    if (dialHousing) {
+      dialHousing.addEventListener("click", () => {
+        const ccSection = document.getElementById("cc");
+        if (ccSection) {
+          ccSection.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        // Start playing the music box (or if already playing, keep playing as it scrolls down)
+        if (typeof window.__playCCNocturne === "function") {
+          window.__playCCNocturne();
+        }
+      });
+      dialHousing.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          dialHousing.click();
+        }
+      });
+    }
+
+    // ============ i18n & 100font.com Artistic Chinese Typography ============
+    const ZH = {
+      "meta.title": "Linkai — 抱持好奇，打磨微小而顺手的作品",
+      "meta.desc": "Linkai 的个人工艺室：做些顺手好用的小工具，动手验证灵感，并随手记录研习所得。",
+      "nav.projects": "作品",
+      "nav.about": "关于",
+      "nav.cc": "CC",
+      "nav.cta": "联络",
+      "hero.badge": "独立构建 · 借力 AI 持续打磨具体工具 · 2026",
+      "hero.title": "抱持好奇，与 AI 同行，<br /><em class='serif-italic'>打磨微小而顺手的作品。</em>",
+      "hero.lead": "你好，我是 Linkai。我喜欢从真实的生活摩擦里敲出顺手的小工具，动手验证灵感，并随手留下纯文本思考。",
+      "hero.cta": "浏览作品",
+      "rt.title": "阿瓦隆定制卡牌典藏",
+      "rt.desc": "以 300 DPI 工业级印刷规范重塑经典社交推演：《鬼灭之刃》与《火影忍者》双套完整实体母版与拟真 3D 展厅。",
+      "rt.tag": "300 DPI · CMYK 印刷母版 · 54×85.5MM",
+      "rt.deck1": "鬼灭之刃 · 23张",
+      "rt.deck2": "火影忍者 · 23张",
+      "tt.title": "Turnitin 报告特征核验",
+      "tt.desc": "浏览器纯本地离线拆解 PDF 修改时序与生成器指纹，秒查篡改痕迹，0% 论文隐私外泄。",
+      "ielts.title": "雅思听力答案词听写实验室",
+      "ielts.desc": "精选 1,925 剑桥真题核心答案词，4.1 秒机考节奏瞬时盲打实战，支持智能错题比对与 Anki 导出。",
+      "about.text": "始终着迷于从 <em class='serif-italic'>「灵光一现」</em> 到一件 <em class='serif-italic'>「顺手器物」</em> 之间的距离。",
+      "now.label": "近况 · NOW",
+      "now.1t": "独立工具打磨",
+      "now.1d": "持续迭代 Turnitin 取证与雅思听力答案词听写实验室",
+      "now.2t": "真实语块沉淀",
+      "now.2d": "在日常交流与深度阅读中提炼高频自然表达",
+      "now.3t": "纯文本观察笔记",
+      "now.3d": "关注具体生活中的细微摩擦，保持安静记录",
+      "cc.status": "致我最爱的女孩 · 专属题献",
+      "cc.dedication": "代码构建的是秩序，<br />而你是我所有日常里的<em class='serif-italic'>偏爱与惊喜。</em>",
+      "cc.desc": "把写给彼此的偏爱，藏进右侧这架自动演奏的四手联弹钢琴里：低音区是 LK 温厚的左手伴奏，高音区是 CC 清亮的右手主旋律。点击播放，或直接用鼠标滑过黑白琴键自由弹奏。",
+      "cc.brand": "四手联弹 · 自动演奏三角钢琴 (F3 – C6)",
+      "cc.standby": "静候奏响",
+      "cc.handLk": "LK · 左手低音伴奏",
+      "cc.handCc": "CC · 右手星光主旋律",
+      "cc.hint": "✦ 点击或按住鼠标滑过黑白琴键即可自由弹奏",
+      "cc.play": "聆听星轨夜曲",
+      "cipher.badge": "星轨暗谱 · 六音琴键锁",
+      "cipher.title": "弹奏六位同频暗谱",
+      "cipher.desc": "点击下方编号黑白琴键（或直接敲击键盘数字）奏响六位密钥",
+      "cipher.status": "弹奏 6 位同频琴键解锁专属密藏",
+      "cipher.clear": "退格 ⌫",
+      "cipher.submit": "奏响开启 ✦",
+      "contact.title": "不如一起，做点真正有用的小创造。",
+      "contact.desc": "探讨工具设计、代码手艺，或只是打个招呼，GitHub 永远敞开。",
+      "contact.cta": "去 GitHub 打个招呼"
+    };
+
+    const i18nEls = document.querySelectorAll("[data-i18n]");
+    const EN = {};
+    i18nEls.forEach((el) => { EN[el.dataset.i18n] = el.innerHTML; });
+    const metaDesc = document.querySelector('meta[name="description"]');
+    EN["meta.title"] = document.title;
+    EN["meta.desc"] = metaDesc.content;
+
+    const langBtns = document.querySelectorAll(".lang-switch button");
+  
+    function setLang(lang) {
+      const dict = lang === "zh" ? ZH : EN;
+      i18nEls.forEach((el) => {
+        const v = dict[el.dataset.i18n];
+        if (v !== undefined) el.innerHTML = v;
+      });
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+      document.title = dict["meta.title"];
+      metaDesc.content = dict["meta.desc"];
+      const nowDateEl = document.getElementById("nowDate");
+      if (nowDateEl) {
+        nowDateEl.textContent = lang === "zh"
+          ? `${now.getFullYear()} 年 ${now.getMonth() + 1} 月`
+          : now.toLocaleDateString("en", { month: "short", year: "numeric" });
+      }
+      langBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+      if (window.__syncOpticsLang) window.__syncOpticsLang();
+      if (window.__syncPianoLang) window.__syncPianoLang();
+    }
+
+    const savedLang = (() => { try { return localStorage.getItem("lang"); } catch (e) { return null; } })();
+    const initialLang = savedLang || ((navigator.language || "").toLowerCase().startsWith("zh") ? "zh" : "en");
+    setLang(initialLang);
+
+    langBtns.forEach((b) => b.addEventListener("click", () => {
+      setLang(b.dataset.lang);
+      try { localStorage.setItem("lang", b.dataset.lang); } catch (e) {}
+    }));
+
+    // Mobile menu
+    const nav = document.getElementById("nav");
+    const menuBtn = document.getElementById("menuBtn");
+    const setMenu = (open) => {
+      nav.classList.toggle("open", open);
+      menuBtn.setAttribute("aria-expanded", String(open));
+      menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    };
+    if (menuBtn && nav) menuBtn.addEventListener("click", () => setMenu(!nav.classList.contains("open")));
+    document.querySelectorAll("#navLinks a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll(".reveal");
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in");
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+      reveals.forEach((el, i) => {
+        el.style.transitionDelay = el.closest(".hero") ? `${i * 80}ms` : "0ms";
+        io.observe(el);
+      });
+    } else {
+      reveals.forEach((el) => el.classList.add("in"));
+    }
+
+    // Avalon 2-Deck Switcher (CLICK-ONLY to switch series) + Balatro Hand Parting Physics
+    const avalonStage = document.getElementById("avalonStage");
+    if (avalonStage) {
+      avalonStage.addEventListener("contextmenu", (e) => e.preventDefault());
+      avalonStage.addEventListener("dragstart", (e) => e.preventDefault());
+    }
+    const decksViewport = document.querySelector(".avalon-decks-viewport");
+    const deckSwitchBtns = document.querySelectorAll(".deck-switch-btn");
+    const deckPanels = document.querySelectorAll(".avalon-deck-hand");
+
+    const BASE_X = [-136, -68, 0, 68, 136];
+    const BASE_Y = [18, 6, -5, 6, 18];
+    const BASE_ROT = [-14, -7, 0, 7, 14];
+
+    function applyBalatroHand(activeIdx) {
+      const isHovering = activeIdx !== null && activeIdx >= 0 && activeIdx <= 4;
+      const focusIdx = isHovering ? activeIdx : 2;
+
+      deckPanels.forEach((panel) => {
+        const cards = panel.querySelectorAll(".fan-card");
+        cards.forEach((fc, idx) => {
+          let tx = BASE_X[idx];
+          let ty = BASE_Y[idx];
+          let rot = BASE_ROT[idx];
+          let sc = idx === 2 ? 1.03 : (idx === 1 || idx === 3 ? 0.96 : 0.94);
+          let zi = 10 - Math.abs(idx - focusIdx);
+
+          if (isHovering) {
+            if (idx === activeIdx) {
+              // Hovered card rises and straightens like Balatro hand inspection
+              ty = -20;
+              rot = BASE_ROT[idx] * 0.2;
+              sc = 1.09;
+              zi = 20;
+            } else if (idx < activeIdx) {
+              // Left neighbors part to the left so they are never covered
+              const dist = activeIdx - idx;
+              tx = BASE_X[idx] - (dist === 1 ? 40 : 28);
+              ty = BASE_Y[idx] + 4;
+              rot = BASE_ROT[idx] - 2.5;
+              sc = 0.94;
+            } else {
+              // Right neighbors part to the right so they are never covered
+              const dist = idx - activeIdx;
+              tx = BASE_X[idx] + (dist === 1 ? 40 : 28);
+              ty = BASE_Y[idx] + 4;
+              rot = BASE_ROT[idx] + 2.5;
+              sc = 0.94;
+            }
+          }
+
+          fc.style.setProperty("--tx", `${tx}px`);
+          fc.style.setProperty("--ty", `${ty}px`);
+          fc.style.setProperty("--rot", `${rot}deg`);
+          fc.style.setProperty("--sc", String(sc));
+          fc.style.setProperty("--zi", String(zi));
+
+          fc.classList.toggle("is-active", idx === focusIdx);
+          fc.classList.toggle("is-dimmed", isHovering && idx !== activeIdx);
+        });
+      });
+    }
+
+    applyBalatroHand(null);
+
+    if (decksViewport) {
+      let currentHoverIdx = null;
+      decksViewport.addEventListener("pointermove", (e) => {
+        const rect = decksViewport.getBoundingClientRect();
+        const relX = e.clientX - (rect.left + rect.width / 2);
+        let idx = Math.floor((relX + 185) / 74);
+        idx = Math.max(0, Math.min(4, idx));
+        if (idx !== currentHoverIdx) {
+          currentHoverIdx = idx;
+          applyBalatroHand(idx);
+        }
+      });
+
+      decksViewport.addEventListener("pointerleave", () => {
+        currentHoverIdx = null;
+        applyBalatroHand(null);
+      });
+    }
+
+    function switchAvalonDeck(deckKey) {
+      if (avalonStage) avalonStage.dataset.activeDeck = deckKey;
+      deckSwitchBtns.forEach((btn) => {
+        btn.classList.toggle("is-active", btn.dataset.deckTarget === deckKey);
+      });
+      deckPanels.forEach((panel) => {
+        panel.classList.toggle("is-active", panel.dataset.deckPanel === deckKey);
+      });
+      applyBalatroHand(null);
+    }
+
+    // CLICK ONLY to switch decks (no accidental hover switching!)
+    deckSwitchBtns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        switchAvalonDeck(btn.dataset.deckTarget);
+      });
+    });
+
+    // Card spotlight follows cursor
+    document.querySelectorAll(".card").forEach((card) => {
+      card.addEventListener("pointermove", (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        card.style.setProperty("--my", `${e.clientY - r.top}px`);
+      });
+    });
+
+    // ============ CC & LK: Interactive 32-Key Grand Piano Keyboard + WebAudio Synthesizer ============
+    (() => {
+      const whiteRow = document.getElementById("pianoWhiteRow");
+      const blackLayer = document.getElementById("pianoBlackLayer");
+      const keybed = document.getElementById("pianoKeybed");
+      const chassisEl = document.getElementById("musicboxChassis");
+      const distReadout = document.getElementById("cclkDistanceReadout");
+      const stepCounter = document.getElementById("mbStepCounter");
+      const musicBtn = document.getElementById("cclkMusicBtn");
+      const musicLabel = document.getElementById("cclkMusicLabel");
+      if (!whiteRow || !blackLayer) return;
+
+      // 19 White Keys from F3 to C6 (Left 9 keys F3..G4 = LK Bass, Right 10 keys A4..C6 = CC Melody)
+      const WHITE_KEYS = [
+        { note: "F3", freq: 174.61, voice: "lk", blackAfter: { note: "F#3", freq: 185.00 } },
+        { note: "G3", freq: 196.00, voice: "lk", blackAfter: { note: "G#3", freq: 207.65 } },
+        { note: "A3", freq: 220.00, voice: "lk", blackAfter: { note: "A#3", freq: 233.08 } },
+        { note: "B3", freq: 246.94, voice: "lk", blackAfter: null },
+        { note: "C4", freq: 261.63, voice: "lk", anchor: true, blackAfter: { note: "C#4", freq: 277.18 } },
+        { note: "D4", freq: 293.66, voice: "lk", blackAfter: { note: "D#4", freq: 311.13 } },
+        { note: "E4", freq: 329.63, voice: "lk", blackAfter: null },
+        { note: "F4", freq: 349.23, voice: "lk", blackAfter: { note: "F#4", freq: 369.99 } },
+        { note: "G4", freq: 392.00, voice: "lk", blackAfter: { note: "G#4", freq: 415.30 } },
+        { note: "A4", freq: 440.00, voice: "cc", blackAfter: { note: "A#4", freq: 466.16 } },
+        { note: "B4", freq: 493.88, voice: "cc", blackAfter: null },
+        { note: "C5", freq: 523.25, voice: "cc", anchor: true, blackAfter: { note: "C#5", freq: 554.37 } },
+        { note: "D5", freq: 587.33, voice: "cc", blackAfter: { note: "D#5", freq: 622.25 } },
+        { note: "E5", freq: 659.25, voice: "cc", blackAfter: null },
+        { note: "F5", freq: 698.46, voice: "cc", blackAfter: { note: "F#5", freq: 739.99 } },
+        { note: "G5", freq: 783.99, voice: "cc", blackAfter: { note: "G#5", freq: 830.61 } },
+        { note: "A5", freq: 880.00, voice: "cc", blackAfter: { note: "A#5", freq: 932.33 } },
+        { note: "B5", freq: 987.77, voice: "cc", blackAfter: null },
+        { note: "C6", freq: 1046.50, voice: "cc", anchor: true, blackAfter: null }
+      ];
+
+      const NOTE_FREQ = {};
+      const keyEls = {};
+      const keyTimers = {};
+
+      let whiteHtml = "";
+      let blackHtml = "";
+      const totalWhite = WHITE_KEYS.length;
+
+      WHITE_KEYS.forEach((wk, idx) => {
+        NOTE_FREQ[wk.note] = wk.freq;
+        const anchorClass = wk.anchor ? " is-c-anchor" : "";
+        whiteHtml += `
+          <button type="button" class="piano-key-white${anchorClass}" data-note="${wk.note}" data-voice="${wk.voice}" aria-label="Piano key ${wk.note}">
+            <span class="piano-key-label">${wk.note}</span>
+          </button>
+        `;
+        if (wk.blackAfter) {
+          const bk = wk.blackAfter;
+          NOTE_FREQ[bk.note] = bk.freq;
+          const leftPct = (((idx + 1) / totalWhite) * 100).toFixed(3);
+          blackHtml += `
+            <button type="button" class="piano-key-black" data-note="${bk.note}" data-voice="${wk.voice}" style="left:${leftPct}%" aria-label="Piano key ${bk.note}"></button>
+          `;
+        }
+      });
+
+      whiteRow.innerHTML = whiteHtml;
+      blackLayer.innerHTML = blackHtml;
+
+      let isPointerDown = false;
+      window.addEventListener("pointerup", () => { isPointerDown = false; });
+
+      keybed.querySelectorAll("[data-note]").forEach((btn) => {
+        const note = btn.dataset.note;
+        keyEls[note] = btn;
+
+        btn.addEventListener("pointerdown", (e) => {
+          e.preventDefault();
+          isPointerDown = true;
+          initAudio();
+          playPianoNote(note, 0.095, 1.65);
+          flashKey(note, 260);
+        });
+
+        btn.addEventListener("pointerenter", () => {
+          if (isPointerDown) {
+            initAudio();
+            playPianoNote(note, 0.08, 1.45);
+            flashKey(note, 220);
+          }
+        });
+      });
+
+      function flashKey(noteName, durationMs = 240) {
+        const el = keyEls[noteName];
+        if (!el) return;
+        el.classList.add("is-active");
+        clearTimeout(keyTimers[noteName]);
+        keyTimers[noteName] = setTimeout(() => {
+          el.classList.remove("is-active");
+        }, durationMs);
+      }
+
+      // Mozart K.265 Score: [ccNote (Right Hand Melody), lkNote (Left Hand Bass), durationIn16ths, sectionLabel]
+      const MOZART_K265 = [
+        ["C5", "C4", 4, "STARLIGHT · NOCTURNE"], ["C5", "E4", 4, "STARLIGHT · NOCTURNE"], ["G5", "E4", 4, "STARLIGHT · NOCTURNE"], ["G5", "C4", 4, "STARLIGHT · NOCTURNE"],
+        ["A5", "F4", 4, "STARLIGHT · NOCTURNE"], ["A5", "C4", 4, "STARLIGHT · NOCTURNE"], ["G5", "E4", 8, "STARLIGHT · NOCTURNE"],
+        ["F5", "D4", 4, "STARLIGHT · NOCTURNE"], ["F5", "B3", 4, "STARLIGHT · NOCTURNE"], ["E5", "C4", 4, "STARLIGHT · NOCTURNE"], ["E5", "A3", 4, "STARLIGHT · NOCTURNE"],
+        ["D5", "F3", 4, "STARLIGHT · NOCTURNE"], ["D5", "G3", 2, "STARLIGHT · NOCTURNE"], ["E5", null, 2, "STARLIGHT · NOCTURNE"], ["C5", "C4", 8, "STARLIGHT · NOCTURNE"],
+
+        ["G5", "E4", 4, "STARLIGHT · NOCTURNE"], ["G5", "G3", 4, "STARLIGHT · NOCTURNE"], ["F5", "D4", 4, "STARLIGHT · NOCTURNE"], ["F5", "G3", 4, "STARLIGHT · NOCTURNE"],
+        ["E5", "C4", 4, "STARLIGHT · NOCTURNE"], ["E5", "E4", 4, "STARLIGHT · NOCTURNE"], ["D5", "G3", 8, "STARLIGHT · NOCTURNE"],
+        ["G5", "E4", 4, "STARLIGHT · NOCTURNE"], ["G5", "G3", 4, "STARLIGHT · NOCTURNE"], ["F5", "D4", 4, "STARLIGHT · NOCTURNE"], ["F5", "G3", 4, "STARLIGHT · NOCTURNE"],
+        ["E5", "C4", 4, "STARLIGHT · NOCTURNE"], ["E5", "A3", 2, "STARLIGHT · NOCTURNE"], ["F5", null, 2, "STARLIGHT · NOCTURNE"], ["D5", "G3", 8, "STARLIGHT · NOCTURNE"],
+
+        ["D5", "C4", 1, "STARLIGHT · REVERIE"], ["C5", null, 1, "STARLIGHT · REVERIE"], ["B4", null, 1, "STARLIGHT · REVERIE"], ["C5", null, 1, "STARLIGHT · REVERIE"],
+        ["E5", "E4", 1, "STARLIGHT · REVERIE"], ["C5", null, 1, "STARLIGHT · REVERIE"], ["D5", null, 1, "STARLIGHT · REVERIE"], ["C5", null, 1, "STARLIGHT · REVERIE"],
+        ["A5", "E4", 1, "STARLIGHT · REVERIE"], ["G5", null, 1, "STARLIGHT · REVERIE"], ["F#5", null, 1, "STARLIGHT · REVERIE"], ["G5", null, 1, "STARLIGHT · REVERIE"],
+        ["B5", "C4", 1, "STARLIGHT · REVERIE"], ["G5", null, 1, "STARLIGHT · REVERIE"], ["A5", null, 1, "STARLIGHT · REVERIE"], ["G5", null, 1, "STARLIGHT · REVERIE"],
+
+        ["B5", "F4", 1, "STARLIGHT · REVERIE"], ["A5", null, 1, "STARLIGHT · REVERIE"], ["G#5", null, 1, "STARLIGHT · REVERIE"], ["A5", null, 1, "STARLIGHT · REVERIE"],
+        ["C6", "C4", 1, "STARLIGHT · REVERIE"], ["A5", null, 1, "STARLIGHT · REVERIE"], ["B5", null, 1, "STARLIGHT · REVERIE"], ["A5", null, 1, "STARLIGHT · REVERIE"],
+        ["G5", "E4", 2, "STARLIGHT · REVERIE"], ["E5", "C4", 2, "STARLIGHT · REVERIE"], ["G5", "G3", 4, "STARLIGHT · REVERIE"],
+
+        ["G5", "D4", 1, "STARLIGHT · REVERIE"], ["F5", null, 1, "STARLIGHT · REVERIE"], ["E5", null, 1, "STARLIGHT · REVERIE"], ["F5", null, 1, "STARLIGHT · REVERIE"],
+        ["A5", "B3", 1, "STARLIGHT · REVERIE"], ["F5", null, 1, "STARLIGHT · REVERIE"], ["G5", null, 1, "STARLIGHT · REVERIE"], ["F5", null, 1, "STARLIGHT · REVERIE"],
+        ["F5", "C4", 1, "STARLIGHT · REVERIE"], ["E5", null, 1, "STARLIGHT · REVERIE"], ["D#5", null, 1, "STARLIGHT · REVERIE"], ["E5", null, 1, "STARLIGHT · REVERIE"],
+        ["G5", "A3", 1, "STARLIGHT · REVERIE"], ["E5", null, 1, "STARLIGHT · REVERIE"], ["F5", null, 1, "STARLIGHT · REVERIE"], ["E5", null, 1, "STARLIGHT · REVERIE"],
+
+        ["E5", "F3", 1, "STARLIGHT · REVERIE"], ["D5", null, 1, "STARLIGHT · REVERIE"], ["C#5", null, 1, "STARLIGHT · REVERIE"], ["D5", null, 1, "STARLIGHT · REVERIE"],
+        ["F5", "G3", 1, "STARLIGHT · REVERIE"], ["D5", null, 1, "STARLIGHT · REVERIE"], ["E5", null, 1, "STARLIGHT · REVERIE"], ["B4", null, 1, "STARLIGHT · REVERIE"],
+        ["C5", "C4", 4, "STARLIGHT · REVERIE"], ["C5", "E4", 2, "STARLIGHT · REVERIE"], ["C5", "C4", 6, "STARLIGHT · REVERIE"]
+      ];
+
+      let audioCtx = null;
+      let isPlayingBox = false;
+      let schedulerTimer = null;
+      let scoreIdx = 0;
+
+      function initAudio() {
+        if (!audioCtx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) audioCtx = new AC();
+        }
+        if (audioCtx && audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+      }
+
+      // Warm Felt Grand Piano + Celesta synthesis
+      function playFreq(freq, volume = 0.085, decay = 1.65) {
+        initAudio();
+        if (!audioCtx || !freq) return;
+        const nowTime = audioCtx.currentTime;
+
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const gain2 = audioCtx.createGain();
+
+        osc1.type = "sine";
+        osc1.frequency.setValueAtTime(freq, nowTime);
+
+        osc2.type = "triangle";
+        osc2.frequency.setValueAtTime(freq * 2, nowTime);
+        gain2.gain.setValueAtTime(0.18, nowTime);
+
+        osc2.connect(gain2);
+        gain2.connect(gain);
+        osc1.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        gain.gain.setValueAtTime(0.0001, nowTime);
+        gain.gain.exponentialRampToValueAtTime(volume, nowTime + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0001, nowTime + decay);
+
+        osc1.start(nowTime);
+        osc2.start(nowTime);
+        osc1.stop(nowTime + decay + 0.05);
+        osc2.stop(nowTime + decay + 0.05);
+      }
+      window.__playCustomPianoFreq = playFreq;
+
+      function playPianoNote(noteName, volume = 0.085, decay = 1.65) {
+        if (!noteName || !NOTE_FREQ[noteName]) return;
+        playFreq(NOTE_FREQ[noteName], volume, decay);
+      }
+
+      function playNextScoreStep() {
+        if (!isPlayingBox) return;
+        const step = MOZART_K265[scoreIdx % MOZART_K265.length];
+        const [ccNote, lkNote, dur16, section] = step;
+        const currentStepNum = (scoreIdx % MOZART_K265.length) + 1;
+        scoreIdx++;
+
+        const stepMs = dur16 * 135;
+        const visualHold = Math.max(115, stepMs - 25);
+
+        if (ccNote) {
+          playPianoNote(ccNote, dur16 === 1 ? 0.072 : 0.092, dur16 === 1 ? 1.1 : 1.75);
+          flashKey(ccNote, visualHold);
+        }
+        if (lkNote) {
+          playPianoNote(lkNote, 0.058, 1.95);
+          flashKey(lkNote, Math.max(visualHold, 360));
+        }
+        const isZh = document.documentElement.lang === "zh-CN";
+        if (distReadout && section) {
+          const zhSection = section.includes("REVERIE") ? "星光流转 · 华彩变奏" : "星轨夜曲 · 主题呈示";
+          distReadout.textContent = `♪ ${isZh ? zhSection : section}`;
+        }
+        if (stepCounter) {
+          const padNum = String(currentStepNum).padStart(2, "0");
+          stepCounter.textContent = isZh
+            ? `第 ${padNum} / ${MOZART_K265.length} 音`
+            : `NOTE ${padNum} / ${MOZART_K265.length}`;
+        }
+
+        schedulerTimer = setTimeout(playNextScoreStep, stepMs);
+      }
+
+      function syncMusicUI() {
+        musicBtn?.classList.toggle("is-playing", isPlayingBox);
+        chassisEl?.classList.toggle("is-playing", isPlayingBox);
+        const isZh = document.documentElement.lang === "zh-CN";
+        if (musicLabel) {
+          musicLabel.textContent = isPlayingBox
+            ? (isZh ? "星光流转中 · 轻触静默" : "Starlight Reverie · Pause")
+            : (isZh ? "聆听星轨夜曲" : "Listen to Starlight Nocturne");
+        }
+        if (distReadout) {
+          if (!isPlayingBox) {
+            distReadout.textContent = isZh ? "静候奏响" : "STANDBY · READY";
+          } else {
+            const step = MOZART_K265[Math.max(0, scoreIdx - 1) % MOZART_K265.length];
+            const section = step ? step[3] : "STARLIGHT · NOCTURNE";
+            const zhSection = section.includes("REVERIE") ? "星光流转 · 华彩变奏" : "星轨夜曲 · 主题呈示";
+            distReadout.textContent = `♪ ${isZh ? zhSection : section}`;
+          }
+        }
+        if (stepCounter) {
+          if (!isPlayingBox) {
+            stepCounter.textContent = "CC × LK";
+          } else {
+            const currentStepNum = ((Math.max(0, scoreIdx - 1)) % MOZART_K265.length) + 1;
+            const padNum = String(currentStepNum).padStart(2, "0");
+            stepCounter.textContent = isZh
+              ? `第 ${padNum} / ${MOZART_K265.length} 音`
+              : `NOTE ${padNum} / ${MOZART_K265.length}`;
+          }
+        }
+        if (window.__syncOpticsLang) window.__syncOpticsLang(isPlayingBox);
+      }
+      window.__syncPianoLang = syncMusicUI;
+
+      function toggleMusicBox() {
+        initAudio();
+        isPlayingBox = !isPlayingBox;
+        syncMusicUI();
+        clearTimeout(schedulerTimer);
+        if (isPlayingBox) {
+          playNextScoreStep();
+        }
+      }
+
+      window.__playCCNocturne = () => {
+        initAudio();
+        if (!isPlayingBox) {
+          isPlayingBox = true;
+          syncMusicUI();
+          clearTimeout(schedulerTimer);
+          playNextScoreStep();
+        }
+      };
+
+      musicBtn?.addEventListener("click", toggleMusicBox);
+      syncMusicUI();
+    })();
+
+    // ============ Nocturne Piano Cipher Modal Interaction (Code: 961007) ============
+    (() => {
+      const PANDORA_CODE = "961007";
+      const pandoraTrigger = document.getElementById("pandoraTrigger");
+      const pandoraModal = document.getElementById("pandoraModal");
+      const pandoraDialog = document.getElementById("pandoraDialog");
+      const pandoraClose = document.getElementById("pandoraClose");
+      const pandoraBackdrop = document.getElementById("pandoraBackdrop");
+      const cipherSlots = document.querySelectorAll("#cipherSlots .cipher-slot");
+      const cipherWhiteRow = document.getElementById("cipherWhiteRow");
+      const cipherBlackLayer = document.getElementById("cipherBlackLayer");
+      const pandoraStatus = document.getElementById("pandoraStatus");
+      const pandoraClear = document.getElementById("pandoraClear");
+      const pandoraSubmit = document.getElementById("pandoraSubmit");
+
+      if (!pandoraModal || !cipherWhiteRow) return;
+
+      // 10 Ivory Cipher Keys (1..9, 0) tuned so that 9-6-1-0-0-7 plays the Starlight Nocturne phrase:
+      // 9 (A5) -> 6 (G5) -> 1 (F5) -> 0 (E5) -> 0 (E5) -> 7 (C5)!
+      const CIPHER_WHITE_KEYS = [
+        { digit: "1", note: "F5",  freq: 698.46, staffY: "42%" },
+        { digit: "2", note: "D4",  freq: 293.66, staffY: "70%" },
+        { digit: "3", note: "E4",  freq: 329.63, staffY: "64%" },
+        { digit: "4", note: "F4",  freq: 349.23, staffY: "58%" },
+        { digit: "5", note: "G4",  freq: 392.00, staffY: "53%" },
+        { digit: "6", note: "G5",  freq: 783.99, staffY: "35%" },
+        { digit: "7", note: "C5",  freq: 523.25, staffY: "50%" },
+        { digit: "8", note: "B4",  freq: 493.88, staffY: "48%" },
+        { digit: "9", note: "A5",  freq: 880.00, staffY: "28%" },
+        { digit: "0", note: "E5",  freq: 659.25, staffY: "46%" }
+      ];
+
+      // 7 Raised Ebony Black Keys in authentic piano grouping (2 - 3 - 2)
+      // The rightmost black key acts as a tactile Backspace (⌫) key
+      const CIPHER_BLACK_KEYS = [
+        { afterIdx: 0, freq: 311.13, label: "" },
+        { afterIdx: 1, freq: 369.99, label: "" },
+        { afterIdx: 3, freq: 415.30, label: "" },
+        { afterIdx: 4, freq: 466.16, label: "" },
+        { afterIdx: 5, freq: 554.37, label: "" },
+        { afterIdx: 7, freq: 622.25, label: "" },
+        { afterIdx: 8, freq: 246.94, label: "⌫", isBackspace: true }
+      ];
+
+      const DIGIT_MAP = {};
+      const whiteKeyEls = {};
+
+      cipherWhiteRow.innerHTML = CIPHER_WHITE_KEYS.map((k) => {
+        DIGIT_MAP[k.digit] = k;
+        return `
+          <button type="button" class="cipher-key-white" data-digit="${k.digit}" aria-label="Piano Key ${k.digit} (${k.note})">
+            <span class="cipher-key-pitch">${k.note}</span>
+            <span class="cipher-key-num">${k.digit}</span>
+          </button>
+        `;
+      }).join("");
+
+      cipherBlackLayer.innerHTML = CIPHER_BLACK_KEYS.map((bk) => {
+        const leftPct = (((bk.afterIdx + 1) / 10) * 100).toFixed(2);
+        return `
+          <button type="button" class="cipher-key-black" style="left:${leftPct}%" data-backspace="${bk.isBackspace ? '1' : '0'}" data-freq="${bk.freq}" aria-label="${bk.isBackspace ? 'Backspace' : 'Harmonic Key'}">
+            <span>${bk.label}</span>
+          </button>
+        `;
+      }).join("");
+
+      cipherWhiteRow.querySelectorAll(".cipher-key-white").forEach((btn) => {
+        const d = btn.dataset.digit;
+        whiteKeyEls[d] = btn;
+        btn.addEventListener("pointerdown", (e) => {
+          e.preventDefault();
+          pressDigit(d);
+        });
+      });
+
+      cipherBlackLayer.querySelectorAll(".cipher-key-black").forEach((btn) => {
+        btn.addEventListener("pointerdown", (e) => {
+          e.preventDefault();
+          btn.classList.add("is-pressed");
+          setTimeout(() => btn.classList.remove("is-pressed"), 180);
+          const freq = parseFloat(btn.dataset.freq || "440");
+          if (window.__playCustomPianoFreq) window.__playCustomPianoFreq(freq, 0.055, 1.1);
+          if (btn.dataset.backspace === "1") {
+            removeLastDigit();
+          }
+        });
+      });
+
+      let currentCode = "";
+      let isVerifying = false;
+
+      function isZh() {
+        return document.documentElement.lang === "zh-CN";
+      }
+
+      function pressDigit(digit) {
+        if (isVerifying || currentCode.length >= 6) return;
+        const info = DIGIT_MAP[digit];
+        if (!info) return;
+
+        // Play piano tone & animate key
+        if (window.__playCustomPianoFreq) {
+          window.__playCustomPianoFreq(info.freq, 0.095, 1.6);
+        }
+        const keyEl = whiteKeyEls[digit];
+        if (keyEl) {
+          keyEl.classList.add("is-pressed");
+          setTimeout(() => keyEl.classList.remove("is-pressed"), 200);
+        }
+
+        currentCode += digit;
+        updateStaffUI();
+
+        if (currentCode.length === 6) {
+          isVerifying = true;
+          setTimeout(verifyCode, 220);
+        }
+      }
+
+      function removeLastDigit() {
+        if (isVerifying || currentCode.length === 0) return;
+        currentCode = currentCode.slice(0, -1);
+        updateStaffUI();
+      }
+
+      function updateStaffUI() {
+        cipherSlots.forEach((slot, idx) => {
+          slot.classList.remove("active", "filled", "error");
+          const glyph = slot.querySelector(".cipher-note-glyph");
+          const idxLabel = slot.querySelector(".cipher-slot-idx");
+
+          if (idx < currentCode.length) {
+            const digit = currentCode[idx];
+            const info = DIGIT_MAP[digit];
+            slot.classList.add("filled");
+            if (glyph && info) {
+              glyph.style.setProperty("--note-y", info.staffY);
+            }
+            if (idxLabel && info) {
+              idxLabel.textContent = info.note;
+            }
+          } else {
+            if (idx === currentCode.length) {
+              slot.classList.add("active");
+            }
+            if (idxLabel) {
+              idxLabel.textContent = String(idx + 1).padStart(2, "0");
+            }
+          }
+        });
+
+        if (pandoraStatus && !isVerifying) {
+          pandoraStatus.className = "pandora-status";
+          if (currentCode.length === 0) {
+            pandoraStatus.textContent = isZh()
+              ? "弹奏 6 位同频琴键解锁专属密藏"
+              : "Awaiting 6-note cadence...";
+          } else {
+            pandoraStatus.textContent = isZh()
+              ? `已落谱 ${currentCode.length} / 6 音`
+              : `Notes plotted: ${currentCode.length} / 6`;
+          }
+        }
+      }
+
+      function playResolutionChord() {
+        if (!window.__playCustomPianoFreq) return;
+        const chord = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+        chord.forEach((f, i) => {
+          setTimeout(() => {
+            window.__playCustomPianoFreq(f, 0.065, 2.2);
+          }, i * 55);
+        });
+      }
+
+      function verifyCode() {
+        if (currentCode === PANDORA_CODE) {
+          pandoraDialog.classList.remove("shake");
+          pandoraDialog.classList.add("unlocking");
+          playResolutionChord();
+
+          // Ripple across all 10 white keys
+          CIPHER_WHITE_KEYS.forEach((k, i) => {
+            setTimeout(() => {
+              const el = whiteKeyEls[k.digit];
+              if (el) {
+                el.classList.add("is-pressed");
+                setTimeout(() => el.classList.remove("is-pressed"), 240);
+              }
+            }, i * 45);
+          });
+
+          if (pandoraStatus) {
+            pandoraStatus.className = "pandora-status success";
+            pandoraStatus.textContent = isZh()
+              ? "✦ 暗谱共鸣对齐 · 正在开启专属篇章..."
+              : "✦ Nocturne Cadence Resolved · Opening Archive...";
+          }
+
+          sessionStorage.setItem("pandora_unlocked", PANDORA_CODE);
+          try { localStorage.setItem("pandora_unlocked", PANDORA_CODE); } catch (e) {}
+
+          setTimeout(() => {
+            window.location.href = "./pandora/";
+          }, 1150);
+        } else {
+          // Dissonant low interval on wrong code
+          if (window.__playCustomPianoFreq) {
+            window.__playCustomPianoFreq(185.00, 0.06, 0.7);
+            window.__playCustomPianoFreq(196.00, 0.06, 0.7);
+          }
+          pandoraDialog.classList.remove("shake");
+          void pandoraDialog.offsetWidth;
+          pandoraDialog.classList.add("shake");
+          cipherSlots.forEach((s) => s.classList.add("error"));
+
+          if (pandoraStatus) {
+            pandoraStatus.className = "pandora-status error";
+            pandoraStatus.textContent = isZh()
+              ? "⚠ 琴音未对齐 · 请重新弹奏六位暗谱"
+              : "⚠ Cadence mismatch · Please play the 6 notes again";
+          }
+
+          setTimeout(() => {
+            currentCode = "";
+            isVerifying = false;
+            updateStaffUI();
+          }, 680);
+        }
+      }
+
+      function openPandoraModal() {
+        pandoraModal.hidden = false;
+        void pandoraModal.offsetWidth;
+        pandoraModal.classList.add("open");
+        document.body.style.overflow = "hidden";
+        currentCode = "";
+        isVerifying = false;
+        updateStaffUI();
+      }
+
+      function closePandoraModal() {
+        pandoraModal.classList.remove("open");
+        pandoraDialog.classList.remove("unlocking", "shake");
+        document.body.style.overflow = "";
+        setTimeout(() => {
+          pandoraModal.hidden = true;
+        }, 280);
+      }
+
+      pandoraTrigger?.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openPandoraModal();
+      });
+
+      pandoraClose?.addEventListener("click", closePandoraModal);
+      pandoraBackdrop?.addEventListener("click", closePandoraModal);
+      pandoraClear?.addEventListener("click", removeLastDigit);
+      pandoraSubmit?.addEventListener("click", () => {
+        if (currentCode.length === 6 && !isVerifying) {
+          isVerifying = true;
+          verifyCode();
+        }
+      });
+
+      // Physical computer keyboard support while modal is open
+      window.addEventListener("keydown", (e) => {
+        if (pandoraModal.hidden || !pandoraModal.classList.contains("open")) return;
+        if (e.key >= "0" && e.key <= "9") {
+          e.preventDefault();
+          pressDigit(e.key);
+        } else if (e.key === "Backspace") {
+          e.preventDefault();
+          removeLastDigit();
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (currentCode.length === 6 && !isVerifying) {
+            isVerifying = true;
+            verifyCode();
+          }
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          closePandoraModal();
+        }
+      });
+    })();
+    </script>
+</body>
+</html>
+
+
+
