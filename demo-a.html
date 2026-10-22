@@ -173,10 +173,11 @@
     }
 
     html:lang(zh-CN) .hero h1 {
-      font-size: clamp(2.35rem, 4.8vw, 4.1rem);
+      font-size: clamp(2.25rem, 4.3vw, 3.72rem);
       line-height: 1.28;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.035em;
       color: #d6dde6;
+      text-wrap: pretty;
     }
 
     html:lang(zh-CN) .about-statement {
@@ -738,7 +739,7 @@
     .hero-grid {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: clamp(32px, 5vw, 72px);
+      gap: clamp(24px, 3.6vw, 48px);
       align-items: center;
     }
 
@@ -866,145 +867,251 @@
       user-select: none;
     }
 
-    /* Authentic Obsidian & Champagne-Gold Vinyl Turntable Deck */
+    /* ============ Bespoke Audiophile Turntable (Technics SL-1200G × Braun PCS 5) ============ */
     .turntable-deck {
       position: relative;
-      width: 232px;
-      height: 198px;
-      border-radius: 22px;
+      width: 276px;
+      height: 220px;
+      border-radius: 20px;
+      padding: 10px;
+      /* Outer walnut/ebony & anodized gunmetal chassis */
       background:
-        radial-gradient(140px 140px at 42% 50%, rgba(212, 180, 117, 0.06), transparent 75%),
-        linear-gradient(155deg, #171a22 0%, #0d1015 58%, #08090c 100%);
-      border: 1px solid rgba(255, 255, 255, 0.11);
+        linear-gradient(145deg, #222631 0%, #12151c 45%, #090b0f 100%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.14),
-        inset 0 -12px 24px rgba(0, 0, 0, 0.85),
-        0 26px 54px -14px rgba(0, 0, 0, 0.92),
-        0 0 38px -10px rgba(212, 180, 117, 0.14);
+        inset 0 1.5px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.9),
+        0 32px 64px -14px rgba(0, 0, 0, 0.95),
+        0 12px 24px -8px rgba(0, 0, 0, 0.8),
+        0 0 42px -10px rgba(212, 180, 117, 0.12);
       cursor: pointer;
-      transition: transform 220ms var(--ease-snap), border-color 260ms ease, box-shadow 300ms ease;
+      transition:
+        transform 240ms var(--ease-snap),
+        border-color 280ms ease,
+        box-shadow 320ms ease;
+    }
+
+    /* Inner recessed brushed dark-titanium top plate */
+    .tt-top-plate {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 13px;
+      background:
+        radial-gradient(150px 150px at 36% 48%, rgba(212, 180, 117, 0.06), transparent 75%),
+        repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.012) 0px,
+          rgba(255, 255, 255, 0.012) 1px,
+          transparent 1px,
+          transparent 3px
+        ),
+        linear-gradient(165deg, #161922 0%, #0e1017 60%, #090b0e 100%);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow:
+        inset 0 2px 8px rgba(0, 0, 0, 0.85),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      overflow: hidden;
     }
 
     .turntable-deck:hover {
-      border-color: rgba(212, 180, 117, 0.34);
+      border-color: rgba(212, 180, 117, 0.38);
+      transform: translateY(-2px);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.18),
-        inset 0 -12px 24px rgba(0, 0, 0, 0.85),
-        0 30px 60px -12px rgba(0, 0, 0, 0.96),
-        0 0 44px -8px rgba(212, 180, 117, 0.28);
+        inset 0 1.5px 0 rgba(255, 255, 255, 0.24),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.9),
+        0 36px 72px -12px rgba(0, 0, 0, 0.98),
+        0 0 52px -8px rgba(212, 180, 117, 0.26);
     }
 
     .turntable-deck:active {
-      transform: scale(0.975);
+      transform: translateY(0) scale(0.985);
     }
 
     .turntable-deck.is-playing {
-      border-color: rgba(212, 180, 117, 0.44);
+      border-color: rgba(212, 180, 117, 0.48);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.18),
-        inset 0 -12px 24px rgba(0, 0, 0, 0.85),
-        0 30px 60px -12px rgba(0, 0, 0, 0.96),
-        0 0 52px -6px rgba(212, 180, 117, 0.36);
+        inset 0 1.5px 0 rgba(255, 255, 255, 0.24),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.9),
+        0 36px 72px -12px rgba(0, 0, 0, 0.98),
+        0 0 64px -6px rgba(212, 180, 117, 0.34);
     }
 
-    /* 4 Corner Machined Micro-Bolts */
+    /* 4 Machined Hex Corner Bolts */
     .tt-screw {
       position: absolute;
-      width: 5px;
-      height: 5px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #2a2f3a, #0e1015);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: radial-gradient(circle at 35% 35%, #3a404f 0%, #151821 70%, #090b0e 100%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.9);
       pointer-events: none;
+      z-index: 5;
     }
-    .tt-screw.tl { top: 10px; left: 10px; }
-    .tt-screw.tr { top: 10px; right: 10px; }
-    .tt-screw.bl { bottom: 10px; left: 10px; }
-    .tt-screw.br { bottom: 10px; right: 10px; }
-
-    /* Bottom-Left Strobe Lamp & 33 1/3 RPM Engraving */
-    .tt-strobe {
+    .tt-screw::after {
+      content: "";
       position: absolute;
-      left: 14px;
-      bottom: 13px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-family: var(--font-mono);
-      font-size: 8.5px;
-      letter-spacing: 0.08em;
-      color: rgba(242, 244, 247, 0.42);
-      pointer-events: none;
-    }
-
-    .tt-strobe-led {
-      width: 5px;
-      height: 5px;
+      inset: 2px;
       border-radius: 50%;
-      background: rgba(212, 180, 117, 0.35);
-      transition: all 240ms ease;
+      background: #0b0d12;
+      border: 0.5px solid rgba(255, 255, 255, 0.12);
+    }
+    .tt-screw.tl { top: 8px; left: 8px; }
+    .tt-screw.tr { top: 8px; right: 8px; }
+    .tt-screw.bl { bottom: 8px; left: 8px; }
+    .tt-screw.br { bottom: 8px; right: 8px; }
+
+    /* Top-Left Deck Model Badge */
+    .tt-brand-plate {
+      position: absolute;
+      top: 10px;
+      left: 22px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 7.5px;
+      letter-spacing: 0.16em;
+      color: rgba(242, 244, 247, 0.45);
+      pointer-events: none;
+      z-index: 4;
+    }
+    .tt-brand-plate strong {
+      color: #d4b475;
+      font-weight: 600;
     }
 
-    .turntable-deck.is-playing .tt-strobe-led {
-      background: #f3c6a8;
-      box-shadow: 0 0 10px #f3c6a8, 0 0 4px #d4b475;
-    }
-
-    /* Machined Platter & Strobe Rim */
+    /* Recessed Platter Well & Strobe-Dot Aluminum Platter */
     .tt-platter-well {
       position: absolute;
-      top: 15px;
-      left: 16px;
-      width: 164px;
-      height: 164px;
+      top: 21px;
+      left: 12px;
+      width: 162px;
+      height: 162px;
       border-radius: 50%;
-      padding: 4px;
+      padding: 6px;
       background:
-        repeating-conic-gradient(
-          from 0deg,
-          rgba(255, 255, 255, 0.18) 0deg 1.2deg,
-          transparent 1.2deg 4deg
-        ),
-        radial-gradient(circle, #060709 62%, #1c2029 100%);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+        radial-gradient(circle, #050608 64%, #1f2430 68%, #0d1016 71%, #262c3a 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       box-shadow:
-        inset 0 4px 12px rgba(0, 0, 0, 0.95),
-        0 6px 18px rgba(0, 0, 0, 0.8);
+        inset 0 6px 16px rgba(0, 0, 0, 0.95),
+        0 10px 26px rgba(0, 0, 0, 0.9),
+        0 0 0 3px rgba(0, 0, 0, 0.45);
     }
 
-    /* Spinning Vinyl Record Disc */
+    /* Precision Strobe Dots Ring on Platter Bevel */
+    .tt-strobe-ring {
+      position: absolute;
+      inset: 2px;
+      border-radius: 50%;
+      border: 2px dashed rgba(212, 180, 117, 0.38);
+      opacity: 0.75;
+      pointer-events: none;
+      animation: vinylSpin 12s linear infinite;
+      animation-play-state: paused;
+    }
+
+    .turntable-deck.is-playing .tt-strobe-ring {
+      animation-play-state: running;
+      border-color: rgba(243, 198, 168, 0.55);
+    }
+
+    /* Stationary Optical Specular Sheen Wrapper (Stays aligned to studio light while vinyl spins inside!) */
+    .tt-vinyl-stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.9);
+    }
+
+    /* Fixed Studio Lamp Specular Butterfly Reflection across the Grooves */
+    .tt-vinyl-sheen {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background:
+        conic-gradient(
+          from 315deg at 50% 50%,
+          transparent 0deg,
+          rgba(255, 255, 255, 0.03) 14deg,
+          rgba(255, 255, 255, 0.18) 28deg,
+          rgba(243, 198, 168, 0.14) 34deg,
+          rgba(255, 255, 255, 0.03) 48deg,
+          transparent 64deg,
+          transparent 180deg,
+          rgba(255, 255, 255, 0.03) 194deg,
+          rgba(255, 255, 255, 0.16) 208deg,
+          rgba(212, 180, 117, 0.12) 214deg,
+          rgba(255, 255, 255, 0.03) 228deg,
+          transparent 244deg,
+          transparent 360deg
+        );
+      pointer-events: none;
+      z-index: 2;
+      mix-blend-mode: screen;
+    }
+
+    /* Spinning 180g Audiophile Vinyl Disc */
     .tt-vinyl {
       position: relative;
       width: 100%;
       height: 100%;
       border-radius: 50%;
       background:
-        /* Anisotropic vinyl light reflection cones */
+        /* Subtle secondary rotating luster */
         conic-gradient(
-          from 25deg,
+          from 60deg,
           transparent 0deg,
-          rgba(255, 255, 255, 0.09) 18deg,
-          rgba(243, 198, 168, 0.07) 26deg,
-          transparent 44deg,
+          rgba(212, 180, 117, 0.05) 30deg,
+          transparent 60deg,
           transparent 180deg,
-          rgba(255, 255, 255, 0.09) 198deg,
-          rgba(212, 180, 117, 0.07) 206deg,
-          transparent 224deg,
-          transparent 360deg
+          rgba(212, 180, 117, 0.05) 210deg,
+          transparent 240deg
         ),
-        /* Realistic concentric vinyl micro-grooves */
+        /* Authentic LP Track Bands (Lead-in, Track 1, Gap, Track 2, Gap, Track 3, Run-out matrix) */
+        radial-gradient(
+          circle at center,
+          #090a0d 0%,
+          #090a0d 34%,
+          /* Run-out matrix area */
+          #0e1015 35%,
+          #07080a 40%,
+          /* Track 3 */
+          transparent 40.5%,
+          transparent 53%,
+          /* Track gap 2 */
+          #050608 53.5%,
+          #050608 55%,
+          /* Track 2 */
+          transparent 55.5%,
+          transparent 72%,
+          /* Track gap 1 */
+          #050608 72.5%,
+          #050608 74%,
+          /* Track 1 */
+          transparent 74.5%,
+          transparent 94%,
+          /* Outer lead-in rim bevel */
+          #050608 95%,
+          #1b1f2a 98.5%,
+          #060709 100%
+        ),
+        /* Ultra-fine sub-pixel concentric micro-grooves */
         repeating-radial-gradient(
           circle at center,
-          #0a0b0e 0px,
-          #0a0b0e 1.6px,
-          #14171f 2.2px,
-          #090a0d 3.2px
+          #090b0f 0px,
+          #090b0f 0.9px,
+          #161922 1.35px,
+          #0b0d12 1.8px
         );
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
       display: grid;
       place-items: center;
-      animation: vinylSpin 4.2s linear infinite;
+      animation: vinylSpin 3.6s linear infinite;
       animation-play-state: paused;
     }
 
@@ -1017,94 +1124,362 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Champagne-Gold & Warm Ivory Record Center Label */
+    /* Run-out Groove Etched Matrix Ring */
+    .tt-vinyl::before {
+      content: "";
+      position: absolute;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 0.75px solid rgba(212, 180, 117, 0.16);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.03);
+      pointer-events: none;
+    }
+
+    /* Classical Gold-Foil Record Center Label (Deutsche Grammophon / ECM Aesthetic) */
     .tt-label {
       position: relative;
-      width: 54px;
-      height: 54px;
+      z-index: 3;
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 30% 28%, #f6e3c4 0%, #d4b475 55%, #9a7840 100%);
-      border: 2px solid rgba(15, 17, 22, 0.85);
+        radial-gradient(circle at 32% 28%, #fbf0da 0%, #e5c687 48%, #b8904c 85%, #8a6830 100%);
+      border: 2px solid #0b0d12;
       box-shadow:
-        0 0 0 1px rgba(212, 180, 117, 0.35),
-        inset 0 1px 2px rgba(255, 255, 255, 0.45);
+        0 0 0 1.5px rgba(212, 180, 117, 0.5),
+        inset 0 0 0 2.5px rgba(20, 16, 10, 0.22),
+        inset 0 1px 2px rgba(255, 255, 255, 0.65);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 6px 0;
+      padding: 6px 0 5px;
       text-align: center;
+    }
+
+    /* Inner decorative guilloche ring on label */
+    .tt-label::before {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      border: 0.75px solid rgba(20, 16, 10, 0.45);
+      pointer-events: none;
     }
 
     .tt-label-top {
       font-family: var(--font-mono);
-      font-size: 6px;
+      font-size: 5.5px;
       font-weight: 700;
-      letter-spacing: 0.12em;
-      color: #14120e;
+      letter-spacing: 0.14em;
+      color: #17130c;
       line-height: 1;
+      border-bottom: 0.75px solid rgba(23, 19, 12, 0.35);
+      padding-bottom: 1.5px;
+    }
+
+    .tt-label-Side {
+      position: absolute;
+      left: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-mono);
+      font-size: 4.5px;
+      font-weight: 700;
+      color: rgba(23, 19, 12, 0.75);
+    }
+
+    .tt-label-Rpm {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-mono);
+      font-size: 4.5px;
+      font-weight: 700;
+      color: rgba(23, 19, 12, 0.75);
     }
 
     .tt-label-bottom {
       font-family: var(--font-serif);
       font-style: italic;
       font-size: 7.5px;
-      font-weight: 600;
-      color: #14120e;
+      font-weight: 700;
+      color: #17130c;
       line-height: 1;
     }
 
-    /* Metallic Chrome Center Spindle Pin */
+    /* Machined Chrome & Brass Center Spindle Stabilizer Weight */
     .tt-spindle {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background:
+        conic-gradient(
+          from 0deg,
+          #d1d5db,
+          #4b5563,
+          #f9fafb,
+          #374151,
+          #e5e7eb,
+          #4b5563,
+          #d1d5db
+        );
+      border: 1px solid rgba(15, 17, 22, 0.85);
+      box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.85),
+        inset 0 1px 1px rgba(255, 255, 255, 0.8);
+    }
+    .tt-spindle::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #6b7280 70%, #111827 100%);
+      border: 0.5px solid rgba(0, 0, 0, 0.6);
+    }
+
+    /* ============ Left-Corner Hardware Controls: Start/Stop Switch & Strobe Prism ============ */
+    .tt-power-btn {
+      position: absolute;
+      left: 14px;
+      bottom: 10px;
+      height: 18px;
+      padding: 0 7px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #252a36 0%, #14171f 100%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        0 2px 5px rgba(0, 0, 0, 0.85);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 7px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: rgba(242, 244, 247, 0.65);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .tt-strobe-led {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(212, 180, 117, 0.3);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6);
+      transition: all 240ms ease;
+    }
+
+    .turntable-deck.is-playing .tt-strobe-led {
+      background: #34d399;
+      box-shadow: 0 0 8px #34d399, 0 0 3px #a7f3d0;
+    }
+
+    .turntable-deck.is-playing .tt-power-btn {
+      border-color: rgba(212, 180, 117, 0.45);
+      color: #f5e3c6;
+    }
+
+    /* Warm Amber Strobe Illuminator Beam hitting the Platter Rim */
+    .tt-strobe-lamp {
+      position: absolute;
+      left: 14px;
+      top: 32px;
+      width: 10px;
+      height: 16px;
+      border-radius: 3px;
+      background: linear-gradient(135deg, #2b303c, #13161d);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
+      z-index: 4;
+      pointer-events: none;
+    }
+    .tt-strobe-lamp::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      top: 3px;
+      width: 4px;
+      height: 10px;
+      border-radius: 2px;
+      background: rgba(245, 158, 11, 0.25);
+      transition: all 260ms ease;
+    }
+    .turntable-deck.is-playing .tt-strobe-lamp::after {
+      background: #fbbf24;
+      box-shadow: 4px 0 14px 2px rgba(251, 191, 36, 0.75);
+    }
+
+    /* Stylus Target Light (Warm spotlight illuminating the vinyl edge when playing) */
+    .tt-stylus-light {
+      position: absolute;
+      right: 76px;
+      bottom: 24px;
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #9ca3af 55%, #1f2937 100%);
-      border: 1px solid rgba(0, 0, 0, 0.65);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+      background: #1c2029;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      z-index: 4;
+      pointer-events: none;
+    }
+    .tt-stylus-light::before {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      right: -6px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(243, 198, 168, 0.42) 0%, rgba(212, 180, 117, 0.12) 45%, transparent 72%);
+      filter: blur(4px);
+      opacity: 0;
+      transition: opacity 350ms ease;
+      pointer-events: none;
+    }
+    .turntable-deck.is-playing .tt-stylus-light::before {
+      opacity: 1;
     }
 
-    /* Precision Gimbal & Pivoting Tonearm Assembly */
-    .tt-tonearm-base {
+    /* ============ Right-Hand Precision Control Bay: Gimbal, Tonearm & Pitch Fader ============ */
+    /* CNC Gimbal Bearing Base Assembly */
+    .tt-gimbal-housing {
       position: absolute;
-      top: 18px;
+      top: 16px;
       right: 14px;
-      width: 34px;
-      height: 34px;
+      width: 62px;
+      height: 62px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #2b303c 0%, #12151c 70%, #090b0e 100%);
+      /* Multi-stepped machined aluminum & brass bearing base */
+      background:
+        radial-gradient(circle at 50% 50%, #10131a 0%, #10131a 46%, #2b313e 48%, #151820 62%, #0a0c10 100%);
       border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.85);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 10px 22px rgba(0, 0, 0, 0.9);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* Graduated Anti-Skate Dial Ring on Gimbal Base */
+    .tt-gimbal-housing::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border-radius: 50%;
+      border: 1px dashed rgba(212, 180, 117, 0.35);
+    }
+
+    /* Tonearm Rest Clip (Mid-Right Deck) */
+    .tt-arm-rest {
+      position: absolute;
+      top: 104px;
+      right: 31px;
+      width: 12px;
+      height: 8px;
+      border-radius: 2px;
+      background: #1b1f29;
+      border: 1px solid rgba(212, 180, 117, 0.35);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+      z-index: 3;
       pointer-events: none;
     }
 
+    /* Recessed Pitch Control Fader Slot (Bottom-Right Deck) */
+    .tt-pitch-slot {
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      width: 16px;
+      height: 76px;
+      border-radius: 4px;
+      background: #07080b;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 3;
+    }
+    /* Scale ticks next to fader */
+    .tt-pitch-slot::before {
+      content: "";
+      position: absolute;
+      inset: 6px 2px;
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.22) 0px,
+        rgba(255, 255, 255, 0.22) 1px,
+        transparent 1px,
+        transparent 6px
+      );
+      opacity: 0.55;
+    }
+    /* Center track slot */
+    .tt-pitch-slot::after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: #000;
+      border-inline: 0.5px solid rgba(255, 255, 255, 0.12);
+    }
+    /* Sliding metallic fader cap */
+    .tt-pitch-knob {
+      position: relative;
+      z-index: 2;
+      width: 12px;
+      height: 16px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, #4b5563 0%, #1f2937 45%, #0f172a 55%, #374151 100%);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.9);
+    }
+    .tt-pitch-knob::after {
+      content: "";
+      position: absolute;
+      left: 1px;
+      right: 1px;
+      top: 50%;
+      height: 1px;
+      background: #f3c6a8;
+    }
+
+    /* Pivoting S-Shaped Audiophile Tonearm SVG Assembly */
+    /* Pivot center is at (36, 36) inside the 72x195 SVG, aligned with .tt-gimbal-housing center (right: 45px, top: 47px) */
     .tt-tonearm {
       position: absolute;
-      top: 18px;
-      right: 14px;
-      width: 34px;
-      height: 142px;
-      transform-origin: 17px 17px;
-      transform: rotate(2deg);
-      transition: transform 680ms cubic-bezier(0.22, 1, 0.36, 1);
+      top: 11px;
+      right: 9px;
+      width: 72px;
+      height: 182px;
+      transform-origin: 36px 36px;
+      transform: rotate(-15deg);
+      transition: transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
       pointer-events: none;
-      z-index: 4;
-      filter: drop-shadow(-3px 6px 8px rgba(0, 0, 0, 0.85));
+      z-index: 6;
+      filter: drop-shadow(-5px 8px 10px rgba(0, 0, 0, 0.9));
     }
 
-    /* Hovering previews the needle approaching the record */
+    /* Hovering unparks the tonearm toward the vinyl rim */
     .turntable-deck:hover:not(.is-playing) .tt-tonearm {
-      transform: rotate(9deg);
+      transform: rotate(-4deg);
     }
 
-    /* When playing, the tonearm swings onto the spinning vinyl grooves */
+    /* Playing swings the tonearm smoothly onto the spinning vinyl grooves! */
     .turntable-deck.is-playing .tt-tonearm {
-      transform: rotate(26deg);
+      transform: rotate(19deg);
     }
 
     .dial-readout {
@@ -2762,55 +3137,121 @@
           </div>
         </div>
 
-        <!-- Tactile Obsidian & Champagne-Gold Vinyl Turntable Deck (Click to Play / Pause) -->
+        <!-- Bespoke Audiophile Turntable Deck (Technics SL-1200G × Braun PCS 5 — Click to Play / Pause) -->
         <div class="dial-unit">
-          <div class="turntable-deck" id="tactileDial" role="button" tabindex="0" aria-pressed="false" title="Click to drop the needle & play/pause Starlight Nocturne">
+          <div class="turntable-deck" id="tactileDial" role="button" tabindex="0" aria-pressed="false" title="Click to drop the tonearm & play/pause Starlight Nocturne">
             <span class="tt-screw tl" aria-hidden="true"></span>
             <span class="tt-screw tr" aria-hidden="true"></span>
             <span class="tt-screw bl" aria-hidden="true"></span>
             <span class="tt-screw br" aria-hidden="true"></span>
 
-            <!-- Machined Platter & Grooved Obsidian Vinyl Record -->
-            <div class="tt-platter-well">
-              <div class="tt-vinyl" id="dialRotor">
-                <div class="tt-label">
-                  <span class="tt-label-top">CC × LK</span>
-                  <span class="tt-label-bottom">K. 265</span>
-                  <span class="tt-spindle"></span>
+            <div class="tt-top-plate">
+              <!-- Top-Left Engraved Model Plate -->
+              <div class="tt-brand-plate" aria-hidden="true">
+                <strong>SL-K265</strong>
+                <span>DIRECT DRIVE · QUARTZ</span>
+              </div>
+
+              <!-- Warm Amber Strobe Illuminator Tower -->
+              <div class="tt-strobe-lamp" aria-hidden="true"></div>
+
+              <!-- Machined Aluminum Platter & 180g Audiophile Vinyl Record -->
+              <div class="tt-platter-well">
+                <div class="tt-strobe-ring" aria-hidden="true"></div>
+                <div class="tt-vinyl-stage">
+                  <!-- Fixed Studio Light Specular Sheen -->
+                  <div class="tt-vinyl-sheen" aria-hidden="true"></div>
+                  <!-- Rotating Grooved LP Disc -->
+                  <div class="tt-vinyl" id="dialRotor">
+                    <div class="tt-label">
+                      <span class="tt-label-top">CC × LK</span>
+                      <span class="tt-label-Side">A</span>
+                      <span class="tt-label-Rpm">33</span>
+                      <span class="tt-label-bottom">K. 265</span>
+                      <span class="tt-spindle"></span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Gimbal Base & S-Shaped Metallic Tonearm + Golden Stylus Cartridge -->
-            <div class="tt-tonearm-base" aria-hidden="true"></div>
-            <svg class="tt-tonearm" viewBox="0 0 34 142" fill="none" aria-hidden="true">
-              <!-- Counterweight -->
-              <rect x="11" y="2" width="12" height="8" rx="2" fill="#3a404d" stroke="rgba(255,255,255,0.22)" stroke-width="0.8"/>
-              <!-- Pivot Gimbal Ring -->
-              <circle cx="17" cy="17" r="7" fill="#1c2029" stroke="#d4b475" stroke-width="1.2"/>
-              <circle cx="17" cy="17" r="2.5" fill="#d4b475"/>
-              <!-- Brushed Titanium S-Tonearm Tube -->
-              <path d="M17 24 L17 92 Q17 108 10 120" stroke="url(#armGrad)" stroke-width="2.6" stroke-linecap="round"/>
-              <!-- Headshell & Golden Cartridge -->
-              <g transform="translate(3, 116) rotate(24)">
-                <rect x="0" y="0" width="9" height="16" rx="2" fill="#171a22" stroke="#d4b475" stroke-width="1"/>
-                <rect x="2.5" y="14" width="4" height="4" rx="1" fill="#f3c6a8"/>
-                <!-- Finger lift -->
-                <path d="M9 5 Q14 4 15 8" stroke="#d4b475" stroke-width="1.1" stroke-linecap="round" fill="none"/>
-              </g>
-              <defs>
-                <linearGradient id="armGrad" x1="10" y1="24" x2="20" y2="120" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#e5e7eb"/>
-                  <stop offset="50%" stop-color="#9ca3af"/>
-                  <stop offset="100%" stop-color="#d4b475"/>
-                </linearGradient>
-              </defs>
-            </svg>
+              <!-- Bottom-Left Recessed Start/Stop Metal Switch -->
+              <div class="tt-power-btn" aria-hidden="true">
+                <span class="tt-strobe-led"></span>
+                <span>START / STOP</span>
+              </div>
 
-            <!-- 33 1/3 RPM Strobe Indicator -->
-            <div class="tt-strobe" aria-hidden="true">
-              <span class="tt-strobe-led"></span>
-              <span>33⅓ RPM</span>
+              <!-- Stylus Target Lamp -->
+              <div class="tt-stylus-light" aria-hidden="true"></div>
+
+              <!-- Right-Hand Control Bay: Gimbal Base, Arm Rest & Pitch Fader -->
+              <div class="tt-gimbal-housing" aria-hidden="true"></div>
+              <div class="tt-arm-rest" aria-hidden="true"></div>
+              <div class="tt-pitch-slot" aria-hidden="true">
+                <span class="tt-pitch-knob"></span>
+              </div>
+
+              <!-- Precision Multi-Part S-Shaped Tonearm + Die-Cast Headshell SVG -->
+              <svg class="tt-tonearm" viewBox="0 0 72 195" fill="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="cwGrad" x1="24" y1="4" x2="48" y2="4" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#1f2430"/>
+                    <stop offset="35%" stop-color="#6b7280"/>
+                    <stop offset="55%" stop-color="#f3f4f6"/>
+                    <stop offset="80%" stop-color="#374151"/>
+                    <stop offset="100%" stop-color="#111827"/>
+                  </linearGradient>
+                  <linearGradient id="goldRing" x1="24" y1="14" x2="48" y2="14" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#9a7840"/>
+                    <stop offset="50%" stop-color="#f6e3c4"/>
+                    <stop offset="100%" stop-color="#8a6830"/>
+                  </linearGradient>
+                  <linearGradient id="tubeGrad" x1="20" y1="42" x2="42" y2="155" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#f3f4f6"/>
+                    <stop offset="45%" stop-color="#9ca3af"/>
+                    <stop offset="80%" stop-color="#d4b475"/>
+                    <stop offset="100%" stop-color="#f6e3c4"/>
+                  </linearGradient>
+                </defs>
+
+                <!-- Rear Balance Stub & Knurled Cylindrical Counterweight -->
+                <rect x="33" y="2" width="6" height="18" rx="1.5" fill="#4b5563"/>
+                <rect x="25" y="5" width="22" height="12" rx="2.5" fill="url(#cwGrad)" stroke="rgba(255,255,255,0.28)" stroke-width="0.7"/>
+                <!-- Gold tracking-force scale ring on counterweight -->
+                <rect x="25" y="14" width="22" height="2.5" fill="url(#goldRing)"/>
+
+                <!-- CNC Gimbal Outer Yoke & Inner Pivot Bridge -->
+                <rect x="24" y="24" width="24" height="24" rx="5" fill="#171b24" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+                <circle cx="36" cy="36" r="9" fill="#0d1016" stroke="#d4b475" stroke-width="1.2"/>
+                <circle cx="36" cy="36" r="3.5" fill="url(#goldRing)"/>
+                <!-- Side Cueing Lever -->
+                <path d="M48 34 L55 34 L55 46" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+                <!-- S-Shaped Tubular Tonearm (Outer shadow + Metallic core + Specular ridge) -->
+                <path d="M36 46 C 36 74, 43 96, 36 124 C 31 142, 23 152, 18 162" stroke="#090b0f" stroke-width="5.2" stroke-linecap="round"/>
+                <path d="M36 46 C 36 74, 43 96, 36 124 C 31 142, 23 152, 18 162" stroke="url(#tubeGrad)" stroke-width="3.4" stroke-linecap="round"/>
+                <path d="M35.5 46 C 35.5 74, 42.5 96, 35.5 124 C 30.5 142, 22.5 152, 17.5 162" stroke="rgba(255,255,255,0.65)" stroke-width="0.9" stroke-linecap="round"/>
+
+                <!-- Locking Collar Nut -->
+                <rect x="15" y="157" width="7" height="4" rx="1" transform="rotate(26 18 159)" fill="url(#goldRing)"/>
+
+                <!-- Perforated Die-Cast Audiophile Headshell & Moving-Coil Golden Cartridge -->
+                <g transform="translate(15, 160) rotate(26)">
+                  <!-- Finger Lift Lever -->
+                  <path d="M6 6 Q 13 5, 15 10" stroke="#f6e3c4" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+                  <!-- Headshell Body -->
+                  <path d="M-4 0 L5 0 L7 20 L-6 20 Z" fill="#12151e" stroke="#d4b475" stroke-width="1.1" stroke-linejoin="round"/>
+                  <!-- Perforation slots on headshell -->
+                  <circle cx="0.5" cy="5" r="1.1" fill="#07080b"/>
+                  <circle cx="-1.5" cy="9" r="1" fill="#07080b"/>
+                  <circle cx="2.5" cy="9" r="1" fill="#07080b"/>
+                  <!-- Dual Mounting Screws -->
+                  <circle cx="-2" cy="14.5" r="1.1" fill="#f6e3c4"/>
+                  <circle cx="3" cy="14.5" r="1.1" fill="#f6e3c4"/>
+                  <!-- Exposed Golden Stylus Cantilever Tip -->
+                  <path d="M-1.5 20 L2.5 20 L1 24.5 L0 24.5 Z" fill="#f3c6a8"/>
+                  <circle cx="0.5" cy="24.5" r="1.2" fill="#ffffff"/>
+                </g>
+              </svg>
             </div>
           </div>
           <div class="dial-readout" id="dialReadout">✦ CC &amp; LK · STARLIGHT NOCTURNE</div>
