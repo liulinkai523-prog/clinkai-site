@@ -862,115 +862,249 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       user-select: none;
     }
 
-    .dial-housing {
+    /* Authentic Obsidian & Champagne-Gold Vinyl Turntable Deck */
+    .turntable-deck {
       position: relative;
-      width: 176px;
-      height: 176px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 38% 32%, #1a1e26 0%, #0d1015 65%, #07080b 100%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      width: 232px;
+      height: 198px;
+      border-radius: 22px;
+      background:
+        radial-gradient(140px 140px at 42% 50%, rgba(212, 180, 117, 0.06), transparent 75%),
+        linear-gradient(155deg, #171a22 0%, #0d1015 58%, #08090c 100%);
+      border: 1px solid rgba(255, 255, 255, 0.11);
       box-shadow:
-        inset 0 1.5px 1px rgba(255, 255, 255, 0.14),
-        inset 0 -10px 24px rgba(0, 0, 0, 0.85),
-        0 24px 48px -12px rgba(0, 0, 0, 0.9),
-        0 0 36px -8px var(--dial-glow, rgba(94, 194, 230, 0.2));
-      display: grid;
-      place-items: center;
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 -12px 24px rgba(0, 0, 0, 0.85),
+        0 26px 54px -14px rgba(0, 0, 0, 0.92),
+        0 0 38px -10px rgba(212, 180, 117, 0.14);
       cursor: pointer;
-      transition: transform 200ms var(--ease-snap), border-color 240ms ease, box-shadow 300ms ease;
+      transition: transform 220ms var(--ease-snap), border-color 260ms ease, box-shadow 300ms ease;
     }
 
-    .dial-housing:hover {
-      border-color: rgba(255, 255, 255, 0.24);
+    .turntable-deck:hover {
+      border-color: rgba(212, 180, 117, 0.34);
       box-shadow:
-        inset 0 1.5px 1px rgba(255, 255, 255, 0.18),
-        inset 0 -10px 24px rgba(0, 0, 0, 0.85),
-        0 28px 56px -12px rgba(0, 0, 0, 0.95),
-        0 0 42px -6px var(--dial-glow, rgba(94, 194, 230, 0.35));
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        inset 0 -12px 24px rgba(0, 0, 0, 0.85),
+        0 30px 60px -12px rgba(0, 0, 0, 0.96),
+        0 0 44px -8px rgba(212, 180, 117, 0.28);
     }
 
-    .dial-housing:active {
-      transform: scale(0.96);
+    .turntable-deck:active {
+      transform: scale(0.975);
     }
 
-    .dial-ticks {
+    .turntable-deck.is-playing {
+      border-color: rgba(212, 180, 117, 0.44);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        inset 0 -12px 24px rgba(0, 0, 0, 0.85),
+        0 30px 60px -12px rgba(0, 0, 0, 0.96),
+        0 0 52px -6px rgba(212, 180, 117, 0.36);
+    }
+
+    /* 4 Corner Machined Micro-Bolts */
+    .tt-screw {
       position: absolute;
-      inset: 8px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
+      background: linear-gradient(135deg, #2a2f3a, #0e1015);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+    }
+    .tt-screw.tl { top: 10px; left: 10px; }
+    .tt-screw.tr { top: 10px; right: 10px; }
+    .tt-screw.bl { bottom: 10px; left: 10px; }
+    .tt-screw.br { bottom: 10px; right: 10px; }
+
+    /* Bottom-Left Strobe Lamp & 33 1/3 RPM Engraving */
+    .tt-strobe {
+      position: absolute;
+      left: 14px;
+      bottom: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      letter-spacing: 0.08em;
+      color: rgba(242, 244, 247, 0.42);
       pointer-events: none;
     }
 
-    .dial-rotor {
+    .tt-strobe-led {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(212, 180, 117, 0.35);
+      transition: all 240ms ease;
+    }
+
+    .turntable-deck.is-playing .tt-strobe-led {
+      background: #f3c6a8;
+      box-shadow: 0 0 10px #f3c6a8, 0 0 4px #d4b475;
+    }
+
+    /* Machined Platter & Strobe Rim */
+    .tt-platter-well {
+      position: absolute;
+      top: 15px;
+      left: 16px;
+      width: 164px;
+      height: 164px;
+      border-radius: 50%;
+      padding: 4px;
+      background:
+        repeating-conic-gradient(
+          from 0deg,
+          rgba(255, 255, 255, 0.18) 0deg 1.2deg,
+          transparent 1.2deg 4deg
+        ),
+        radial-gradient(circle, #060709 62%, #1c2029 100%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow:
+        inset 0 4px 12px rgba(0, 0, 0, 0.95),
+        0 6px 18px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Spinning Vinyl Record Disc */
+    .tt-vinyl {
       position: relative;
-      width: 122px;
-      height: 122px;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 35% 30%, #20252f 0%, #11141a 70%, #0a0c10 100%);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        0 8px 18px rgba(0, 0, 0, 0.8);
+        /* Anisotropic vinyl light reflection cones */
+        conic-gradient(
+          from 25deg,
+          transparent 0deg,
+          rgba(255, 255, 255, 0.09) 18deg,
+          rgba(243, 198, 168, 0.07) 26deg,
+          transparent 44deg,
+          transparent 180deg,
+          rgba(255, 255, 255, 0.09) 198deg,
+          rgba(212, 180, 117, 0.07) 206deg,
+          transparent 224deg,
+          transparent 360deg
+        ),
+        /* Realistic concentric vinyl micro-grooves */
+        repeating-radial-gradient(
+          circle at center,
+          #0a0b0e 0px,
+          #0a0b0e 1.6px,
+          #14171f 2.2px,
+          #090a0d 3.2px
+        );
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
       display: grid;
       place-items: center;
-      transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: vinylSpin 4.2s linear infinite;
+      animation-play-state: paused;
     }
 
-    .dial-notch {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 14px;
-      height: 4px;
-      border-radius: 99px;
-      background: var(--dial-color, #f3c6a8);
-      box-shadow: 0 0 12px var(--dial-color, #f3c6a8);
-      transition: background 240ms ease, box-shadow 240ms ease;
+    .turntable-deck.is-playing .tt-vinyl {
+      animation-play-state: running;
     }
 
-    .dial-center-icon {
-      position: absolute;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: rgba(212, 180, 117, 0.1);
-      border: 1px solid rgba(243, 198, 168, 0.35);
-      color: #f3c6a8;
-      display: grid;
-      place-items: center;
-      font-size: 10px;
-      box-shadow: 0 0 16px rgba(243, 198, 168, 0.25);
-      transition: transform 240ms ease, background 240ms ease, border-color 240ms ease;
-    }
-
-    .dial-housing:hover .dial-center-icon {
-      transform: scale(1.12);
-      background: rgba(243, 198, 168, 0.2);
-      border-color: #f3c6a8;
-    }
-
-    .dial-housing.is-playing {
-      --dial-glow: rgba(243, 198, 168, 0.42);
-      border-color: rgba(243, 198, 168, 0.4);
-    }
-
-    .dial-housing.is-playing .dial-rotor {
-      animation: dialTurntableSpin 9s linear infinite;
-    }
-
-    @keyframes dialTurntableSpin {
+    @keyframes vinylSpin {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
 
-    .dial-matrix {
-      width: 84px;
-      height: 84px;
+    /* Champagne-Gold & Warm Ivory Record Center Label */
+    .tt-label {
+      position: relative;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 28%, #f6e3c4 0%, #d4b475 55%, #9a7840 100%);
+      border: 2px solid rgba(15, 17, 22, 0.85);
+      box-shadow:
+        0 0 0 1px rgba(212, 180, 117, 0.35),
+        inset 0 1px 2px rgba(255, 255, 255, 0.45);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+      text-align: center;
+    }
+
+    .tt-label-top {
+      font-family: var(--font-mono);
+      font-size: 6px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #14120e;
+      line-height: 1;
+    }
+
+    .tt-label-bottom {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 7.5px;
+      font-weight: 600;
+      color: #14120e;
+      line-height: 1;
+    }
+
+    /* Metallic Chrome Center Spindle Pin */
+    .tt-spindle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #9ca3af 55%, #1f2937 100%);
+      border: 1px solid rgba(0, 0, 0, 0.65);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Precision Gimbal & Pivoting Tonearm Assembly */
+    .tt-tonearm-base {
+      position: absolute;
+      top: 18px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #2b303c 0%, #12151c 70%, #090b0e 100%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.85);
+      pointer-events: none;
+    }
+
+    .tt-tonearm {
+      position: absolute;
+      top: 18px;
+      right: 14px;
+      width: 34px;
+      height: 142px;
+      transform-origin: 17px 17px;
+      transform: rotate(2deg);
+      transition: transform 680ms cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      z-index: 4;
+      filter: drop-shadow(-3px 6px 8px rgba(0, 0, 0, 0.85));
+    }
+
+    /* Hovering previews the needle approaching the record */
+    .turntable-deck:hover:not(.is-playing) .tt-tonearm {
+      transform: rotate(9deg);
+    }
+
+    /* When playing, the tonearm swings onto the spinning vinyl grooves */
+    .turntable-deck.is-playing .tt-tonearm {
+      transform: rotate(26deg);
     }
 
     .dial-readout {
@@ -2628,26 +2762,56 @@
           </div>
         </div>
 
-        <!-- Tactile Starlight Vinyl / Music Box Dial (Jumps to CC & LK & Plays Nocturne) -->
+        <!-- Tactile Obsidian & Champagne-Gold Vinyl Turntable Deck (Click to Play / Pause) -->
         <div class="dial-unit">
-          <div class="dial-housing" id="tactileDial" role="button" tabindex="0" title="Jump to CC & LK and play the Starlight Nocturne">
-            <svg class="dial-ticks" viewBox="0 0 160 160" aria-hidden="true">
-              <g stroke="rgba(255,255,255,0.22)" stroke-linecap="round">
-                <circle cx="80" cy="8" r="2.2" fill="#f3c6a8" stroke="none" />
-                <circle cx="131" cy="29" r="1.4" fill="rgba(255,255,255,0.45)" stroke="none" />
-                <circle cx="152" cy="80" r="2.2" fill="#f2f4f7" stroke="none" />
-                <circle cx="131" cy="131" r="1.4" fill="rgba(255,255,255,0.45)" stroke="none" />
-                <circle cx="80" cy="152" r="2.2" fill="#f2f4f7" stroke="none" />
-                <circle cx="29" cy="131" r="1.4" fill="rgba(255,255,255,0.45)" stroke="none" />
-                <circle cx="8" cy="80" r="2.2" fill="#f2f4f7" stroke="none" />
-                <circle cx="29" cy="29" r="1.4" fill="rgba(255,255,255,0.45)" stroke="none" />
-              </g>
-            </svg>
-            <div class="dial-rotor" id="dialRotor">
-              <span class="dial-notch"></span>
-              <svg class="dial-matrix" viewBox="0 0 84 84" aria-hidden="true" id="dialMatrixSvg"></svg>
+          <div class="turntable-deck" id="tactileDial" role="button" tabindex="0" aria-pressed="false" title="Click to drop the needle & play/pause Starlight Nocturne">
+            <span class="tt-screw tl" aria-hidden="true"></span>
+            <span class="tt-screw tr" aria-hidden="true"></span>
+            <span class="tt-screw bl" aria-hidden="true"></span>
+            <span class="tt-screw br" aria-hidden="true"></span>
+
+            <!-- Machined Platter & Grooved Obsidian Vinyl Record -->
+            <div class="tt-platter-well">
+              <div class="tt-vinyl" id="dialRotor">
+                <div class="tt-label">
+                  <span class="tt-label-top">CC × LK</span>
+                  <span class="tt-label-bottom">K. 265</span>
+                  <span class="tt-spindle"></span>
+                </div>
+              </div>
             </div>
-            <div class="dial-center-icon" id="dialCenterIcon" aria-hidden="true">▶</div>
+
+            <!-- Gimbal Base & S-Shaped Metallic Tonearm + Golden Stylus Cartridge -->
+            <div class="tt-tonearm-base" aria-hidden="true"></div>
+            <svg class="tt-tonearm" viewBox="0 0 34 142" fill="none" aria-hidden="true">
+              <!-- Counterweight -->
+              <rect x="11" y="2" width="12" height="8" rx="2" fill="#3a404d" stroke="rgba(255,255,255,0.22)" stroke-width="0.8"/>
+              <!-- Pivot Gimbal Ring -->
+              <circle cx="17" cy="17" r="7" fill="#1c2029" stroke="#d4b475" stroke-width="1.2"/>
+              <circle cx="17" cy="17" r="2.5" fill="#d4b475"/>
+              <!-- Brushed Titanium S-Tonearm Tube -->
+              <path d="M17 24 L17 92 Q17 108 10 120" stroke="url(#armGrad)" stroke-width="2.6" stroke-linecap="round"/>
+              <!-- Headshell & Golden Cartridge -->
+              <g transform="translate(3, 116) rotate(24)">
+                <rect x="0" y="0" width="9" height="16" rx="2" fill="#171a22" stroke="#d4b475" stroke-width="1"/>
+                <rect x="2.5" y="14" width="4" height="4" rx="1" fill="#f3c6a8"/>
+                <!-- Finger lift -->
+                <path d="M9 5 Q14 4 15 8" stroke="#d4b475" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+              </g>
+              <defs>
+                <linearGradient id="armGrad" x1="10" y1="24" x2="20" y2="120" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#e5e7eb"/>
+                  <stop offset="50%" stop-color="#9ca3af"/>
+                  <stop offset="100%" stop-color="#d4b475"/>
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <!-- 33 1/3 RPM Strobe Indicator -->
+            <div class="tt-strobe" aria-hidden="true">
+              <span class="tt-strobe-led"></span>
+              <span>33⅓ RPM</span>
+            </div>
           </div>
           <div class="dial-readout" id="dialReadout">✦ CC &amp; LK · STARLIGHT NOCTURNE</div>
         </div>
@@ -3041,13 +3205,9 @@
 
     if (dialHousing) {
       dialHousing.addEventListener("click", () => {
-        const ccSection = document.getElementById("cc");
-        if (ccSection) {
-          ccSection.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-        // Start playing the music box (or if already playing, keep playing as it scrolls down)
-        if (typeof window.__playCCNocturne === "function") {
-          window.__playCCNocturne();
+        // Toggle Play / Pause directly on the Vinyl Turntable (drops or lifts the tonearm needle!)
+        if (typeof window.__toggleCCNocturne === "function") {
+          window.__toggleCCNocturne();
         }
       });
       dialHousing.addEventListener("keydown", (e) => {
