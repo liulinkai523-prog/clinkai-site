@@ -521,7 +521,7 @@
           if (loading) loading.classList.add("hidden");
           if (!error && Array.isArray(data)) {
             // 过滤旧的无二维码假测试号，只展示真实上传的号
-            accounts = data.filter(item => item.qr_url && item.qr_url.trim().length > 5 && !["Linkai 的思考实验", "AI极客先锋"].includes(item.name));
+            accounts = data.filter(item => item.qr_url && item.qr_url.trim().length > 5 && !["Linkai 的思考实验", "AI极客先锋", "测试账号"].includes(item.name));
             try {
               localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
             } catch (e) {}
