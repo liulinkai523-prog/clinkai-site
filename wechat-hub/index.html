@@ -328,25 +328,39 @@
 
       <div class="space-y-4 text-xs">
         <div>
-          <label class="block font-bold text-slate-700 mb-1.5">从已发布的号主中一键选择我是谁：</label>
-          <div id="identityQuickSelect" class="space-y-1.5 max-h-40 overflow-y-auto custom-scroll pr-1">
-            <!-- 动态填充可选项 -->
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="font-bold text-slate-700">我在本设备发布的公众号：</label>
+            <span class="text-[10px] text-slate-400">仅限本人创建的号</span>
+          </div>
+          <div id="identityQuickSelect" class="space-y-2 max-h-48 overflow-y-auto custom-scroll pr-1">
+            <!-- 动态填充本机真正拥有的公众号 -->
           </div>
         </div>
 
-        <div class="pt-2 border-t border-slate-100">
-          <label class="block font-bold text-slate-700 mb-1.5">或者手动输入你的公众号名称：</label>
-          <input 
-            type="text" 
-            id="manualIdentityInput" 
-            placeholder="例如：复杂讲两句" 
-            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 font-bold focus:bg-white focus:outline-none focus:border-brand-500"
-          >
+        <div class="pt-3 border-t border-slate-100">
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="font-bold text-slate-700">新设备号主认领：</label>
+            <span class="text-[10px] text-brand-600 font-medium">换设备时安全认领已入驻名片</span>
+          </div>
+          <div class="space-y-2">
+            <input 
+              type="text" 
+              id="manualIdentityInput" 
+              placeholder="输入你的公众号名称（如：复杂讲两句）" 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 font-bold focus:bg-white focus:outline-none focus:border-brand-500 text-xs"
+            >
+            <input 
+              type="password" 
+              id="manualIdentityPasscode" 
+              placeholder="输入发布时填写的微信号（验证所有权）" 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 font-bold focus:bg-white focus:outline-none focus:border-brand-500 text-xs hidden"
+            >
+          </div>
         </div>
 
-        <div class="flex gap-2 pt-2">
+        <div class="flex gap-2 pt-1">
           <button onclick="saveManualIdentity()" class="flex-1 py-2.5 rounded-xl font-bold bg-brand-500 hover:bg-brand-600 text-white tap-btn shadow-md shadow-brand-500/25">
-            确认设置我的身份
+            确认设置 / 认领身份
           </button>
         </div>
       </div>
@@ -517,9 +531,24 @@
     let supabaseClient = null;
     let isCloudMode = false;
 
-    // 当前访问者的身份 (我的公众号名称)
+    // 当前访问者的身份 (我的公众号名称) 及所有权保护体系
     const IDENTITY_STORAGE_KEY = "wechat_hub_my_identity_name";
+    const OWNED_STORAGE_KEY = "wechat_hub_my_owned_accounts";
     let currentIdentity = localStorage.getItem(IDENTITY_STORAGE_KEY) || "";
+    let myOwnedAccounts = [];
+    try {
+      myOwnedAccounts = JSON.parse(localStorage.getItem(OWNED_STORAGE_KEY) || "[]");
+    } catch(e) {
+      myOwnedAccounts = [];
+    }
+
+    // 默认保护机制：如果是作者本人设备（有历史 identity 是“复杂讲两句”或默认初始化），自动赋予所有权
+    if (currentIdentity === "复杂讲两句" || (!myOwnedAccounts.length && currentIdentity === "复杂讲两句")) {
+      if (!myOwnedAccounts.includes("复杂讲两句")) {
+        myOwnedAccounts.push("复杂讲两句");
+        localStorage.setItem(OWNED_STORAGE_KEY, JSON.stringify(myOwnedAccounts));
+      }
+    }
 
     // 内存数据
     let accounts = [];
@@ -612,9 +641,10 @@
       const display = document.getElementById("headerIdentityName");
       const banner = document.getElementById("identityBanner");
       
-      // 如果还没设置身份，但账号列表里有名字叫“复杂讲两句”，默认建议设置
-      if (!currentIdentity && accounts.length > 0) {
-        // 尝试自动匹配
+      // 验证当前身份合法性：如果当前身份不在所有权列表中，强制清空防止任何客户端冒充
+      if (currentIdentity && !myOwnedAccounts.includes(currentIdentity)) {
+        currentIdentity = "";
+        localStorage.removeItem(IDENTITY_STORAGE_KEY);
       }
 
       if (currentIdentity) {
@@ -622,7 +652,7 @@
         display.className = "text-brand-700 font-extrabold max-w-[130px] truncate";
         if (banner) banner.classList.add("hidden");
       } else {
-        display.textContent = "点击绑定身份";
+        display.textContent = "未绑定 (点击设置)";
         display.className = "text-amber-600 font-bold max-w-[130px] truncate";
         if (banner) banner.classList.remove("hidden");
       }
@@ -900,9 +930,9 @@
 
     // 触发关注/回关/取消动作 (双向交叉写入)
     async function toggleFollowAction(targetName) {
-      if (!currentIdentity) {
+      if (!currentIdentity || !myOwnedAccounts.includes(currentIdentity)) {
         openIdentityModal();
-        showToast("请先设置当前你的公众号身份", "🆔");
+        showToast("请先发布或认领你自己的公众号名片，别人才能回关你！", "💡");
         return;
       }
 
@@ -963,8 +993,12 @@
       }
     }
 
-    // 下架并删除公众号卡片
+    // 下架并删除公众号卡片 (仅所有者可操作)
     async function deleteAccount(accountName, accountId) {
+      if (!myOwnedAccounts.includes(accountName)) {
+        showToast("⛔ 权限不足：只有该公众号的发布者才能执行下架！", "❌");
+        return;
+      }
       if (!confirm(`确定要下架并删除公众号「${accountName}」吗？\n下架后该卡片及相关关注数据将被彻底移除。`)) return;
 
       const loading = document.getElementById("loadingIndicator");
@@ -1045,24 +1079,43 @@
       render();
     }
 
-    // 身份弹窗逻辑
+    // 身份弹窗逻辑 - 严格保护所有权，禁止挑选他人账号
     function openIdentityModal() {
       const container = document.getElementById("identityQuickSelect");
       const manualInput = document.getElementById("manualIdentityInput");
-      manualInput.value = currentIdentity || "";
+      const passcodeInput = document.getElementById("manualIdentityPasscode");
+      if (passcodeInput) passcodeInput.classList.add("hidden");
+      manualInput.value = "";
 
-      if (accounts.length > 0) {
-        container.innerHTML = accounts.map(item => `
+      // 仅过滤出当前设备真正拥有的公众号
+      const myValidAccounts = accounts.filter(item => myOwnedAccounts.includes(item.name));
+
+      if (myValidAccounts.length > 0) {
+        container.innerHTML = myValidAccounts.map(item => `
           <button 
             onclick="selectQuickIdentity('${item.name}')" 
-            class="w-full text-left px-3 py-2 rounded-xl border transition-colors flex items-center justify-between ${currentIdentity === item.name ? 'border-brand-500 bg-brand-50/50 text-brand-800 font-bold' : 'border-slate-200 hover:bg-slate-50 text-slate-700'}"
+            class="w-full text-left px-3.5 py-2.5 rounded-2xl border transition-all flex items-center justify-between ${currentIdentity === item.name ? 'border-brand-500 bg-brand-50/70 text-brand-900 font-extrabold shadow-xs ring-1 ring-brand-500/30' : 'border-slate-200 hover:bg-slate-50 text-slate-700'}"
           >
-            <span class="truncate">${item.name}</span>
-            ${currentIdentity === item.name ? '<span class="text-xs text-brand-600 font-bold">✓ 当前身份</span>' : '<span class="text-[11px] text-slate-400">选择此号</span>'}
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="w-2 h-2 rounded-full ${currentIdentity === item.name ? 'bg-brand-500 animate-pulse' : 'bg-slate-300'}"></span>
+              <span class="truncate font-bold">${item.name}</span>
+            </div>
+            ${currentIdentity === item.name ? '<span class="text-xs text-brand-600 font-extrabold">✓ 当前使用中</span>' : '<span class="text-xs text-slate-400 hover:text-brand-600 font-medium">使用此号</span>'}
           </button>
         `).join("");
       } else {
-        container.innerHTML = `<p class="text-slate-400 py-1">暂无已入驻公众号，请直接在下方手动输入。</p>`;
+        container.innerHTML = `
+          <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-4 text-center">
+            <p class="text-amber-800 font-bold text-xs mb-1">你尚未在此设备发布公众号名片</p>
+            <p class="text-[11px] text-amber-600 mb-3 leading-relaxed">系统严格遵循“一人一号，防冒充认证”规则。必须拥有自己的卡片，别人才能回关你！</p>
+            <button 
+              onclick="closeIdentityModal(); openPublishModal();" 
+              class="w-full py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/20 tap-btn"
+            >
+              + 立即发布我的公众号 (10秒入驻)
+            </button>
+          </div>
+        `;
       }
 
       document.getElementById("identityModal").classList.remove("hidden");
@@ -1073,6 +1126,10 @@
     }
 
     function selectQuickIdentity(name) {
+      if (!myOwnedAccounts.includes(name)) {
+        showToast("无法选择未经授权的公众号！", "⛔");
+        return;
+      }
       currentIdentity = name.trim();
       localStorage.setItem(IDENTITY_STORAGE_KEY, currentIdentity);
       closeIdentityModal();
@@ -1081,18 +1138,68 @@
       render();
     }
 
+    // 认领已有公众号 / 手动身份设定
     function saveManualIdentity() {
       const input = document.getElementById("manualIdentityInput").value.trim();
+      const passcodeInput = document.getElementById("manualIdentityPasscode");
+      
       if (!input) {
         showToast("请输入公众号名称", "⚠️");
         return;
       }
-      currentIdentity = input;
-      localStorage.setItem(IDENTITY_STORAGE_KEY, currentIdentity);
-      closeIdentityModal();
-      syncIdentity();
-      showToast(`身份已设置为「${currentIdentity}」`, "🆔");
-      render();
+
+      // 如果本身就是我已拥有的号，直接切换
+      if (myOwnedAccounts.includes(input)) {
+        currentIdentity = input;
+        localStorage.setItem(IDENTITY_STORAGE_KEY, currentIdentity);
+        closeIdentityModal();
+        syncIdentity();
+        showToast(`身份已切换为「${currentIdentity}」`, "🆔");
+        render();
+        return;
+      }
+
+      // 检查该号是否已经在系统入驻
+      const targetAcc = accounts.find(a => a.name.trim().toLowerCase() === input.toLowerCase());
+      if (targetAcc) {
+        // 如果是已入驻号，必须验证所有权（防他人冒充）
+        if (passcodeInput.classList.contains("hidden")) {
+          passcodeInput.classList.remove("hidden");
+          passcodeInput.placeholder = `输入发布「${targetAcc.name}」时填写的微信号验证`;
+          showToast(`请输入发布时填写的微信号，验证号主所有权`, "🔐");
+          passcodeInput.focus();
+          return;
+        }
+
+        const passcode = passcodeInput.value.trim();
+        if (!passcode) {
+          showToast("请输入验证微信号", "⚠️");
+          return;
+        }
+
+        // 验证微信号是否与发布时一致 (或网站管理员万能口令 linkai)
+        const isAuthor = (targetAcc.name === "复杂讲两句" && ["linkai", "旺旺同学", "523"].includes(passcode));
+        const isMatchedWechat = (targetAcc.wechat && targetAcc.wechat.trim().toLowerCase() === passcode.toLowerCase());
+
+        if (isAuthor || isMatchedWechat) {
+          if (!myOwnedAccounts.includes(targetAcc.name)) {
+            myOwnedAccounts.push(targetAcc.name);
+            localStorage.setItem(OWNED_STORAGE_KEY, JSON.stringify(myOwnedAccounts));
+          }
+          currentIdentity = targetAcc.name;
+          localStorage.setItem(IDENTITY_STORAGE_KEY, currentIdentity);
+          closeIdentityModal();
+          syncIdentity();
+          showToast(`🎉 验证成功！已认领公众号「${currentIdentity}」`, "🎊");
+          render();
+        } else {
+          showToast("⛔ 验证失败：微信号不匹配，无法认领他人公众号！", "❌");
+        }
+        return;
+      }
+
+      // 该号尚未在系统发布
+      showToast(`系统未找到「${input}」的名片，请先点击右上角发布！`, "⚠️");
     }
 
     // 二维码弹窗
@@ -1237,6 +1344,16 @@
         const wechat = document.getElementById("formWechat").value.trim() || "未公开";
         const bio = document.getElementById("formBio").value.trim();
 
+        // 1. 防重名冒充检测
+        const duplicate = accounts.find(a => a.name.trim().toLowerCase() === name.toLowerCase());
+        if (duplicate) {
+          showToast(`公众号「${name}」已由其他号主入驻，不可重复发布！`, "⚠️");
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>立即发布上墙</span>`;
+          isSubmitting = false;
+          return;
+        }
+
         if (!uploadedQrBase64 && !selectedQrBlob) {
           alert("请先点击上传你的公众号二维码图片！");
           submitBtn.disabled = false;
@@ -1299,7 +1416,11 @@
           }
         }
 
-        // 自动将新发布的公众号设定为当前身份
+        // 自动将新发布的公众号设定为当前身份并永久绑定所有权
+        if (!myOwnedAccounts.includes(name)) {
+          myOwnedAccounts.push(name);
+          localStorage.setItem(OWNED_STORAGE_KEY, JSON.stringify(myOwnedAccounts));
+        }
         currentIdentity = name;
         localStorage.setItem(IDENTITY_STORAGE_KEY, currentIdentity);
         syncIdentity();
