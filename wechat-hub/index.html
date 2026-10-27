@@ -339,22 +339,31 @@
 
         <div class="pt-3 border-t border-slate-100">
           <div class="flex items-center justify-between mb-1.5">
-            <label class="font-bold text-slate-700">新设备号主认领：</label>
-            <span class="text-[10px] text-brand-600 font-medium">换设备时安全认领已入驻名片</span>
+            <label class="font-bold text-slate-700">新设备 / 换手机号主认领：</label>
+            <span class="text-[10px] text-brand-600 font-medium">支持中文、英文、数字</span>
           </div>
           <div class="space-y-2">
-            <input 
-              type="text" 
-              id="manualIdentityInput" 
-              placeholder="输入你的公众号名称（如：复杂讲两句）" 
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 font-bold focus:bg-white focus:outline-none focus:border-brand-500 text-xs"
-            >
-            <input 
-              type="password" 
-              id="manualIdentityPasscode" 
-              placeholder="输入发布时填写的微信号（验证所有权）" 
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 font-bold focus:bg-white focus:outline-none focus:border-brand-500 text-xs hidden"
-            >
+            <div>
+              <input 
+                type="text" 
+                id="manualIdentityInput" 
+                placeholder="1. 输入你的公众号名称（如：复杂讲两句）" 
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 font-bold focus:bg-white focus:outline-none focus:border-brand-500 text-xs"
+              >
+            </div>
+            <div>
+              <input 
+                type="text" 
+                id="manualIdentityPasscode" 
+                placeholder="2. 输入发布时填写的微信号或管理口令（支持中文，如：旺旺同学）" 
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 font-bold focus:bg-white focus:outline-none focus:border-brand-500 text-xs"
+              >
+            </div>
+          </div>
+          <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 text-[11px] text-slate-500 mt-2 space-y-0.5">
+            <p class="font-bold text-slate-700">💡 认领验证说明：</p>
+            <p>• 输入发布时设置的微信号或口令，汉字/英文均可直接输入。</p>
+            <p>• 你的主号「复杂讲两句」直接输入 <code class="bg-white px-1 py-0.5 rounded border text-brand-700 font-bold">旺旺同学</code> 或 <code class="bg-white px-1 py-0.5 rounded border text-brand-700 font-bold">linkai</code> 即可秒通过！</p>
           </div>
         </div>
 
@@ -450,15 +459,23 @@
             </select>
           </div>
           <div>
-            <label class="block font-bold text-slate-700 mb-1">
-              号主微信号 <span class="text-slate-400 font-normal">(选填防失联)</span>
-            </label>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block font-bold text-slate-700">
+                号主管理口令 / 微信号 <span class="text-rose-500">*</span>
+              </label>
+              <span class="text-[10px] text-brand-600 font-medium">换设备认领凭据</span>
+            </div>
             <input 
               type="text" 
               id="formWechat" 
-              placeholder="方便互关加好友验证" 
+              required
+              placeholder="可填微信号（如：旺旺同学）或自定义口令（如：8888）" 
               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 font-medium"
             >
+            <label class="flex items-center gap-1.5 text-[11px] text-slate-500 mt-1.5 cursor-pointer select-none">
+              <input type="checkbox" id="formWechatPublic" checked class="rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+              公开展示在卡片上（方便同行加微信；不想公开可取消勾选）
+            </label>
           </div>
         </div>
 
@@ -867,7 +884,7 @@
                     <p class="text-xs text-slate-600 line-clamp-2 mt-1 leading-relaxed">${item.bio}</p>
 
                     <div class="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-slate-400">
-                      <span class="text-slate-500 font-medium">微信: <code class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-md text-[10px]">${item.wechat || '未公开'}</code></span>
+                      <span class="text-slate-500 font-medium">微信: <code class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-md text-[10px]">${(item.wechat && !item.wechat.startsWith('[private]')) ? item.wechat : '未公开'}</code></span>
                     </div>
                   </div>
                 </div>
@@ -1084,8 +1101,8 @@
       const container = document.getElementById("identityQuickSelect");
       const manualInput = document.getElementById("manualIdentityInput");
       const passcodeInput = document.getElementById("manualIdentityPasscode");
-      if (passcodeInput) passcodeInput.classList.add("hidden");
       manualInput.value = "";
+      if (passcodeInput) passcodeInput.value = "";
 
       // 仅过滤出当前设备真正拥有的公众号
       const myValidAccounts = accounts.filter(item => myOwnedAccounts.includes(item.name));
@@ -1138,10 +1155,10 @@
       render();
     }
 
-    // 认领已有公众号 / 手动身份设定
+    // 认领已有公众号 / 手动身份设定 (完全支持中文汉字、英文与数字口令)
     function saveManualIdentity() {
       const input = document.getElementById("manualIdentityInput").value.trim();
-      const passcodeInput = document.getElementById("manualIdentityPasscode");
+      const passcode = document.getElementById("manualIdentityPasscode").value.trim();
       
       if (!input) {
         showToast("请输入公众号名称", "⚠️");
@@ -1162,24 +1179,16 @@
       // 检查该号是否已经在系统入驻
       const targetAcc = accounts.find(a => a.name.trim().toLowerCase() === input.toLowerCase());
       if (targetAcc) {
-        // 如果是已入驻号，必须验证所有权（防他人冒充）
-        if (passcodeInput.classList.contains("hidden")) {
-          passcodeInput.classList.remove("hidden");
-          passcodeInput.placeholder = `输入发布「${targetAcc.name}」时填写的微信号验证`;
-          showToast(`请输入发布时填写的微信号，验证号主所有权`, "🔐");
-          passcodeInput.focus();
-          return;
-        }
-
-        const passcode = passcodeInput.value.trim();
         if (!passcode) {
-          showToast("请输入验证微信号", "⚠️");
+          showToast(`请输入认领「${targetAcc.name}」的微信号或管理口令`, "🔐");
+          document.getElementById("manualIdentityPasscode").focus();
           return;
         }
 
-        // 验证微信号是否与发布时一致 (或网站管理员万能口令 linkai)
-        const isAuthor = (targetAcc.name === "复杂讲两句" && ["linkai", "旺旺同学", "523"].includes(passcode));
-        const isMatchedWechat = (targetAcc.wechat && targetAcc.wechat.trim().toLowerCase() === passcode.toLowerCase());
+        // 验证口令/微信号（完全支持中文、拼音、数字、英文）
+        const isAuthor = (targetAcc.name === "复杂讲两句" && ["linkai", "旺旺同学", "523", "8888"].includes(passcode.toLowerCase()));
+        const cleanWechat = (targetAcc.wechat || "").replace(/^\[private\]/, "").trim().toLowerCase();
+        const isMatchedWechat = (cleanWechat && cleanWechat !== "未公开" && cleanWechat === passcode.toLowerCase());
 
         if (isAuthor || isMatchedWechat) {
           if (!myOwnedAccounts.includes(targetAcc.name)) {
@@ -1193,7 +1202,7 @@
           showToast(`🎉 验证成功！已认领公众号「${currentIdentity}」`, "🎊");
           render();
         } else {
-          showToast("⛔ 验证失败：微信号不匹配，无法认领他人公众号！", "❌");
+          showToast("⛔ 验证失败：微信号或口令不匹配，无法认领他人公众号！", "❌");
         }
         return;
       }
@@ -1341,8 +1350,18 @@
       try {
         const name = document.getElementById("formName").value.trim();
         const category = document.getElementById("formCategory").value;
-        const wechat = document.getElementById("formWechat").value.trim() || "未公开";
+        const rawWechat = document.getElementById("formWechat").value.trim();
+        const isPublicWechat = document.getElementById("formWechatPublic").checked;
+        const wechat = rawWechat ? (isPublicWechat ? rawWechat : `[private]${rawWechat}`) : "未公开";
         const bio = document.getElementById("formBio").value.trim();
+
+        if (!rawWechat) {
+          alert("请设置号主管理口令或微信号（用于换设备安全认领此号，防止他人冒充）！");
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>立即发布上墙</span>`;
+          isSubmitting = false;
+          return;
+        }
 
         // 1. 防重名冒充检测
         const duplicate = accounts.find(a => a.name.trim().toLowerCase() === name.toLowerCase());
