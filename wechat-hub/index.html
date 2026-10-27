@@ -472,32 +472,22 @@
 
     // 初始化 Supabase
     function initSupabase() {
-      let url = DEFAULT_SUPABASE_URL;
-      let key = DEFAULT_SUPABASE_KEY;
+      // 清除本地可能残留的旧错误密钥缓存，强制使用当前最新有效密钥
+      localStorage.removeItem("linkai_supabase_credentials");
 
-      const stored = localStorage.getItem(SB_CONFIG_KEY);
-      if (stored) {
-        try {
-          const cfg = JSON.parse(stored);
-          if (cfg.url && cfg.key) {
-            url = cfg.url;
-            key = cfg.key;
-          }
-        } catch (e) {}
-      }
+      const url = DEFAULT_SUPABASE_URL;
+      const key = DEFAULT_SUPABASE_KEY;
 
       if (url && key && window.supabase) {
         try {
           supabaseClient = window.supabase.createClient(url, key);
           isCloudMode = true;
-          updateCloudBadge(true);
           return;
         } catch (e) {
-          console.error("Supabase 初始化失败", e);
+          console.error("Supabase 初始化异常", e);
         }
       }
       isCloudMode = false;
-      updateCloudBadge(false);
     }
 
     function updateCloudBadge(connected) {
@@ -518,40 +508,38 @@
     // 从云端或本地加载号主数据
     async function fetchAccounts() {
       const loading = document.getElementById("loadingIndicator");
+      if (loading) loading.classList.remove("hidden");
 
-      // 1. 如果已连接 Supabase，优先从云端拉取全网号主
-      if (isCloudMode && supabaseClient) {
+      // 1. 如果已初始化 Supabase，优先从云端拉取真实全网号主
+      if (supabaseClient) {
         try {
-          loading.classList.remove("hidden");
           const { data, error } = await supabaseClient
             .from("wechat_accounts")
             .select("*")
             .order("created_at", { ascending: false });
 
-          loading.classList.add("hidden");
-          if (!error && data) {
-            // 过滤掉旧的无二维码测试占位卡片 (彻底下掉测试号)
-            accounts = data.filter(item => item.qr_url && item.qr_url.trim().length > 0 && !["Linkai 的思考实验", "AI极客先锋"].includes(item.name));
+          if (loading) loading.classList.add("hidden");
+          if (!error && Array.isArray(data)) {
+            // 过滤旧的无二维码假测试号，只展示真实上传的号
+            accounts = data.filter(item => item.qr_url && item.qr_url.trim().length > 5 && !["Linkai 的思考实验", "AI极客先锋"].includes(item.name));
             try {
               localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
             } catch (e) {}
             render();
             return;
+          } else if (error) {
+            console.error("云端拉取错误:", error);
           }
         } catch (err) {
-          console.warn("读取云端数据失败，降级为本地数据", err);
-          loading.classList.add("hidden");
+          console.warn("读取云端数据失败，降级读取本地缓存", err);
         }
       }
 
-      // 2. 本地持久化降级：读取已保存的号主
+      if (loading) loading.classList.add("hidden");
+      // 2. 本地持久化降级
       try {
         const localData = localStorage.getItem("wechat_hub_local_accounts");
-        if (localData) {
-          accounts = JSON.parse(localData);
-        } else {
-          accounts = [];
-        }
+        accounts = localData ? JSON.parse(localData) : [];
       } catch (e) {
         accounts = [];
       }
@@ -594,6 +582,18 @@
     function render() {
       const grid = document.getElementById("cardsGrid");
       const emptyState = document.getElementById("emptyState");
+
+      // 严格去重 (按 id 或 name+wechat 唯一索引，彻底杜绝出现两张一模一样卡片)
+      const seen = new Set();
+      const uniqueAccounts = [];
+      for (const item of accounts) {
+        const uKey = item.id ? String(item.id) : (item.name + '_' + item.wechat);
+        if (!seen.has(uKey)) {
+          seen.add(uKey);
+          uniqueAccounts.push(item);
+        }
+      }
+      accounts = uniqueAccounts;
 
       const filtered = accounts.filter(item => {
         const isFollowed = myFollowedIds.has(item.id);
@@ -899,17 +899,31 @@
     }
 
     // 提交发布：支持云端存储与本地回退
+    let isSubmitting = false;
+
     async function submitPublish(e) {
       e.preventDefault();
+      if (isSubmitting) return; // 防双击重复触发
+      isSubmitting = true;
+
       const submitBtn = document.getElementById("submitPublishBtn");
       submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span>处理上传中...</span>`;
+      submitBtn.innerHTML = `<span>正在优化并同步到全网...</span>`;
 
       try {
         const name = document.getElementById("formName").value.trim();
         const category = document.getElementById("formCategory").value;
         const wechat = document.getElementById("formWechat").value.trim() || "未公开";
         const bio = document.getElementById("formBio").value.trim();
+
+        // 校验：必须上传了二维码图片
+        if (!uploadedQrBase64 && !selectedQrBlob) {
+          alert("请先点击上传你的公众号二维码图片！");
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>立即发布上墙</span>`;
+          isSubmitting = false;
+          return;
+        }
 
         const catMap = {
           ai: "🤖 AI/科技大模型",
@@ -920,10 +934,10 @@
           life: "🌿 摄影/生活日常"
         };
 
-        let finalQrUrl = uploadedQrBase64 || "";
+        let finalQrUrl = uploadedQrBase64;
 
-        // 1. 如果已连接 Supabase，优先上传到 Supabase Storage
-        if (isCloudMode && supabaseClient && selectedQrBlob) {
+        // 1. 如果已连接 Supabase，上传优化后的图片至 Storage 存储桶
+        if (supabaseClient && selectedQrBlob) {
           try {
             const fileName = `qr_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.jpg`;
             const { data: uploadData, error: uploadErr } = await supabaseClient.storage
@@ -938,17 +952,17 @@
                 finalQrUrl = publicUrlData.publicUrl;
               }
             } else {
-              console.warn("Storage 上传跳过，使用优化后的Base64直存", uploadErr);
+              console.warn("Storage 上传跳过，使用优化Base64直存", uploadErr);
             }
           } catch (stErr) {
-            console.warn("Storage 异常，使用优化后的Base64直存", stErr);
+            console.warn("Storage 异常，使用优化Base64直存", stErr);
           }
         }
 
         const newRecord = {
           name: name,
           category: category,
-          category_label: catMap[category],
+          category_label: catMap[category] || "🤖 AI/科技",
           bio: bio,
           wechat: wechat,
           qr_url: finalQrUrl,
@@ -956,48 +970,37 @@
           followers_count: 1
         };
 
-        // 2. 尝试写入 Supabase 数据库
-        let savedToCloud = false;
-        if (isCloudMode && supabaseClient) {
+        // 2. 写入 Supabase 数据库
+        let cloudSuccess = false;
+        if (supabaseClient) {
           try {
             const { data, error } = await supabaseClient
               .from("wechat_accounts")
               .insert([newRecord]);
 
             if (!error) {
-              savedToCloud = true;
+              cloudSuccess = true;
             } else {
               console.error("Supabase 写入失败:", error);
-              alert("提示：Supabase 云端数据库写入失败：\n" + (error.message || error.code || "请检查数据表和权限") + "\n\n已自动为您保存在本地，刷新不丢失！");
+              alert("云端提示：" + (error.message || "写入异常") + "，已为您保存在本地。");
             }
           } catch (err) {
-            console.error("Supabase 异常", err);
+            console.error("Supabase 写入异常", err);
           }
         }
 
-        // 3. 始终同步保存一份至本地 LocalStorage 备份（双保险，永不丢失！）
-        newRecord.id = Date.now();
-        newRecord.created_at = new Date().toISOString();
-
-        let localList = [];
-        try {
-          const raw = localStorage.getItem("wechat_hub_local_accounts");
-          if (raw) localList = JSON.parse(raw);
-        } catch (e) {}
-
-        localList.unshift(newRecord);
-        try {
-          localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(localList));
-        } catch (quotaErr) {
-          console.error("LocalStorage 写入异常", quotaErr);
-        }
-
-        if (savedToCloud) {
+        // 3. 处理展示逻辑（云端成功则刷新拉取最新，杜绝前端制造双份重复卡片）
+        if (cloudSuccess) {
           showToast(`🚀 公众号「${name}」已成功发布至全网云端！`, "🎉");
           await fetchAccounts();
         } else {
-          showToast(`🎉 公众号「${name}」已成功保存并上墙展示！`, "🚀");
-          accounts = localList;
+          newRecord.id = Date.now();
+          newRecord.created_at = new Date().toISOString();
+          accounts.unshift(newRecord);
+          try {
+            localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
+          } catch (e) {}
+          showToast(`🎉 公众号「${name}」已成功上墙展示！`, "🚀");
           render();
         }
 
@@ -1007,6 +1010,8 @@
         alert("提交出错：" + (err.message || "未知错误"));
         submitBtn.disabled = false;
         submitBtn.innerHTML = `<span>立即发布上墙</span>`;
+      } finally {
+        isSubmitting = false;
       }
     }
 
