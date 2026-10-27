@@ -610,7 +610,7 @@
 
           if (!accRes.error && Array.isArray(accRes.data)) {
             // 过滤旧的无二维码假测试号
-            accounts = accRes.data.filter(item => item.qr_url && item.qr_url.trim().length > 5 && !["Linkai 的思考实验", "AI极客先锋", "测试账号"].includes(item.name));
+            accounts = accRes.data.filter(item => item.qr_url && item.qr_url.trim().length > 5 && !["Linkai 的思考实验", "AI极客先锋", "测试账号"].includes(item.name) && getStrikes(item).length < 3);
             try {
               localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
             } catch (e) {}
@@ -673,6 +673,19 @@
         display.textContent = "未绑定 (点击设置)";
         display.className = "text-amber-600 font-bold max-w-[130px] truncate";
         if (banner) banner.classList.remove("hidden");
+      }
+    }
+
+    // 解析账号的假关注违规举报列表
+    function getStrikes(item) {
+      if (!item || !item.avatar_grad || item.avatar_grad.startsWith("from-")) {
+        return [];
+      }
+      try {
+        const list = JSON.parse(item.avatar_grad);
+        return Array.isArray(list) ? list : [];
+      } catch(e) {
+        return [];
       }
     }
 
@@ -806,12 +819,21 @@
               </span>
             `;
             actionButtonHtml = `
-              <button 
-                onclick="toggleFollowAction('${item.name}')" 
-                class="tap-btn text-xs font-extrabold px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 to-brand-500 hover:from-rose-600 hover:to-brand-600 text-white shadow-md shadow-rose-500/25 flex items-center gap-1"
-              >
-                ⚡ 立即回关 (达成互关)
-              </button>
+              <div class="flex items-center gap-1.5">
+                <button 
+                  onclick="toggleFollowAction('${item.name}')" 
+                  class="tap-btn text-xs font-extrabold px-3 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 to-brand-500 hover:from-rose-600 hover:to-brand-600 text-white shadow-md shadow-rose-500/25 flex items-center gap-1"
+                >
+                  ⚡ 立即回关
+                </button>
+                <button 
+                  onclick="denyFakeFollow('${item.name}')" 
+                  class="tap-btn text-xs font-bold px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-slate-200 transition-colors flex items-center gap-1"
+                  title="在微信后台未查到真实关注？点击撤销关注声明并记违规举报"
+                >
+                  🚫 查无关注
+                </button>
+              </div>
             `;
           } else if (rel.status === 'pending') {
             // ⏳ 我已关注，等对方回关
@@ -853,9 +875,20 @@
             <div class="card-transition bg-white rounded-3xl p-4 sm:p-5 border ${cardBorderClass} shadow-xs hover:shadow-lg flex flex-col justify-between relative group">
               <div>
                 <div class="flex items-center justify-between gap-2 mb-3">
-                  <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-                    ${item.category_label || item.categoryLabel || '🤖 科技/综合'}
-                  </span>
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                      ${item.category_label || item.categoryLabel || '🤖 科技/综合'}
+                    </span>
+                    ${(() => {
+                      const strikes = getStrikes(item);
+                      if (strikes.length === 1) {
+                        return '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-300 flex items-center gap-0.5" title="已有 1 位号主核验证实其存在未关注虚标行为">⚠️ 假关注投诉 (1/3)</span>';
+                      } else if (strikes.length === 2) {
+                        return '<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-300 flex items-center gap-0.5 animate-pulse" title="已累计收到 2 次未关注投诉，再有 1 次将被全网自动下架！">🚨 濒临下架警告 (2/3)</span>';
+                      }
+                      return '';
+                    })()}
+                  </div>
                   <div class="flex items-center gap-1.5">
                     ${statusBadgeHtml}
                   </div>
@@ -1009,6 +1042,108 @@
 
         render();
       }
+    }
+
+    // 否认假关注并记录违规举报（累计 3 次自动下架）
+    async function denyFakeFollow(targetName) {
+      if (!currentIdentity || !myOwnedAccounts.includes(currentIdentity)) {
+        showToast("请先认证你的号主身份，才能进行核验！", "⚠️");
+        openIdentityModal();
+        return;
+      }
+
+      const targetAcc = accounts.find(a => a.name.trim().toLowerCase() === targetName.trim().toLowerCase());
+      if (!targetAcc) {
+        showToast("未找到目标账号信息", "⚠️");
+        return;
+      }
+
+      const strikes = getStrikes(targetAcc);
+      const currentCount = strikes.length;
+
+      if (strikes.includes(currentIdentity)) {
+        showToast(`你已经对「${targetName}」提交过否认记录了，系统已记录！`, "ℹ️");
+        return;
+      }
+
+      const confirmMsg = `【假关注举报与否认核验】\n\n您确认在微信公众号助手/后台中，未查到「${targetName}」的真实关注吗？\n\n• 点击确定后，系统将立即撤销其对您的关注记录；\n• 对「${targetName}」记 1 次假关注举报（当前已累计: ${currentCount + 1}/3）；\n• 累计达到 3 次被不同号主否认，系统将立即全网自动下架该号并清空数据！`;
+
+      if (!confirm(confirmMsg)) return;
+
+      const loading = document.getElementById("loadingIndicator");
+      if (loading) loading.classList.remove("hidden");
+
+      // 1. 撤销 targetName -> currentIdentity 的关注记录
+      if (supabaseClient) {
+        try {
+          await supabaseClient
+            .from("follow_relations")
+            .delete()
+            .eq("follower_name", targetName)
+            .eq("target_name", currentIdentity);
+        } catch(e) {
+          console.warn("Delete follow_relation failed:", e);
+        }
+      }
+
+      followRelations = followRelations.filter(r => 
+        !(r.follower_name === targetName && r.target_name === currentIdentity)
+      );
+      try {
+        localStorage.setItem("wechat_hub_local_relations", JSON.stringify(followRelations));
+      } catch(e) {}
+
+      // 2. 累加违规次数
+      strikes.push(currentIdentity);
+      const newStrikesCount = strikes.length;
+
+      // 3. 检查是否达到 3 次下架阈值
+      if (newStrikesCount >= 3) {
+        // 🚨 达到 3 次，全网自动下架该号！
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from("wechat_accounts").delete().eq("id", targetAcc.id);
+            await supabaseClient.from("follow_relations").delete().or(`follower_name.eq.${targetName},target_name.eq.${targetName}`);
+          } catch(e) {
+            console.warn("Auto delist failed:", e);
+          }
+        }
+
+        accounts = accounts.filter(a => a.id !== targetAcc.id && a.name !== targetName);
+        followRelations = followRelations.filter(r => r.follower_name !== targetName && r.target_name !== targetName);
+        try {
+          localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
+          localStorage.setItem("wechat_hub_local_relations", JSON.stringify(followRelations));
+        } catch(e) {}
+
+        if (loading) loading.classList.add("hidden");
+        alert(`🚨【平台裁决生效】\n\n公众号「${targetName}」因累计收到 3 次假关注核验举报（已由 3 位不同号主证实未真实关注），已被系统全网永久自动下架清理！\n\n感谢您共同维护诚信互助引力场！`);
+        render();
+        return;
+      }
+
+      // 未达到 3 次：更新云端违规计数
+      const newGradStr = JSON.stringify(strikes);
+      targetAcc.avatar_grad = newGradStr;
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient
+            .from("wechat_accounts")
+            .update({ avatar_grad: newGradStr })
+            .eq("id", targetAcc.id);
+        } catch(e) {
+          console.warn("Update strikes failed:", e);
+        }
+      }
+
+      try {
+        localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
+      } catch(e) {}
+
+      if (loading) loading.classList.add("hidden");
+      showToast(`已撤销其关注声明！已对「${targetName}」记 1 次假关注警告（${newStrikesCount}/3）`, "⚠️");
+      render();
     }
 
     // 下架并删除公众号卡片 (仅所有者可操作)
