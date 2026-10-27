@@ -517,48 +517,8 @@
 
   <!-- ======================== 核心业务逻辑脚本 ======================== -->
   <script>
-    // 默认展示的种子数据
-    const SEED_ACCOUNTS = [
-      {
-        id: 1,
-        name: "Linkai 的思考实验",
-        category: "ai",
-        category_label: "🤖 AI/科技大模型",
-        bio: "聚焦大模型企业落地与独立开发实操，新人号主求支持，关注必秒回！",
-        wechat: "linkai_liu",
-        qr_url: "",
-        avatar_letter: "凯",
-        avatar_grad: "from-brand-500 to-emerald-600",
-        followers_count: 128,
-        created_at: new Date().toISOString()
-      },
-      {
-        id: 2,
-        name: "AI极客先锋",
-        category: "ai",
-        category_label: "🤖 AI/科技大模型",
-        bio: "专注Agent智能体与自动化工具流，日更原创干货，24h内必回关！",
-        wechat: "geeker_ai",
-        qr_url: "",
-        avatar_letter: "AI",
-        avatar_grad: "from-blue-600 to-indigo-600",
-        followers_count: 356,
-        created_at: new Date().toISOString()
-      },
-      {
-        id: 3,
-        name: "独立开发搞钱日常",
-        category: "sidehustle",
-        category_label: "💼 副业搞钱/商业",
-        bio: "从0到1记录独立产品开发与自媒体出海变现，真实数据复盘，诚信互勉。",
-        wechat: "indie_dev_lab",
-        qr_url: "",
-        avatar_letter: "工",
-        avatar_grad: "from-amber-500 to-orange-600",
-        followers_count: 412,
-        created_at: new Date().toISOString()
-      }
-    ];
+    // 默认种子数据（已清空假数据，纯净真实号主展示）
+    const SEED_ACCOUNTS = [];
 
     // 本地用户个人关注记录 (每个访客自己的一套已互关列表)
     const MY_FOLLOWED_KEY = "linkai_wechat_hub_my_followed_ids";
@@ -625,7 +585,7 @@
             .order("created_at", { ascending: false });
 
           loading.classList.add("hidden");
-          if (!error && data && data.length > 0) {
+          if (!error && data) {
             accounts = data;
             render();
             return;
@@ -719,6 +679,10 @@
                     ${item.category_label || item.categoryLabel || '🤖 科技/综合'}
                   </span>
                   <div class="flex items-center gap-1.5">
+                    <!-- 下架/删除按钮 -->
+                    <button onclick="deleteAccount(${item.id}, '${item.name}')" title="下架此卡片" class="text-slate-300 hover:text-rose-500 transition-colors p-0.5">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
                     ${isFollowed ? `
                       <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
@@ -1096,6 +1060,26 @@
       setTimeout(() => {
         toast.classList.add("translate-y-20", "opacity-0");
       }, 2600);
+    }
+
+    // 下架/删除指定号主
+    async function deleteAccount(id, name) {
+      if (!confirm(`确定要彻底下架删除「${name}」吗？`)) return;
+      if (isCloudMode && supabaseClient) {
+        try {
+          const { error } = await supabaseClient.from("wechat_accounts").delete().eq("id", id);
+          if (error) throw error;
+          showToast(`已从云端数据库彻底下架「${name}」`, "🗑️");
+          await fetchAccounts();
+          return;
+        } catch (err) {
+          console.warn("云端删除失败，尝试本地清除", err);
+        }
+      }
+      accounts = accounts.filter(a => a.id !== id);
+      localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
+      showToast(`已下架「${name}」`, "🗑️");
+      render();
     }
 
     // 启动初始化
