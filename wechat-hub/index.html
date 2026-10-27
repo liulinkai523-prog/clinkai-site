@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>公众号新人互助互关引力场 - LINKAI 实验室</title>
+  <title>公众号新人互助平台 - 双向交叉验证互关引力场</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -18,7 +18,7 @@
               200: '#aaf0c5',
               300: '#73e2a3',
               400: '#3bcc7c',
-              500: '#07c160', // 微信官方经典绿
+              500: '#07c160', // 微信经典官方绿
               600: '#06a350',
               700: '#088042',
               800: '#0c6537',
@@ -83,29 +83,37 @@
             <h1 class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight leading-none">
               公众号新人互助平台
             </h1>
-            <!-- 云端连接状态徽章 -->
             <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>全网实时互助中</span>
+              <span>双向交叉验证中</span>
             </span>
           </div>
           <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
-            <span>linkai.codes 旗下实验室项目</span>
+            <span>linkai.codes 实验室</span>
             <span>·</span>
-            <a href="../" class="text-brand-600 hover:underline">返回 Linkai 首页</a>
+            <a href="../" class="text-brand-600 hover:underline">返回首页</a>
           </p>
         </div>
       </div>
 
-      <!-- 顶部操作区 -->
-      <div class="flex items-center gap-2.5">
+      <!-- 顶部操作区：身份选择器 + 发布按钮 -->
+      <div class="flex items-center gap-2 sm:gap-3">
         
-        
+        <!-- 我的身份胶囊 (核心：点击切换/设置我是哪个公众号) -->
+        <button 
+          onclick="openIdentityModal()" 
+          title="点击切换当前你的公众号身份" 
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition-colors tap-btn"
+        >
+          <span class="text-slate-400 font-normal hidden xs:inline">我的身份:</span>
+          <span id="headerIdentityName" class="text-brand-700 max-w-[110px] truncate">未设置身份</span>
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
 
         <!-- 发布按钮 -->
         <button 
           onclick="openPublishModal()" 
-          class="tap-btn bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-md shadow-brand-500/30 transition-all"
+          class="tap-btn bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-bold px-3.5 sm:px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-md shadow-brand-500/30 transition-all"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
           <span>上传我的二维码</span>
@@ -121,30 +129,30 @@
     <!-- 顶部通知与数据统计看板 -->
     <section class="grid grid-cols-1 lg:grid-cols-4 gap-4">
       
-      <!-- 左侧宣传语 & 互助准则 -->
+      <!-- 左侧宣传语 & 交叉验证说明 -->
       <div class="lg:col-span-2 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 rounded-3xl p-5 text-white shadow-xl flex flex-col justify-between relative overflow-hidden">
         <div class="absolute -right-8 -bottom-10 w-40 h-40 bg-brand-500/10 rounded-full blur-2xl pointer-events-none"></div>
         
         <div>
           <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-brand-300 mb-3 border border-white/10">
-            <span>🤝 微信作者互助引力场</span>
+            <span>🤝 双向闭环握手认证</span>
             <span class="w-1 h-1 rounded-full bg-brand-400"></span>
-            <span>已接入全网云端同步</span>
+            <span>拒绝单向白嫖欺骗</span>
           </div>
           <h2 class="text-lg sm:text-xl font-extrabold tracking-tight">
-            让每一个用心创作的新人作者，被更多同频人看见
+            设定好你的公众号 ID，双方扫码关注后系统自动认证【互关成功】
           </h2>
           <p class="text-xs text-slate-300 mt-2 leading-relaxed">
-            这里是公众号创作者的互助展示墙。扫码关注后请点击“标记为已关注”，防重复打扰，彼此信任，携手度过冷启动期。
+            你点击关注别人，对方会收到【待我回关】提醒；对方回关你后，系统通过数据库交叉验证，自动将双方标记为【🎉 互关成功】！
           </p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-white/10 text-[11px] text-slate-300">
-          <span class="flex items-center gap-1">☁️ Supabase 全网数据库</span>
+          <span class="flex items-center gap-1">🆔 绑定公众号 ID</span>
           <span class="text-slate-500">·</span>
-          <span class="flex items-center gap-1">📱 微信内置长按识别</span>
+          <span class="flex items-center gap-1">🔔 实时回关提醒</span>
           <span class="text-slate-500">·</span>
-          <span class="flex items-center gap-1">🏷️ 个人互关进度本地记忆</span>
+          <span class="flex items-center gap-1">🎉 双方确认互关</span>
         </div>
       </div>
 
@@ -159,31 +167,34 @@
           </div>
           <div class="mt-3">
             <div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight" id="statTotalCount">0</div>
-            <p class="text-[11px] text-slate-400 mt-0.5">点击查看全部</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">全网展示池</p>
           </div>
         </div>
 
-        <!-- 指标 2: 待我关注 -->
-        <div onclick="filterByStatus('unfollowed')" class="bg-white rounded-3xl p-4 border border-amber-200/80 shadow-xs hover:border-amber-400 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group">
-          <div class="flex items-center justify-between text-amber-500">
-            <span class="text-xs font-semibold">待我关注</span>
-            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+        <!-- 指标 2: 待我回关 (最核心！别人关注我了，提醒我回关) -->
+        <div onclick="filterByStatus('toReciprocate')" class="bg-white rounded-3xl p-4 border border-rose-200 shadow-xs hover:border-rose-400 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group relative overflow-hidden">
+          <div class="flex items-center justify-between text-rose-500">
+            <span class="text-xs font-bold flex items-center gap-1">
+              <span>待我回关</span>
+              <span id="badgeToReciprocatePulse" class="w-2 h-2 rounded-full bg-rose-500 animate-ping hidden"></span>
+            </span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
           </div>
           <div class="mt-3">
-            <div class="text-2xl sm:text-3xl font-black text-amber-600 tracking-tight" id="statUnfollowedCount">0</div>
-            <p class="text-[11px] text-amber-600/80 mt-0.5">去扫码破冰</p>
+            <div class="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight" id="statToReciprocateCount">0</div>
+            <p class="text-[11px] text-rose-600/80 mt-0.5 font-medium">有人关注了你！</p>
           </div>
         </div>
 
-        <!-- 指标 3: 我已互关 -->
-        <div onclick="filterByStatus('followed')" class="bg-white rounded-3xl p-4 border border-brand-200/80 shadow-xs hover:border-brand-400 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group">
+        <!-- 指标 3: 双方互关成功 -->
+        <div onclick="filterByStatus('mutual')" class="bg-white rounded-3xl p-4 border border-brand-200 shadow-xs hover:border-brand-400 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group">
           <div class="flex items-center justify-between text-brand-600">
-            <span class="text-xs font-semibold">已互关</span>
+            <span class="text-xs font-bold">互关成功</span>
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
           </div>
           <div class="mt-3">
-            <div class="text-2xl sm:text-3xl font-black text-brand-600 tracking-tight" id="statFollowedCount">0</div>
-            <p class="text-[11px] text-brand-600/80 mt-0.5">我的互助记录</p>
+            <div class="text-2xl sm:text-3xl font-black text-brand-600 tracking-tight" id="statMutualCount">0</div>
+            <p class="text-[11px] text-brand-600/80 mt-0.5 font-medium">双向认证达成</p>
           </div>
         </div>
 
@@ -208,16 +219,20 @@
           <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-xs">✕</button>
         </div>
 
-        <!-- 状态筛选 Tab 组 -->
+        <!-- 交叉验证状态筛选 Tab 组 (核心：4 维双向状态) -->
         <div class="flex items-center bg-slate-100/90 p-1 rounded-2xl text-xs font-bold border border-slate-200/60 self-start sm:self-auto overflow-x-auto max-w-full">
-          <button id="tab-all" onclick="filterByStatus('all')" class="px-3.5 py-1.5 rounded-xl transition-all bg-white text-slate-800 shadow-xs whitespace-nowrap">
+          <button id="tab-all" onclick="filterByStatus('all')" class="px-3 py-1.5 rounded-xl transition-all bg-white text-slate-800 shadow-xs whitespace-nowrap">
             全部号主 (<span id="count-all">0</span>)
           </button>
-          <button id="tab-unfollowed" onclick="filterByStatus('unfollowed')" class="px-3.5 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 whitespace-nowrap">
-            待我关注 (<span id="count-unfollowed">0</span>)
+          <button id="tab-toReciprocate" onclick="filterByStatus('toReciprocate')" class="px-3 py-1.5 rounded-xl transition-all text-rose-600 hover:text-rose-700 whitespace-nowrap flex items-center gap-1">
+            <span>🔔 待我回关</span>
+            <span id="badgeTabToRecip" class="bg-rose-500 text-white text-[10px] px-1.5 py-0.2 rounded-full hidden">0</span>
           </button>
-          <button id="tab-followed" onclick="filterByStatus('followed')" class="px-3.5 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 whitespace-nowrap">
-            已标记互关 (<span id="count-followed">0</span>)
+          <button id="tab-pending" onclick="filterByStatus('pending')" class="px-3 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 whitespace-nowrap">
+            ⏳ 待对方回关 (<span id="count-pending">0</span>)
+          </button>
+          <button id="tab-mutual" onclick="filterByStatus('mutual')" class="px-3 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 whitespace-nowrap">
+            🎉 互关成功 (<span id="count-mutual">0</span>)
           </button>
         </div>
       </div>
@@ -239,12 +254,23 @@
 
     </section>
 
+    <!-- 当前身份快捷提示条 (如果未设置身份，置顶提醒) -->
+    <div id="identityBanner" class="bg-amber-50 border border-amber-200 rounded-2xl p-3 sm:p-4 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-amber-900">
+      <div class="flex items-center gap-2">
+        <span class="text-base">💡</span>
+        <span>你当前尚未选择自己的公众号身份，无法开启双向交叉回关。</span>
+      </div>
+      <button onclick="openIdentityModal()" class="px-3.5 py-1.5 rounded-xl font-bold bg-amber-500 hover:bg-amber-600 text-white tap-btn whitespace-nowrap self-start sm:self-auto shadow-xs">
+        点此绑定我的公众号
+      </button>
+    </div>
+
     <!-- 号主卡片网格区域 (Core Grid) -->
     <section>
       <!-- 加载中提示 -->
       <div id="loadingIndicator" class="hidden py-12 text-center text-slate-400">
         <div class="w-8 h-8 mx-auto border-3 border-brand-500 border-t-transparent rounded-full animate-spin mb-2"></div>
-        <p class="text-xs">正在连接 Supabase 云端同步数据...</p>
+        <p class="text-xs">正在交叉验证云端数据...</p>
       </div>
 
       <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
@@ -256,9 +282,9 @@
         <div class="w-16 h-16 mx-auto rounded-3xl bg-slate-100 flex items-center justify-center text-3xl mb-3">
           🔍
         </div>
-        <h3 class="text-base font-bold text-slate-800">没有找到匹配的公众号</h3>
+        <h3 class="text-base font-bold text-slate-800">暂无符合条件的号主</h3>
         <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-          尝试更换关键词或清除筛选条件，也可以点击右上角上传您的公众号二维码。
+          切换筛选条件或点击右上角“上传我的二维码”，成为第一位入驻者。
         </p>
       </div>
     </section>
@@ -273,10 +299,10 @@
         <span>·</span>
         <span>公众号新人互助平台</span>
         <span>·</span>
-        <span>云端数据库驱动</span>
+        <span>双向交叉验证驱动</span>
       </div>
       <div class="flex items-center gap-4 text-[11px]">
-        <span class="text-slate-400">已开启全网实时同步</span>
+        <button onclick="openIdentityModal()" class="text-slate-500 hover:text-slate-800 underline">切换我的身份</button>
         <span>·</span>
         <button onclick="openPublishModal()" class="text-brand-600 font-bold hover:underline">+ 发布我的公众号</button>
       </div>
@@ -285,7 +311,49 @@
 
   <!-- ======================== 模态弹窗组件 ======================== -->
 
-  <!-- 1. 二维码大图弹窗 (长按识别) -->
+  <!-- 1. 身份设置弹窗 (设置我是谁) -->
+  <div id="identityModal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-slate-800 relative shadow-2xl border border-slate-100">
+      <button onclick="closeIdentityModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center text-xs font-bold">✕</button>
+
+      <div class="flex items-center gap-2.5 mb-4">
+        <div class="w-10 h-10 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-base border border-brand-200">
+          🆔
+        </div>
+        <div>
+          <h3 class="text-base font-extrabold text-slate-900 tracking-tight">确认当前你的公众号身份</h3>
+          <p class="text-xs text-slate-400">设置身份后，别人关注你时系统才能通知你回关！</p>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1.5">从已发布的号主中一键选择我是谁：</label>
+          <div id="identityQuickSelect" class="space-y-1.5 max-h-40 overflow-y-auto custom-scroll pr-1">
+            <!-- 动态填充可选项 -->
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-slate-100">
+          <label class="block font-bold text-slate-700 mb-1.5">或者手动输入你的公众号名称：</label>
+          <input 
+            type="text" 
+            id="manualIdentityInput" 
+            placeholder="例如：复杂讲两句" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 font-bold focus:bg-white focus:outline-none focus:border-brand-500"
+          >
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button onclick="saveManualIdentity()" class="flex-1 py-2.5 rounded-xl font-bold bg-brand-500 hover:bg-brand-600 text-white tap-btn shadow-md shadow-brand-500/25">
+            确认设置我的身份
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 二维码大图弹窗 (长按识别) -->
   <div id="qrModal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-slate-800 text-center relative shadow-2xl animate-in fade-in zoom-in-95 duration-200 border border-slate-100">
       
@@ -311,7 +379,7 @@
 
       <div class="flex gap-2">
         <button id="modalActionBtn" onclick="toggleFollowFromModal()" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/25 tap-btn">
-          已关注，标记互关
+          关注并请求回关
         </button>
         <button onclick="copyModalName()" class="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 tap-btn flex items-center gap-1">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
@@ -322,7 +390,7 @@
     </div>
   </div>
 
-  <!-- 2. 号主发布上墙弹窗 -->
+  <!-- 3. 号主发布上墙弹窗 -->
   <div id="publishModal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 text-slate-800 relative shadow-2xl max-h-[90vh] overflow-y-auto custom-scroll border border-slate-100">
       
@@ -334,7 +402,7 @@
         </div>
         <div>
           <h3 class="text-base font-extrabold text-slate-900 tracking-tight">发布我的公众号二维码</h3>
-          <p class="text-xs text-slate-400" id="publishStorageHint">图片将上传至云存储并在全网展示</p>
+          <p class="text-xs text-slate-400">发布后将自动将此号设置为你的当前身份</p>
         </div>
       </div>
 
@@ -348,7 +416,7 @@
             type="text" 
             id="formName" 
             required 
-            placeholder="例如：Linkai 的思考实验、数字游民日常" 
+            placeholder="例如：复杂讲两句、AI极客先锋" 
             class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all font-medium"
           >
         </div>
@@ -359,8 +427,8 @@
               所属领域分类 <span class="text-rose-500">*</span>
             </label>
             <select id="formCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 font-medium">
-              <option value="ai">🤖 AI/科技大模型</option>
               <option value="growth">💡 个人成长/认知</option>
+              <option value="ai">🤖 AI/科技大模型</option>
               <option value="sidehustle">💼 副业搞钱/商业</option>
               <option value="reading">☕ 读书/人文思考</option>
               <option value="design">🎨 设计/美学/视觉</option>
@@ -388,7 +456,7 @@
             id="formBio" 
             required 
             rows="2" 
-            placeholder="写一句打动人的简介，例如：专注AI自动化与副业实操，每天日更干货，关注必秒回，诚信同行！" 
+            placeholder="写一句打动人的简介，例如：新人起步，每天日更干货，关注必秒回，诚信同行！" 
             class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 font-medium"
           ></textarea>
         </div>
@@ -434,9 +502,6 @@
     </div>
   </div>
 
-  
-  </div>
-
   <!-- 全局 Toast 提示 -->
   <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-slate-700/80 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2">
     <span id="toastIcon">✨</span>
@@ -445,42 +510,33 @@
 
   <!-- ======================== 核心业务逻辑脚本 ======================== -->
   <script>
-    // 默认种子数据（已清空假数据，纯净真实号主展示）
-    const SEED_ACCOUNTS = [];
-
-    // 本地用户个人关注记录 (每个访客自己的一套已互关列表)
-    const MY_FOLLOWED_KEY = "linkai_wechat_hub_my_followed_ids";
-    let myFollowedIds = new Set(JSON.parse(localStorage.getItem(MY_FOLLOWED_KEY) || "[]"));
-
-    // Supabase 配置项
-    // Supabase 全局免配置云端连接 (全网所有访客打开即连)
+    // Supabase 全局免配置云端连接
     const DEFAULT_SUPABASE_URL = "https://yfklqbmjqfmcothfffdr.supabase.co";
     const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlma2xxYm1qcWZtY290aGZmZmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNjI1OTgsImV4cCI6MjEwODYzODU5OH0.kfS1ww5kpZw_B3hMdIlNJkQD7IfBD-oPmb8E-KiEdB0";
 
-    const SB_CONFIG_KEY = "linkai_supabase_credentials";
     let supabaseClient = null;
     let isCloudMode = false;
 
+    // 当前访问者的身份 (我的公众号名称)
+    const IDENTITY_STORAGE_KEY = "wechat_hub_my_identity_name";
+    let currentIdentity = localStorage.getItem(IDENTITY_STORAGE_KEY) || "";
+
     // 内存数据
     let accounts = [];
-    let currentStatus = "all";
+    let followRelations = []; // 全网所有的关注关系: [{ follower_name, target_name }, ...]
+    let currentStatus = "all"; // 'all', 'toReciprocate', 'pending', 'mutual'
     let currentCategory = "all";
     let searchQuery = "";
     let activeModalAccount = null;
     let selectedQrFile = null;
+    let selectedQrBlob = null;
     let uploadedQrBase64 = null;
 
-    // 初始化 Supabase
+    // 初始化 Supabase 客户端
     function initSupabase() {
-      // 清除本地可能残留的旧错误密钥缓存，强制使用当前最新有效密钥
-      localStorage.removeItem("linkai_supabase_credentials");
-
-      const url = DEFAULT_SUPABASE_URL;
-      const key = DEFAULT_SUPABASE_KEY;
-
-      if (url && key && window.supabase) {
+      if (DEFAULT_SUPABASE_URL && DEFAULT_SUPABASE_KEY && window.supabase) {
         try {
-          supabaseClient = window.supabase.createClient(url, key);
+          supabaseClient = window.supabase.createClient(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
           isCloudMode = true;
           return;
         } catch (e) {
@@ -490,100 +546,129 @@
       isCloudMode = false;
     }
 
-    function updateCloudBadge(connected) {
-      const dot = document.getElementById("cloudStatusDot");
-      const text = document.getElementById("cloudStatusText");
-      const pill = document.getElementById("cloudStatusPill");
-      if (connected) {
-        dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse";
-        text.textContent = "Supabase 云端已连接";
-        pill.className = "hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300";
-      } else {
-        dot.className = "w-1.5 h-1.5 rounded-full bg-amber-500";
-        text.textContent = "离线演示 (点击接入云端)";
-        pill.className = "hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-300";
-      }
-    }
-
-    // 从云端或本地加载号主数据
-    async function fetchAccounts() {
+    // 从云端或本地加载号主数据与关注关系
+    async function fetchAllData() {
       const loading = document.getElementById("loadingIndicator");
       if (loading) loading.classList.remove("hidden");
 
-      // 1. 如果已初始化 Supabase，优先从云端拉取真实全网号主
       if (supabaseClient) {
         try {
-          const { data, error } = await supabaseClient
-            .from("wechat_accounts")
-            .select("*")
-            .order("created_at", { ascending: false });
+          // 1. 并发拉取号主表与关注关系表
+          const [accRes, relRes] = await Promise.all([
+            supabaseClient.from("wechat_accounts").select("*").order("created_at", { ascending: false }),
+            supabaseClient.from("follow_relations").select("*")
+          ]);
 
           if (loading) loading.classList.add("hidden");
-          if (!error && Array.isArray(data)) {
-            // 过滤旧的无二维码假测试号，只展示真实上传的号
-            accounts = data.filter(item => item.qr_url && item.qr_url.trim().length > 5 && !["Linkai 的思考实验", "AI极客先锋", "测试账号"].includes(item.name));
+
+          if (!accRes.error && Array.isArray(accRes.data)) {
+            // 过滤旧的无二维码假测试号
+            accounts = accRes.data.filter(item => item.qr_url && item.qr_url.trim().length > 5 && !["Linkai 的思考实验", "AI极客先锋", "测试账号"].includes(item.name));
             try {
               localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
             } catch (e) {}
-            render();
-            return;
-          } else if (error) {
-            console.error("云端拉取错误:", error);
           }
+
+          if (!relRes.error && Array.isArray(relRes.data)) {
+            followRelations = relRes.data;
+            try {
+              localStorage.setItem("wechat_hub_local_relations", JSON.stringify(followRelations));
+            } catch (e) {}
+          } else {
+            // 如果 follow_relations 表暂未创建，降级使用本地存储的关系
+            loadLocalRelations();
+          }
+
+          syncIdentity();
+          render();
+          return;
         } catch (err) {
-          console.warn("读取云端数据失败，降级读取本地缓存", err);
+          console.warn("读取云端数据失败，降级本地", err);
         }
       }
 
       if (loading) loading.classList.add("hidden");
-      // 2. 本地持久化降级
+      // 本地降级
       try {
-        const localData = localStorage.getItem("wechat_hub_local_accounts");
-        accounts = localData ? JSON.parse(localData) : [];
-      } catch (e) {
-        accounts = [];
-      }
+        const localAcc = localStorage.getItem("wechat_hub_local_accounts");
+        accounts = localAcc ? JSON.parse(localAcc) : [];
+      } catch (e) { accounts = []; }
+      loadLocalRelations();
+      syncIdentity();
       render();
     }
 
-    // 生成 SVG 拟真二维码
-    function createQrSvg(seed, customColor = "#07c160") {
-      return `
-        <svg viewBox="0 0 100 100" class="w-full h-full text-slate-800 fill-current select-none">
-          <rect x="5" y="5" width="26" height="26" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
-          <rect x="11" y="11" width="14" height="14" rx="3" fill="currentColor"/>
-          <rect x="69" y="5" width="26" height="26" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
-          <rect x="75" y="11" width="14" height="14" rx="3" fill="currentColor"/>
-          <rect x="5" y="69" width="26" height="26" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
-          <rect x="11" y="75" width="14" height="14" rx="3" fill="currentColor"/>
-          
-          <rect x="36" y="8" width="7" height="7" rx="1.5"/>
-          <rect x="47" y="8" width="8" height="7" rx="1.5"/>
-          <rect x="58" y="12" width="6" height="6" rx="1.5"/>
-          <rect x="36" y="20" width="8" height="6" rx="1.5"/>
-          <rect x="48" y="20" width="6" height="12" rx="1.5"/>
-          <rect x="8" y="38" width="12" height="6" rx="1.5"/>
-          <rect x="23" y="38" width="6" height="8" rx="1.5"/>
-          
-          <rect x="37" y="37" width="26" height="26" rx="7" fill="${customColor}" />
-          <path d="M44 47h12M44 53h7" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-
-          <rect x="68" y="38" width="8" height="6" rx="1.5"/>
-          <rect x="80" y="42" width="12" height="6" rx="1.5"/>
-          <rect x="36" y="68" width="6" height="12" rx="1.5"/>
-          <rect x="46" y="74" width="10" height="6" rx="1.5"/>
-          <rect x="68" y="68" width="10" height="6" rx="1.5"/>
-          <rect x="82" y="72" width="8" height="14" rx="1.5"/>
-        </svg>
-      `;
+    function loadLocalRelations() {
+      try {
+        const localRel = localStorage.getItem("wechat_hub_local_relations");
+        followRelations = localRel ? JSON.parse(localRel) : [];
+      } catch (e) {
+        followRelations = [];
+      }
     }
 
-    // 渲染卡片
+    // 同步身份显示
+    function syncIdentity() {
+      const display = document.getElementById("headerIdentityName");
+      const banner = document.getElementById("identityBanner");
+      
+      // 如果还没设置身份，但账号列表里有名字叫“复杂讲两句”，默认建议设置
+      if (!currentIdentity && accounts.length > 0) {
+        // 尝试自动匹配
+      }
+
+      if (currentIdentity) {
+        display.textContent = currentIdentity;
+        display.className = "text-brand-700 font-extrabold max-w-[130px] truncate";
+        if (banner) banner.classList.add("hidden");
+      } else {
+        display.textContent = "点击绑定身份";
+        display.className = "text-amber-600 font-bold max-w-[130px] truncate";
+        if (banner) banner.classList.remove("hidden");
+      }
+    }
+
+    // 计算某个号主与当前用户的双向交叉关系
+    function getCrossRelation(targetName) {
+      if (!currentIdentity) {
+        return { isMe: false, iFollowed: false, theyFollowed: false, status: 'unfollowed' };
+      }
+
+      const isMe = currentIdentity.trim().toLowerCase() === targetName.trim().toLowerCase();
+      if (isMe) {
+        return { isMe: true, iFollowed: false, theyFollowed: false, status: 'me' };
+      }
+
+      // 我是否关注了他: (follower: Me, target: Them)
+      const iFollowed = followRelations.some(r => 
+        r.follower_name.trim().toLowerCase() === currentIdentity.trim().toLowerCase() && 
+        r.target_name.trim().toLowerCase() === targetName.trim().toLowerCase()
+      );
+
+      // 他是否关注了我: (follower: Them, target: Me)
+      const theyFollowed = followRelations.some(r => 
+        r.follower_name.trim().toLowerCase() === targetName.trim().toLowerCase() && 
+        r.target_name.trim().toLowerCase() === currentIdentity.trim().toLowerCase()
+      );
+
+      let status = 'unfollowed';
+      if (iFollowed && theyFollowed) {
+        status = 'mutual'; // 双方互关成功！
+      } else if (theyFollowed && !iFollowed) {
+        status = 'toReciprocate'; // 对方已关注我，等待我回关！
+      } else if (iFollowed && !theyFollowed) {
+        status = 'pending'; // 我已关注，等对方回关
+      }
+
+      return { isMe, iFollowed, theyFollowed, status };
+    }
+
+    // 渲染卡片网格
     function render() {
       const grid = document.getElementById("cardsGrid");
       const emptyState = document.getElementById("emptyState");
 
-      // 严格去重 (按 id 或 name+wechat 唯一索引，彻底杜绝出现两张一模一样卡片)
+      // 严格去重 (按 id 或 name 唯一索引)
       const seen = new Set();
       const uniqueAccounts = [];
       for (const item of accounts) {
@@ -596,10 +681,12 @@
       accounts = uniqueAccounts;
 
       const filtered = accounts.filter(item => {
-        const isFollowed = myFollowedIds.has(item.id);
+        const rel = getCrossRelation(item.name);
+        
         let matchStatus = true;
-        if (currentStatus === "unfollowed") matchStatus = !isFollowed;
-        else if (currentStatus === "followed") matchStatus = isFollowed;
+        if (currentStatus === "toReciprocate") matchStatus = rel.status === 'toReciprocate';
+        else if (currentStatus === "pending") matchStatus = rel.status === 'pending';
+        else if (currentStatus === "mutual") matchStatus = rel.status === 'mutual';
 
         const matchCategory = currentCategory === "all" || item.category === currentCategory;
 
@@ -618,30 +705,103 @@
       } else {
         emptyState.classList.add("hidden");
         grid.innerHTML = filtered.map(item => {
-          const isFollowed = myFollowedIds.has(item.id);
+          const rel = getCrossRelation(item.name);
+
+          // 卡片外框与样式
+          let cardBorderClass = "border-slate-200/90";
+          let statusBadgeHtml = "";
+          let actionButtonHtml = "";
+
+          if (rel.isMe) {
+            cardBorderClass = "border-purple-300 bg-purple-50/15";
+            statusBadgeHtml = `
+              <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200 flex items-center gap-1">
+                👑 我的号主页
+              </span>
+            `;
+            actionButtonHtml = `
+              <span class="text-xs font-semibold text-purple-600 px-3 py-1.5">
+                (这是你当前的绑定身份)
+              </span>
+            `;
+          } else if (rel.status === 'mutual') {
+            // 🎉 双方互关成功！
+            cardBorderClass = "border-brand-400 bg-brand-50/25 shadow-sm";
+            statusBadgeHtml = `
+              <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-brand-500 text-white shadow-xs flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                🎉 互关成功 (双方认证)
+              </span>
+            `;
+            actionButtonHtml = `
+              <button 
+                onclick="toggleFollowAction('${item.name}')" 
+                class="tap-btn text-xs font-bold px-3 py-1.5 rounded-xl bg-brand-100 hover:bg-brand-200 text-brand-800 transition-colors flex items-center gap-1"
+              >
+                已达成互关 (点击取消)
+              </button>
+            `;
+          } else if (rel.status === 'toReciprocate') {
+            // 🔔 对方已关注我，等待我回关！(高亮醒目！)
+            cardBorderClass = "border-rose-300 bg-rose-50/30 shadow-md ring-2 ring-rose-400/20";
+            statusBadgeHtml = `
+              <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-rose-500 text-white shadow-sm flex items-center gap-1 animate-pulse">
+                🔔 对方已先关注你！
+              </span>
+            `;
+            actionButtonHtml = `
+              <button 
+                onclick="toggleFollowAction('${item.name}')" 
+                class="tap-btn text-xs font-extrabold px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 to-brand-500 hover:from-rose-600 hover:to-brand-600 text-white shadow-md shadow-rose-500/25 flex items-center gap-1"
+              >
+                ⚡ 立即回关 (达成互关)
+              </button>
+            `;
+          } else if (rel.status === 'pending') {
+            // ⏳ 我已关注，等对方回关
+            cardBorderClass = "border-blue-200 bg-blue-50/15";
+            statusBadgeHtml = `
+              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                ⏳ 待对方回关
+              </span>
+            `;
+            actionButtonHtml = `
+              <button 
+                onclick="toggleFollowAction('${item.name}')" 
+                class="tap-btn text-xs font-medium px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition-colors"
+                title="已向对方发起关注，点击可取消"
+              >
+                等待对方回关 (取消)
+              </button>
+            `;
+          } else {
+            // ⚪ 未关注
+            statusBadgeHtml = `
+              <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                未关注
+              </span>
+            `;
+            actionButtonHtml = `
+              <button 
+                onclick="toggleFollowAction('${item.name}')" 
+                class="tap-btn text-xs font-extrabold px-3.5 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/20 flex items-center gap-1"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                关注并求回关
+              </button>
+            `;
+          }
+
           return `
-            <div class="card-transition bg-white rounded-3xl p-4 sm:p-5 border ${isFollowed ? 'border-brand-300/80 bg-brand-50/15' : 'border-slate-200/90'} shadow-xs hover:shadow-lg flex flex-col justify-between relative group">
+            <div class="card-transition bg-white rounded-3xl p-4 sm:p-5 border ${cardBorderClass} shadow-xs hover:shadow-lg flex flex-col justify-between relative group">
               <div>
                 <div class="flex items-center justify-between gap-2 mb-3">
                   <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
                     ${item.category_label || item.categoryLabel || '🤖 科技/综合'}
                   </span>
                   <div class="flex items-center gap-1.5">
-                    <!-- 下架/删除按钮 -->
-                    <button onclick="deleteAccount(${item.id}, '${item.name}')" title="下架此卡片" class="text-slate-300 hover:text-rose-500 transition-colors p-0.5">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    </button>
-                    ${isFollowed ? `
-                      <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200 flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                        已互关
-                      </span>
-                    ` : `
-                      <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                        待关注
-                      </span>
-                    `}
+                    ${statusBadgeHtml}
                   </div>
                 </div>
 
@@ -670,8 +830,6 @@
 
                     <div class="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-slate-400">
                       <span class="text-slate-500 font-medium">微信: <code class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-md text-[10px]">${item.wechat || '未公开'}</code></span>
-                      <span>·</span>
-                      <span>热度 ${item.followers_count || 1}</span>
                     </div>
                   </div>
                 </div>
@@ -680,25 +838,12 @@
               <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
                 <button onclick="openQrModal(${item.id})" class="text-xs font-bold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-xl hover:bg-slate-100 transition-colors flex items-center gap-1 tap-btn">
                   <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-                  扫码关注
+                  扫码
                 </button>
 
-                <button 
-                  onclick="toggleFollowStatus(${item.id})" 
-                  class="tap-btn text-xs font-extrabold px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
-                    isFollowed 
-                      ? 'bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200' 
-                      : 'bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/20'
-                  }"
-                >
-                  ${isFollowed ? `
-                    <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                    已标记互关
-                  ` : `
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    标记为已关注
-                  `}
-                </button>
+                <div>
+                  ${actionButtonHtml}
+                </div>
               </div>
             </div>
           `;
@@ -708,44 +853,118 @@
       updateHeaderStats();
     }
 
+    // 更新顶部指标数据
     function updateHeaderStats() {
       const total = accounts.length;
-      let followed = 0;
+      let countToReciprocate = 0;
+      let countPending = 0;
+      let countMutual = 0;
+
       accounts.forEach(a => {
-        if (myFollowedIds.has(a.id)) followed++;
+        const rel = getCrossRelation(a.name);
+        if (rel.status === 'toReciprocate') countToReciprocate++;
+        else if (rel.status === 'pending') countPending++;
+        else if (rel.status === 'mutual') countMutual++;
       });
-      const unfollowed = total - followed;
 
       document.getElementById("statTotalCount").textContent = total;
-      document.getElementById("statUnfollowedCount").textContent = unfollowed;
-      document.getElementById("statFollowedCount").textContent = followed;
+      document.getElementById("statToReciprocateCount").textContent = countToReciprocate;
+      document.getElementById("statMutualCount").textContent = countMutual;
 
       document.getElementById("count-all").textContent = total;
-      document.getElementById("count-unfollowed").textContent = unfollowed;
-      document.getElementById("count-followed").textContent = followed;
-    }
+      document.getElementById("count-pending").textContent = countPending;
+      document.getElementById("count-mutual").textContent = countMutual;
 
-    // 切换个人互关状态
-    function toggleFollowStatus(id) {
-      if (myFollowedIds.has(id)) {
-        myFollowedIds.delete(id);
-        showToast("已撤销互关标记", "ℹ️");
+      // 待我回关红点提示
+      const pulseDot = document.getElementById("badgeToReciprocatePulse");
+      const tabRecipBadge = document.getElementById("badgeTabToRecip");
+      if (countToReciprocate > 0) {
+        if (pulseDot) pulseDot.classList.remove("hidden");
+        if (tabRecipBadge) {
+          tabRecipBadge.textContent = countToReciprocate;
+          tabRecipBadge.classList.remove("hidden");
+        }
       } else {
-        myFollowedIds.add(id);
-        showToast("🎉 已标记为已互关！", "✅");
+        if (pulseDot) pulseDot.classList.add("hidden");
+        if (tabRecipBadge) tabRecipBadge.classList.add("hidden");
       }
-      localStorage.setItem(MY_FOLLOWED_KEY, JSON.stringify([...myFollowedIds]));
-      render();
     }
 
+    // 触发关注/回关/取消动作 (双向交叉写入)
+    async function toggleFollowAction(targetName) {
+      if (!currentIdentity) {
+        openIdentityModal();
+        showToast("请先设置当前你的公众号身份", "🆔");
+        return;
+      }
+
+      if (currentIdentity.trim().toLowerCase() === targetName.trim().toLowerCase()) {
+        showToast("不能关注自己的公众号哦", "⚠️");
+        return;
+      }
+
+      const rel = getCrossRelation(targetName);
+
+      if (rel.iFollowed) {
+        // 取消关注: 删除 (Me -> Target) 关系
+        if (!confirm(`确定要取消对「${targetName}」的关注标记吗？`)) return;
+        
+        if (supabaseClient) {
+          try {
+            await supabaseClient
+              .from("follow_relations")
+              .delete()
+              .eq("follower_name", currentIdentity)
+              .eq("target_name", targetName);
+          } catch (e) { console.warn(e); }
+        }
+
+        followRelations = followRelations.filter(r => 
+          !(r.follower_name === currentIdentity && r.target_name === targetName)
+        );
+        localStorage.setItem("wechat_hub_local_relations", JSON.stringify(followRelations));
+        showToast(`已撤销对「${targetName}」的关注记录`, "ℹ️");
+        render();
+      } else {
+        // 发起关注 / 确认回关
+        const newRel = {
+          follower_name: currentIdentity,
+          target_name: targetName
+        };
+
+        if (supabaseClient) {
+          try {
+            const { error } = await supabaseClient
+              .from("follow_relations")
+              .insert([newRel]);
+            if (error) console.warn("Supabase 写入关系失败，使用本地记录", error);
+          } catch (e) { console.warn(e); }
+        }
+
+        followRelations.push(newRel);
+        localStorage.setItem("wechat_hub_local_relations", JSON.stringify(followRelations));
+
+        // 判断对方是否已经关注了我 (是否达成双向互关)
+        if (rel.theyFollowed) {
+          showToast(`🎉 恭喜！你与「${targetName}」已正式达成双向互关！`, "🎊");
+        } else {
+          showToast(`已成功关注「${targetName}」，已通知对方回关！`, "🚀");
+        }
+
+        render();
+      }
+    }
+
+    // 状态过滤 Tab
     function filterByStatus(status) {
       currentStatus = status;
-      ['all', 'unfollowed', 'followed'].forEach(st => {
+      ['all', 'toReciprocate', 'pending', 'mutual'].forEach(st => {
         const btn = document.getElementById(`tab-${st}`);
+        if (!btn) return;
         if (st === status) {
-          btn.className = "px-3.5 py-1.5 rounded-xl transition-all bg-white text-slate-900 shadow-xs whitespace-nowrap font-extrabold";
+          btn.className = "px-3 py-1.5 rounded-xl transition-all bg-white text-slate-900 shadow-xs whitespace-nowrap font-extrabold flex items-center gap-1";
         } else {
-          btn.className = "px-3.5 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 whitespace-nowrap font-medium";
+          btn.className = "px-3 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 whitespace-nowrap font-medium flex items-center gap-1";
         }
       });
       render();
@@ -778,7 +997,57 @@
       render();
     }
 
-    // 二维码大图弹窗
+    // 身份弹窗逻辑
+    function openIdentityModal() {
+      const container = document.getElementById("identityQuickSelect");
+      const manualInput = document.getElementById("manualIdentityInput");
+      manualInput.value = currentIdentity || "";
+
+      if (accounts.length > 0) {
+        container.innerHTML = accounts.map(item => `
+          <button 
+            onclick="selectQuickIdentity('${item.name}')" 
+            class="w-full text-left px-3 py-2 rounded-xl border transition-colors flex items-center justify-between ${currentIdentity === item.name ? 'border-brand-500 bg-brand-50/50 text-brand-800 font-bold' : 'border-slate-200 hover:bg-slate-50 text-slate-700'}"
+          >
+            <span class="truncate">${item.name}</span>
+            ${currentIdentity === item.name ? '<span class="text-xs text-brand-600 font-bold">✓ 当前身份</span>' : '<span class="text-[11px] text-slate-400">选择此号</span>'}
+          </button>
+        `).join("");
+      } else {
+        container.innerHTML = `<p class="text-slate-400 py-1">暂无已入驻公众号，请直接在下方手动输入。</p>`;
+      }
+
+      document.getElementById("identityModal").classList.remove("hidden");
+    }
+
+    function closeIdentityModal() {
+      document.getElementById("identityModal").classList.add("hidden");
+    }
+
+    function selectQuickIdentity(name) {
+      currentIdentity = name.trim();
+      localStorage.setItem(IDENTITY_STORAGE_KEY, currentIdentity);
+      closeIdentityModal();
+      syncIdentity();
+      showToast(`身份已切换为「${currentIdentity}」`, "🆔");
+      render();
+    }
+
+    function saveManualIdentity() {
+      const input = document.getElementById("manualIdentityInput").value.trim();
+      if (!input) {
+        showToast("请输入公众号名称", "⚠️");
+        return;
+      }
+      currentIdentity = input;
+      localStorage.setItem(IDENTITY_STORAGE_KEY, currentIdentity);
+      closeIdentityModal();
+      syncIdentity();
+      showToast(`身份已设置为「${currentIdentity}」`, "🆔");
+      render();
+    }
+
+    // 二维码弹窗
     function openQrModal(id) {
       const acc = accounts.find(a => a.id === id);
       if (!acc) return;
@@ -796,14 +1065,28 @@
         qrContainer.innerHTML = createQrSvg(acc.id, "#07c160");
       }
 
-      const isFollowed = myFollowedIds.has(acc.id);
+      const rel = getCrossRelation(acc.name);
       const actionBtn = document.getElementById("modalActionBtn");
-      if (isFollowed) {
-        actionBtn.textContent = "已标记互关 (点击取消)";
-        actionBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition-all bg-brand-50 text-brand-700 hover:bg-brand-100 border border-brand-200 tap-btn";
+      if (rel.isMe) {
+        actionBtn.textContent = "这是你当前的身份号";
+        actionBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 cursor-not-allowed";
+        actionBtn.disabled = true;
+      } else if (rel.status === 'mutual') {
+        actionBtn.textContent = "🎉 双方已互关 (点击取消)";
+        actionBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold bg-brand-100 text-brand-800 tap-btn";
+        actionBtn.disabled = false;
+      } else if (rel.status === 'toReciprocate') {
+        actionBtn.textContent = "⚡ 立即回关 (达成双向互关)";
+        actionBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold bg-rose-500 text-white shadow-md tap-btn";
+        actionBtn.disabled = false;
+      } else if (rel.status === 'pending') {
+        actionBtn.textContent = "⏳ 等待对方回关 (点击取消)";
+        actionBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-200 text-slate-700 tap-btn";
+        actionBtn.disabled = false;
       } else {
-        actionBtn.textContent = "已关注，标记互关";
-        actionBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition-all bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/25 tap-btn";
+        actionBtn.textContent = "关注并请求回关";
+        actionBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/25 tap-btn";
+        actionBtn.disabled = false;
       }
 
       document.getElementById("qrModal").classList.remove("hidden");
@@ -816,23 +1099,15 @@
 
     function toggleFollowFromModal() {
       if (!activeModalAccount) return;
-      toggleFollowStatus(activeModalAccount.id);
-      openQrModal(activeModalAccount.id);
+      toggleFollowAction(activeModalAccount.name);
+      closeQrModal();
     }
 
     function copyModalName() {
       if (activeModalAccount) copyText(activeModalAccount.name);
     }
 
-    // 发布弹窗
-    function openPublishModal() {
-      document.getElementById("publishModal").classList.remove("hidden");
-    }
-    function closePublishModal() {
-      document.getElementById("publishModal").classList.add("hidden");
-    }
-
-    // 智能前端图片压缩 (将手机相册高分辨率大图缩放至 600px, 压缩到 50~80KB, 防超出 LocalStorage 与 Cloud 限制)
+    // 智能前端图片压缩 (600px, 50~80KB)
     function compressImage(file, maxDimension = 600, quality = 0.85) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -875,8 +1150,6 @@
       });
     }
 
-    let selectedQrBlob = null;
-
     async function handleQrFileUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -891,19 +1164,19 @@
         document.getElementById("dropzonePrompt").classList.add("hidden");
         document.getElementById("dropzonePreview").classList.remove("hidden");
         document.getElementById("previewImg").src = uploadedQrBase64;
-        showToast(`✓ 二维码已智能优化至 ${sizeKb} KB (清晰且极速)`, "✨");
+        showToast(`✓ 二维码已优化至 ${sizeKb} KB (清晰且极速)`, "✨");
       } catch (err) {
         console.error("图片压缩失败", err);
         showToast("图片处理失败，请重试", "⚠️");
       }
     }
 
-    // 提交发布：支持云端存储与本地回退
+    // 发布新号主
     let isSubmitting = false;
 
     async function submitPublish(e) {
       e.preventDefault();
-      if (isSubmitting) return; // 防双击重复触发
+      if (isSubmitting) return;
       isSubmitting = true;
 
       const submitBtn = document.getElementById("submitPublishBtn");
@@ -916,7 +1189,6 @@
         const wechat = document.getElementById("formWechat").value.trim() || "未公开";
         const bio = document.getElementById("formBio").value.trim();
 
-        // 校验：必须上传了二维码图片
         if (!uploadedQrBase64 && !selectedQrBlob) {
           alert("请先点击上传你的公众号二维码图片！");
           submitBtn.disabled = false;
@@ -936,7 +1208,6 @@
 
         let finalQrUrl = uploadedQrBase64;
 
-        // 1. 如果已连接 Supabase，上传优化后的图片至 Storage 存储桶
         if (supabaseClient && selectedQrBlob) {
           try {
             const fileName = `qr_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.jpg`;
@@ -951,8 +1222,6 @@
               if (publicUrlData && publicUrlData.publicUrl) {
                 finalQrUrl = publicUrlData.publicUrl;
               }
-            } else {
-              console.warn("Storage 上传跳过，使用优化Base64直存", uploadErr);
             }
           } catch (stErr) {
             console.warn("Storage 异常，使用优化Base64直存", stErr);
@@ -962,7 +1231,7 @@
         const newRecord = {
           name: name,
           category: category,
-          category_label: catMap[category] || "🤖 AI/科技",
+          category_label: catMap[category] || "💡 个人成长/认知",
           bio: bio,
           wechat: wechat,
           qr_url: finalQrUrl,
@@ -970,29 +1239,26 @@
           followers_count: 1
         };
 
-        // 2. 写入 Supabase 数据库
         let cloudSuccess = false;
         if (supabaseClient) {
           try {
             const { data, error } = await supabaseClient
               .from("wechat_accounts")
               .insert([newRecord]);
-
-            if (!error) {
-              cloudSuccess = true;
-            } else {
-              console.error("Supabase 写入失败:", error);
-              alert("云端提示：" + (error.message || "写入异常") + "，已为您保存在本地。");
-            }
+            if (!error) cloudSuccess = true;
           } catch (err) {
             console.error("Supabase 写入异常", err);
           }
         }
 
-        // 3. 处理展示逻辑（云端成功则刷新拉取最新，杜绝前端制造双份重复卡片）
+        // 自动将新发布的公众号设定为当前身份
+        currentIdentity = name;
+        localStorage.setItem(IDENTITY_STORAGE_KEY, currentIdentity);
+        syncIdentity();
+
         if (cloudSuccess) {
           showToast(`🚀 公众号「${name}」已成功发布至全网云端！`, "🎉");
-          await fetchAccounts();
+          await fetchAllData();
         } else {
           newRecord.id = Date.now();
           newRecord.created_at = new Date().toISOString();
@@ -1024,10 +1290,16 @@
       document.getElementById("dropzonePrompt").classList.remove("hidden");
       document.getElementById("dropzonePreview").classList.add("hidden");
       uploadedQrBase64 = null;
+      selectedQrBlob = null;
       selectedQrFile = null;
     }
 
-    
+    function openPublishModal() {
+      document.getElementById("publishModal").classList.remove("hidden");
+    }
+    function closePublishModal() {
+      document.getElementById("publishModal").classList.add("hidden");
+    }
 
     function copyText(str) {
       navigator.clipboard.writeText(str).then(() => {
@@ -1044,32 +1316,34 @@
       toast.classList.remove("translate-y-20", "opacity-0");
       setTimeout(() => {
         toast.classList.add("translate-y-20", "opacity-0");
-      }, 2600);
+      }, 2800);
     }
 
-    // 下架/删除指定号主
-    async function deleteAccount(id, name) {
-      if (!confirm(`确定要彻底下架删除「${name}」吗？`)) return;
-      if (isCloudMode && supabaseClient) {
-        try {
-          const { error } = await supabaseClient.from("wechat_accounts").delete().eq("id", id);
-          if (error) throw error;
-          showToast(`已从云端数据库彻底下架「${name}」`, "🗑️");
-          await fetchAccounts();
-          return;
-        } catch (err) {
-          console.warn("云端删除失败，尝试本地清除", err);
-        }
-      }
-      accounts = accounts.filter(a => a.id !== id);
-      localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
-      showToast(`已下架「${name}」`, "🗑️");
-      render();
+    // 拟真 SVG 二维码生成
+    function createQrSvg(seed, customColor = "#07c160") {
+      return `
+        <svg viewBox="0 0 100 100" class="w-full h-full text-slate-800 fill-current select-none">
+          <rect x="5" y="5" width="26" height="26" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
+          <rect x="11" y="11" width="14" height="14" rx="3" fill="currentColor"/>
+          <rect x="69" y="5" width="26" height="26" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
+          <rect x="75" y="11" width="14" height="14" rx="3" fill="currentColor"/>
+          <rect x="5" y="69" width="26" height="26" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
+          <rect x="11" y="75" width="14" height="14" rx="3" fill="currentColor"/>
+          <rect x="36" y="8" width="7" height="7" rx="1.5"/>
+          <rect x="47" y="8" width="8" height="7" rx="1.5"/>
+          <rect x="37" y="37" width="26" height="26" rx="7" fill="${customColor}" />
+          <path d="M44 47h12M44 53h7" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+          <rect x="68" y="38" width="8" height="6" rx="1.5"/>
+          <rect x="80" y="42" width="12" height="6" rx="1.5"/>
+          <rect x="36" y="68" width="6" height="12" rx="1.5"/>
+          <rect x="46" y="74" width="10" height="6" rx="1.5"/>
+        </svg>
+      `;
     }
 
     // 启动初始化
     initSupabase();
-    fetchAccounts();
+    fetchAllData();
   </script>
 </body>
 </html>
