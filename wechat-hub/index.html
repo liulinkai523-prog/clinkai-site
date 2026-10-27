@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>公众号新人互助互关引力场 - LINKAI 实验室</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#edfcf2',
+              100: '#d3f8e0',
+              200: '#aaf0c5',
+              300: '#73e2a3',
+              400: '#3bcc7c',
+              500: '#07c160', // 微信官方经典绿
+              600: '#06a350',
+              700: '#088042',
+              800: '#0c6537',
+              900: '#0c532f'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Supabase JS 官方云端客户端 SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.03);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 9999px;
+    }
+    .tap-btn:active {
+      transform: scale(0.97);
+    }
+    .modal-backdrop {
+      background-color: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+    }
+    .card-transition {
+      transition: all 0.22s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body class="bg-[#f6f7fb] text-slate-800 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- 顶部全局导航栏 -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- 平台 Logo 与名称 + 返回主站 -->
+      <div class="flex items-center gap-3">
+        <a href="../" title="返回 linkai.codes 首页" class="flex items-center gap-2 group">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500 to-emerald-600 text-white flex items-center justify-center font-black text-xl shadow-md shadow-brand-500/25 group-hover:scale-105 transition-transform">
+            互
+          </div>
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight leading-none">
+              公众号新人互助平台
+            </h1>
+            <!-- 云端存储连接状态指示器 (点击可配置) -->
+            <button 
+              onclick="openCloudConfigModal()" 
+              id="cloudStatusPill" 
+              class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80 hover:bg-emerald-100 transition-colors"
+            >
+              <span id="cloudStatusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="cloudStatusText">云端数据库</span>
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
+            <span>linkai.codes 旗下实验室项目</span>
+            <span>·</span>
+            <a href="../" class="text-brand-600 hover:underline">返回 Linkai 首页</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- 顶部操作区 -->
+      <div class="flex items-center gap-2.5">
+        
+        <!-- 数据库配置按钮 -->
+        <button 
+          onclick="openCloudConfigModal()" 
+          title="配置 Supabase 云端数据库与图片存储" 
+          class="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-colors tap-btn shadow-xs"
+        >
+          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span class="hidden md:inline">云存储配置</span>
+        </button>
+
+        <!-- 发布按钮 -->
+        <button 
+          onclick="openPublishModal()" 
+          class="tap-btn bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-md shadow-brand-500/30 transition-all"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+          <span>上传我的二维码</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- 主体工作区 -->
+  <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 flex-1">
+
+    <!-- 顶部通知与数据统计看板 -->
+    <section class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+      
+      <!-- 左侧宣传语 & 互助准则 -->
+      <div class="lg:col-span-2 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 rounded-3xl p-5 text-white shadow-xl flex flex-col justify-between relative overflow-hidden">
+        <div class="absolute -right-8 -bottom-10 w-40 h-40 bg-brand-500/10 rounded-full blur-2xl pointer-events-none"></div>
+        
+        <div>
+          <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-brand-300 mb-3 border border-white/10">
+            <span>🤝 微信作者互助引力场</span>
+            <span class="w-1 h-1 rounded-full bg-brand-400"></span>
+            <span>已接入全网云端同步</span>
+          </div>
+          <h2 class="text-lg sm:text-xl font-extrabold tracking-tight">
+            让每一个用心创作的新人作者，被更多同频人看见
+          </h2>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            这里是公众号创作者的互助展示墙。扫码关注后请点击“标记为已关注”，防重复打扰，彼此信任，携手度过冷启动期。
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-white/10 text-[11px] text-slate-300">
+          <span class="flex items-center gap-1">☁️ Supabase 全网数据库</span>
+          <span class="text-slate-500">·</span>
+          <span class="flex items-center gap-1">📱 微信内置长按识别</span>
+          <span class="text-slate-500">·</span>
+          <span class="flex items-center gap-1">🏷️ 个人互关进度本地记忆</span>
+        </div>
+      </div>
+
+      <!-- 右侧数据指标卡片群 -->
+      <div class="lg:col-span-2 grid grid-cols-3 gap-3">
+        
+        <!-- 指标 1: 全部号主 -->
+        <div onclick="filterByStatus('all')" class="bg-white rounded-3xl p-4 border border-slate-200/80 shadow-xs hover:border-brand-300 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group">
+          <div class="flex items-center justify-between text-slate-400 group-hover:text-brand-500 transition-colors">
+            <span class="text-xs font-semibold">入驻号主</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <div class="mt-3">
+            <div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight" id="statTotalCount">0</div>
+            <p class="text-[11px] text-slate-400 mt-0.5">点击查看全部</p>
+          </div>
+        </div>
+
+        <!-- 指标 2: 待我关注 -->
+        <div onclick="filterByStatus('unfollowed')" class="bg-white rounded-3xl p-4 border border-amber-200/80 shadow-xs hover:border-amber-400 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group">
+          <div class="flex items-center justify-between text-amber-500">
+            <span class="text-xs font-semibold">待我关注</span>
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          </div>
+          <div class="mt-3">
+            <div class="text-2xl sm:text-3xl font-black text-amber-600 tracking-tight" id="statUnfollowedCount">0</div>
+            <p class="text-[11px] text-amber-600/80 mt-0.5">去扫码破冰</p>
+          </div>
+        </div>
+
+        <!-- 指标 3: 我已互关 -->
+        <div onclick="filterByStatus('followed')" class="bg-white rounded-3xl p-4 border border-brand-200/80 shadow-xs hover:border-brand-400 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group">
+          <div class="flex items-center justify-between text-brand-600">
+            <span class="text-xs font-semibold">已互关</span>
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="mt-3">
+            <div class="text-2xl sm:text-3xl font-black text-brand-600 tracking-tight" id="statFollowedCount">0</div>
+            <p class="text-[11px] text-brand-600/80 mt-0.5">我的互助记录</p>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- 搜索、筛选与分类控制工具栏 -->
+    <section class="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-xs space-y-4">
+      
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <!-- 搜索框 -->
+        <div class="relative flex-1 max-w-md">
+          <input 
+            type="text" 
+            id="searchInput" 
+            oninput="handleSearch()"
+            placeholder="搜索公众号名称、简介关键词、微信号..." 
+            class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-9 py-2.5 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all shadow-inner"
+          >
+          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-xs">✕</button>
+        </div>
+
+        <!-- 状态筛选 Tab 组 -->
+        <div class="flex items-center bg-slate-100/90 p-1 rounded-2xl text-xs font-bold border border-slate-200/60 self-start sm:self-auto overflow-x-auto max-w-full">
+          <button id="tab-all" onclick="filterByStatus('all')" class="px-3.5 py-1.5 rounded-xl transition-all bg-white text-slate-800 shadow-xs whitespace-nowrap">
+            全部号主 (<span id="count-all">0</span>)
+          </button>
+          <button id="tab-unfollowed" onclick="filterByStatus('unfollowed')" class="px-3.5 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 whitespace-nowrap">
+            待我关注 (<span id="count-unfollowed">0</span>)
+          </button>
+          <button id="tab-followed" onclick="filterByStatus('followed')" class="px-3.5 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 whitespace-nowrap">
+            已标记互关 (<span id="count-followed">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <!-- 领域分类 Filter Chips -->
+      <div class="flex items-center gap-2 overflow-x-auto custom-scroll pb-1 text-xs font-semibold">
+        <span class="text-slate-400 text-[11px] whitespace-nowrap mr-1 flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+          分类:
+        </span>
+        <button onclick="filterByCategory('all')" class="cat-btn px-3 py-1.5 rounded-xl whitespace-nowrap bg-brand-500 text-white shadow-xs" data-category="all">全部领域</button>
+        <button onclick="filterByCategory('ai')" class="cat-btn px-3 py-1.5 rounded-xl whitespace-nowrap bg-slate-100 text-slate-600 hover:bg-slate-200" data-category="ai">🤖 AI/科技大模型</button>
+        <button onclick="filterByCategory('growth')" class="cat-btn px-3 py-1.5 rounded-xl whitespace-nowrap bg-slate-100 text-slate-600 hover:bg-slate-200" data-category="growth">💡 个人成长/认知</button>
+        <button onclick="filterByCategory('sidehustle')" class="cat-btn px-3 py-1.5 rounded-xl whitespace-nowrap bg-slate-100 text-slate-600 hover:bg-slate-200" data-category="sidehustle">💼 副业搞钱/商业</button>
+        <button onclick="filterByCategory('reading')" class="cat-btn px-3 py-1.5 rounded-xl whitespace-nowrap bg-slate-100 text-slate-600 hover:bg-slate-200" data-category="reading">☕ 读书/人文思考</button>
+        <button onclick="filterByCategory('design')" class="cat-btn px-3 py-1.5 rounded-xl whitespace-nowrap bg-slate-100 text-slate-600 hover:bg-slate-200" data-category="design">🎨 设计/美学/视觉</button>
+        <button onclick="filterByCategory('life')" class="cat-btn px-3 py-1.5 rounded-xl whitespace-nowrap bg-slate-100 text-slate-600 hover:bg-slate-200" data-category="life">🌿 摄影/生活日常</button>
+      </div>
+
+    </section>
+
+    <!-- 号主卡片网格区域 (Core Grid) -->
+    <section>
+      <!-- 加载中提示 -->
+      <div id="loadingIndicator" class="hidden py-12 text-center text-slate-400">
+        <div class="w-8 h-8 mx-auto border-3 border-brand-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+        <p class="text-xs">正在连接 Supabase 云端同步数据...</p>
+      </div>
+
+      <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        <!-- 动态渲染卡片 -->
+      </div>
+
+      <!-- 空状态提示 -->
+      <div id="emptyState" class="hidden py-16 text-center bg-white rounded-3xl border border-slate-200/80 p-8">
+        <div class="w-16 h-16 mx-auto rounded-3xl bg-slate-100 flex items-center justify-center text-3xl mb-3">
+          🔍
+        </div>
+        <h3 class="text-base font-bold text-slate-800">没有找到匹配的公众号</h3>
+        <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+          尝试更换关键词或清除筛选条件，也可以点击右上角上传您的公众号二维码。
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 底部页脚 -->
+  <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <a href="../" class="font-bold text-slate-700 hover:text-brand-600">LINKAI.CODES</a>
+        <span>·</span>
+        <span>公众号新人互助平台</span>
+        <span>·</span>
+        <span>云端数据库驱动</span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <button onclick="openCloudConfigModal()" class="text-slate-500 hover:text-slate-800 underline">云存储/数据库配置</button>
+        <span>·</span>
+        <button onclick="openPublishModal()" class="text-brand-600 font-bold hover:underline">+ 发布我的公众号</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================== 模态弹窗组件 ======================== -->
+
+  <!-- 1. 二维码大图弹窗 (长按识别) -->
+  <div id="qrModal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-slate-800 text-center relative shadow-2xl animate-in fade-in zoom-in-95 duration-200 border border-slate-100">
+      
+      <button onclick="closeQrModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center text-xs font-bold">✕</button>
+
+      <div id="modalAvatarBox" class="w-16 h-16 rounded-2xl mx-auto shadow-md border-2 border-white p-1 flex items-center justify-center text-xl font-black text-white bg-gradient-to-tr from-brand-500 to-emerald-600 mb-2">
+        凯
+      </div>
+      <h3 id="modalName" class="text-base font-extrabold text-slate-900 tracking-tight">公众号名称</h3>
+      <p id="modalBio" class="text-xs text-slate-500 mt-1 px-3 line-clamp-2">简介内容展示</p>
+
+      <!-- 二维码大图 -->
+      <div class="my-4 p-4 bg-slate-50 rounded-2xl border border-slate-200/80 inline-block shadow-inner relative group">
+        <div id="modalQrContainer" class="w-52 h-52 mx-auto flex items-center justify-center bg-white p-2.5 rounded-xl shadow-xs border border-slate-200 overflow-hidden">
+          <!-- 动态注入 -->
+        </div>
+      </div>
+
+      <div class="text-[11px] font-semibold text-brand-700 bg-brand-50 py-2 px-3 rounded-xl inline-flex items-center gap-1.5 mb-4 border border-brand-200/60">
+        <svg class="w-4 h-4 text-brand-600 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+        在微信中长按上方二维码识别关注
+      </div>
+
+      <div class="flex gap-2">
+        <button id="modalActionBtn" onclick="toggleFollowFromModal()" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/25 tap-btn">
+          已关注，标记互关
+        </button>
+        <button onclick="copyModalName()" class="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 tap-btn flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          复制号名
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 2. 号主发布上墙弹窗 -->
+  <div id="publishModal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 text-slate-800 relative shadow-2xl max-h-[90vh] overflow-y-auto custom-scroll border border-slate-100">
+      
+      <button onclick="closePublishModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center text-xs font-bold">✕</button>
+
+      <div class="flex items-center gap-2.5 mb-5">
+        <div class="w-9 h-9 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-base border border-brand-200">
+          🌱
+        </div>
+        <div>
+          <h3 class="text-base font-extrabold text-slate-900 tracking-tight">发布我的公众号二维码</h3>
+          <p class="text-xs text-slate-400" id="publishStorageHint">图片将上传至云存储并在全网展示</p>
+        </div>
+      </div>
+
+      <form id="publishForm" onsubmit="submitPublish(event)" class="space-y-4 text-xs">
+        
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">
+            公众号名称 <span class="text-rose-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="formName" 
+            required 
+            placeholder="例如：Linkai 的思考实验、数字游民日常" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all font-medium"
+          >
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">
+              所属领域分类 <span class="text-rose-500">*</span>
+            </label>
+            <select id="formCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 font-medium">
+              <option value="ai">🤖 AI/科技大模型</option>
+              <option value="growth">💡 个人成长/认知</option>
+              <option value="sidehustle">💼 副业搞钱/商业</option>
+              <option value="reading">☕ 读书/人文思考</option>
+              <option value="design">🎨 设计/美学/视觉</option>
+              <option value="life">🌿 摄影/生活日常</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">
+              号主微信号 <span class="text-slate-400 font-normal">(选填防失联)</span>
+            </label>
+            <input 
+              type="text" 
+              id="formWechat" 
+              placeholder="方便互关加好友验证" 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 font-medium"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">
+            一句话简介 / 互关宣言 <span class="text-rose-500">*</span>
+          </label>
+          <textarea 
+            id="formBio" 
+            required 
+            rows="2" 
+            placeholder="写一句打动人的简介，例如：专注AI自动化与副业实操，每天日更干货，关注必秒回，诚信同行！" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 font-medium"
+          ></textarea>
+        </div>
+
+        <!-- 上传二维码图片 -->
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">
+            上传公众号二维码图片 <span class="text-rose-500">*</span>
+          </label>
+          <div class="border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center bg-slate-50 hover:bg-slate-100 hover:border-brand-400 cursor-pointer transition-all relative">
+            <input 
+              type="file" 
+              id="formQrFile" 
+              accept="image/*" 
+              onchange="handleQrFileUpload(event)"
+              class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+            >
+            <div id="dropzonePrompt" class="space-y-1.5 py-2">
+              <div class="w-10 h-10 mx-auto rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </div>
+              <p class="font-bold text-slate-700">点击选择或拖拽上传二维码截图</p>
+              <p class="text-[11px] text-slate-400">支持相册截图 (JPG/PNG)，自动进行优化</p>
+            </div>
+            <div id="dropzonePreview" class="hidden py-1">
+              <img id="previewImg" src="" class="w-28 h-28 mx-auto object-contain rounded-xl shadow-md border border-slate-200 bg-white p-1">
+              <p class="text-[11px] text-brand-600 font-bold mt-2">✓ 二维码图片已就绪</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button 
+            type="submit" 
+            id="submitPublishBtn"
+            class="w-full py-3 rounded-xl font-extrabold text-white bg-brand-500 hover:bg-brand-600 shadow-lg shadow-brand-500/30 tap-btn transition-all text-xs sm:text-sm flex items-center justify-center gap-2"
+          >
+            <span>立即发布上墙</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. 云端存储 / Supabase 数据库配置弹窗 -->
+  <div id="cloudConfigModal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-slate-800 relative shadow-2xl border border-slate-100">
+      <button onclick="closeCloudConfigModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center text-xs font-bold">✕</button>
+
+      <div class="flex items-center gap-2.5 mb-4">
+        <div class="w-9 h-9 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-base">
+          ⚡
+        </div>
+        <div>
+          <h3 class="text-base font-extrabold text-slate-900 tracking-tight">Supabase 云端配置</h3>
+          <p class="text-xs text-slate-400">连接免费云端数据库，实现全网号主互通</p>
+        </div>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 leading-relaxed text-[11px]">
+          💡 <strong>免服务器原理</strong>：GitHub Pages 配合免费的 <strong>Supabase (PostgreSQL + S3 Storage)</strong>，无需租服务器即可实现全球任何人上传二维码实时可见。
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Supabase Project URL</label>
+          <input 
+            type="url" 
+            id="sbUrlInput" 
+            placeholder="例如: https://xyzcompany.supabase.co" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-mono text-xs focus:bg-white focus:outline-none focus:border-brand-500"
+          >
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Supabase Anon Public Key (公开密钥)</label>
+          <input 
+            type="text" 
+            id="sbKeyInput" 
+            placeholder="eyJh..." 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-mono text-xs focus:bg-white focus:outline-none focus:border-brand-500"
+          >
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <button 
+            onclick="testAndSaveSupabaseConfig()" 
+            class="flex-1 py-2.5 rounded-xl font-bold bg-brand-500 hover:bg-brand-600 text-white tap-btn shadow-md shadow-brand-500/25"
+          >
+            保存并测试连接
+          </button>
+          <button 
+            onclick="clearSupabaseConfig()" 
+            class="px-3 py-2.5 rounded-xl font-semibold bg-slate-100 hover:bg-slate-200 text-slate-600 tap-btn"
+          >
+            清除恢复本地
+          </button>
+        </div>
+
+        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+          <span>建表 SQL: 查看同目录下的 <code class="text-brand-600 font-bold">schema.sql</code></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 全局 Toast 提示 -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-slate-700/80 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2">
+    <span id="toastIcon">✨</span>
+    <span id="toastMsg">提示内容</span>
+  </div>
+
+  <!-- ======================== 核心业务逻辑脚本 ======================== -->
+  <script>
+    // 默认展示的种子数据
+    const SEED_ACCOUNTS = [
+      {
+        id: 1,
+        name: "Linkai 的思考实验",
+        category: "ai",
+        category_label: "🤖 AI/科技大模型",
+        bio: "聚焦大模型企业落地与独立开发实操，新人号主求支持，关注必秒回！",
+        wechat: "linkai_liu",
+        qr_url: "",
+        avatar_letter: "凯",
+        avatar_grad: "from-brand-500 to-emerald-600",
+        followers_count: 128,
+        created_at: new Date().toISOString()
+      },
+      {
+        id: 2,
+        name: "AI极客先锋",
+        category: "ai",
+        category_label: "🤖 AI/科技大模型",
+        bio: "专注Agent智能体与自动化工具流，日更原创干货，24h内必回关！",
+        wechat: "geeker_ai",
+        qr_url: "",
+        avatar_letter: "AI",
+        avatar_grad: "from-blue-600 to-indigo-600",
+        followers_count: 356,
+        created_at: new Date().toISOString()
+      },
+      {
+        id: 3,
+        name: "独立开发搞钱日常",
+        category: "sidehustle",
+        category_label: "💼 副业搞钱/商业",
+        bio: "从0到1记录独立产品开发与自媒体出海变现，真实数据复盘，诚信互勉。",
+        wechat: "indie_dev_lab",
+        qr_url: "",
+        avatar_letter: "工",
+        avatar_grad: "from-amber-500 to-orange-600",
+        followers_count: 412,
+        created_at: new Date().toISOString()
+      }
+    ];
+
+    // 本地用户个人关注记录 (每个访客自己的一套已互关列表)
+    const MY_FOLLOWED_KEY = "linkai_wechat_hub_my_followed_ids";
+    let myFollowedIds = new Set(JSON.parse(localStorage.getItem(MY_FOLLOWED_KEY) || "[]"));
+
+    // Supabase 配置项
+    const SB_CONFIG_KEY = "linkai_supabase_credentials";
+    let supabaseClient = null;
+    let isCloudMode = false;
+
+    // 内存数据
+    let accounts = [];
+    let currentStatus = "all";
+    let currentCategory = "all";
+    let searchQuery = "";
+    let activeModalAccount = null;
+    let selectedQrFile = null;
+    let uploadedQrBase64 = null;
+
+    // 初始化 Supabase
+    function initSupabase() {
+      const stored = localStorage.getItem(SB_CONFIG_KEY);
+      if (stored) {
+        try {
+          const cfg = JSON.parse(stored);
+          if (cfg.url && cfg.key && window.supabase) {
+            supabaseClient = window.supabase.createClient(cfg.url, cfg.key);
+            isCloudMode = true;
+            updateCloudBadge(true);
+            return;
+          }
+        } catch (e) {
+          console.error("Supabase 初始化失败", e);
+        }
+      }
+      isCloudMode = false;
+      updateCloudBadge(false);
+    }
+
+    function updateCloudBadge(connected) {
+      const dot = document.getElementById("cloudStatusDot");
+      const text = document.getElementById("cloudStatusText");
+      const pill = document.getElementById("cloudStatusPill");
+      if (connected) {
+        dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse";
+        text.textContent = "Supabase 云端已连接";
+        pill.className = "hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300";
+      } else {
+        dot.className = "w-1.5 h-1.5 rounded-full bg-amber-500";
+        text.textContent = "离线演示 (点击接入云端)";
+        pill.className = "hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-300";
+      }
+    }
+
+    // 从云端或本地加载号主数据
+    async function fetchAccounts() {
+      const loading = document.getElementById("loadingIndicator");
+      if (isCloudMode && supabaseClient) {
+        try {
+          loading.classList.remove("hidden");
+          const { data, error } = await supabaseClient
+            .from("wechat_accounts")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+          loading.classList.add("hidden");
+          if (!error && data && data.length > 0) {
+            accounts = data;
+            render();
+            return;
+          }
+        } catch (err) {
+          console.warn("读取云端数据失败，降级为本地数据", err);
+          loading.classList.add("hidden");
+        }
+      }
+
+      // 本地降级存储
+      const localData = localStorage.getItem("wechat_hub_local_accounts");
+      if (localData) {
+        try {
+          accounts = JSON.parse(localData);
+        } catch (e) {
+          accounts = [...SEED_ACCOUNTS];
+        }
+      } else {
+        accounts = [...SEED_ACCOUNTS];
+      }
+      render();
+    }
+
+    // 生成 SVG 拟真二维码
+    function createQrSvg(seed, customColor = "#07c160") {
+      return `
+        <svg viewBox="0 0 100 100" class="w-full h-full text-slate-800 fill-current select-none">
+          <rect x="5" y="5" width="26" height="26" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
+          <rect x="11" y="11" width="14" height="14" rx="3" fill="currentColor"/>
+          <rect x="69" y="5" width="26" height="26" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
+          <rect x="75" y="11" width="14" height="14" rx="3" fill="currentColor"/>
+          <rect x="5" y="69" width="26" height="26" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
+          <rect x="11" y="75" width="14" height="14" rx="3" fill="currentColor"/>
+          
+          <rect x="36" y="8" width="7" height="7" rx="1.5"/>
+          <rect x="47" y="8" width="8" height="7" rx="1.5"/>
+          <rect x="58" y="12" width="6" height="6" rx="1.5"/>
+          <rect x="36" y="20" width="8" height="6" rx="1.5"/>
+          <rect x="48" y="20" width="6" height="12" rx="1.5"/>
+          <rect x="8" y="38" width="12" height="6" rx="1.5"/>
+          <rect x="23" y="38" width="6" height="8" rx="1.5"/>
+          
+          <rect x="37" y="37" width="26" height="26" rx="7" fill="${customColor}" />
+          <path d="M44 47h12M44 53h7" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+
+          <rect x="68" y="38" width="8" height="6" rx="1.5"/>
+          <rect x="80" y="42" width="12" height="6" rx="1.5"/>
+          <rect x="36" y="68" width="6" height="12" rx="1.5"/>
+          <rect x="46" y="74" width="10" height="6" rx="1.5"/>
+          <rect x="68" y="68" width="10" height="6" rx="1.5"/>
+          <rect x="82" y="72" width="8" height="14" rx="1.5"/>
+        </svg>
+      `;
+    }
+
+    // 渲染卡片
+    function render() {
+      const grid = document.getElementById("cardsGrid");
+      const emptyState = document.getElementById("emptyState");
+
+      const filtered = accounts.filter(item => {
+        const isFollowed = myFollowedIds.has(item.id);
+        let matchStatus = true;
+        if (currentStatus === "unfollowed") matchStatus = !isFollowed;
+        else if (currentStatus === "followed") matchStatus = isFollowed;
+
+        const matchCategory = currentCategory === "all" || item.category === currentCategory;
+
+        const q = searchQuery.toLowerCase();
+        const matchSearch = q === "" || 
+          item.name.toLowerCase().includes(q) || 
+          item.bio.toLowerCase().includes(q) || 
+          (item.wechat && item.wechat.toLowerCase().includes(q));
+
+        return matchStatus && matchCategory && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+      } else {
+        emptyState.classList.add("hidden");
+        grid.innerHTML = filtered.map(item => {
+          const isFollowed = myFollowedIds.has(item.id);
+          return `
+            <div class="card-transition bg-white rounded-3xl p-4 sm:p-5 border ${isFollowed ? 'border-brand-300/80 bg-brand-50/15' : 'border-slate-200/90'} shadow-xs hover:shadow-lg flex flex-col justify-between relative group">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                    ${item.category_label || item.categoryLabel || '🤖 科技/综合'}
+                  </span>
+                  <div class="flex items-center gap-1.5">
+                    ${isFollowed ? `
+                      <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        已互关
+                      </span>
+                    ` : `
+                      <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                        待关注
+                      </span>
+                    `}
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3.5">
+                  <div 
+                    onclick="openQrModal(${item.id})" 
+                    title="点击放大长按识别二维码" 
+                    class="w-20 h-20 sm:w-22 sm:h-22 flex-shrink-0 bg-slate-50 border border-slate-200/90 rounded-2xl p-1.5 cursor-pointer relative group/qr hover:border-brand-500 transition-all shadow-inner flex items-center justify-center overflow-hidden"
+                  >
+                    ${item.qr_url ? `<img src="${item.qr_url}" class="w-full h-full object-contain rounded-xl">` : createQrSvg(item.id)}
+                    <div class="absolute inset-0 bg-slate-900/60 rounded-2xl opacity-0 group-hover/qr:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[10px] font-bold">
+                      <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3-0H7"/></svg>
+                      扫码关注
+                    </div>
+                  </div>
+
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-1">
+                      <h3 class="text-sm font-extrabold text-slate-900 truncate tracking-tight">${item.name}</h3>
+                      <button onclick="copyText('${item.name}')" title="一键复制公众号名" class="text-slate-400 hover:text-brand-600 transition-colors p-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                      </button>
+                    </div>
+
+                    <p class="text-xs text-slate-600 line-clamp-2 mt-1 leading-relaxed">${item.bio}</p>
+
+                    <div class="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-slate-400">
+                      <span class="text-slate-500 font-medium">微信: <code class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-md text-[10px]">${item.wechat || '未公开'}</code></span>
+                      <span>·</span>
+                      <span>热度 ${item.followers_count || 1}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                <button onclick="openQrModal(${item.id})" class="text-xs font-bold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-xl hover:bg-slate-100 transition-colors flex items-center gap-1 tap-btn">
+                  <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                  扫码关注
+                </button>
+
+                <button 
+                  onclick="toggleFollowStatus(${item.id})" 
+                  class="tap-btn text-xs font-extrabold px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
+                    isFollowed 
+                      ? 'bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200' 
+                      : 'bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/20'
+                  }"
+                >
+                  ${isFollowed ? `
+                    <svg class="w-3.5 h-3.5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    已标记互关
+                  ` : `
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    标记为已关注
+                  `}
+                </button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      updateHeaderStats();
+    }
+
+    function updateHeaderStats() {
+      const total = accounts.length;
+      let followed = 0;
+      accounts.forEach(a => {
+        if (myFollowedIds.has(a.id)) followed++;
+      });
+      const unfollowed = total - followed;
+
+      document.getElementById("statTotalCount").textContent = total;
+      document.getElementById("statUnfollowedCount").textContent = unfollowed;
+      document.getElementById("statFollowedCount").textContent = followed;
+
+      document.getElementById("count-all").textContent = total;
+      document.getElementById("count-unfollowed").textContent = unfollowed;
+      document.getElementById("count-followed").textContent = followed;
+    }
+
+    // 切换个人互关状态
+    function toggleFollowStatus(id) {
+      if (myFollowedIds.has(id)) {
+        myFollowedIds.delete(id);
+        showToast("已撤销互关标记", "ℹ️");
+      } else {
+        myFollowedIds.add(id);
+        showToast("🎉 已标记为已互关！", "✅");
+      }
+      localStorage.setItem(MY_FOLLOWED_KEY, JSON.stringify([...myFollowedIds]));
+      render();
+    }
+
+    function filterByStatus(status) {
+      currentStatus = status;
+      ['all', 'unfollowed', 'followed'].forEach(st => {
+        const btn = document.getElementById(`tab-${st}`);
+        if (st === status) {
+          btn.className = "px-3.5 py-1.5 rounded-xl transition-all bg-white text-slate-900 shadow-xs whitespace-nowrap font-extrabold";
+        } else {
+          btn.className = "px-3.5 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 whitespace-nowrap font-medium";
+        }
+      });
+      render();
+    }
+
+    function filterByCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll(".cat-btn").forEach(btn => {
+        if (btn.dataset.category === cat) {
+          btn.className = "cat-btn px-3 py-1.5 rounded-xl whitespace-nowrap bg-brand-500 text-white shadow-xs font-bold";
+        } else {
+          btn.className = "cat-btn px-3 py-1.5 rounded-xl whitespace-nowrap bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium";
+        }
+      });
+      render();
+    }
+
+    function handleSearch() {
+      searchQuery = document.getElementById("searchInput").value.trim();
+      const clearBtn = document.getElementById("clearSearchBtn");
+      if (searchQuery.length > 0) clearBtn.classList.remove("hidden");
+      else clearBtn.classList.add("hidden");
+      render();
+    }
+
+    function clearSearch() {
+      document.getElementById("searchInput").value = "";
+      searchQuery = "";
+      document.getElementById("clearSearchBtn").classList.add("hidden");
+      render();
+    }
+
+    // 二维码大图弹窗
+    function openQrModal(id) {
+      const acc = accounts.find(a => a.id === id);
+      if (!acc) return;
+      activeModalAccount = acc;
+
+      document.getElementById("modalAvatarBox").className = `w-16 h-16 rounded-2xl mx-auto shadow-md border-2 border-white p-1 flex items-center justify-center text-xl font-black text-white bg-gradient-to-tr ${acc.avatar_grad || 'from-brand-500 to-emerald-600'}`;
+      document.getElementById("modalAvatarBox").textContent = acc.avatar_letter || acc.name.slice(0, 1);
+      document.getElementById("modalName").textContent = acc.name;
+      document.getElementById("modalBio").textContent = acc.bio;
+
+      const qrContainer = document.getElementById("modalQrContainer");
+      if (acc.qr_url) {
+        qrContainer.innerHTML = `<img src="${acc.qr_url}" class="w-full h-full object-contain rounded-xl">`;
+      } else {
+        qrContainer.innerHTML = createQrSvg(acc.id, "#07c160");
+      }
+
+      const isFollowed = myFollowedIds.has(acc.id);
+      const actionBtn = document.getElementById("modalActionBtn");
+      if (isFollowed) {
+        actionBtn.textContent = "已标记互关 (点击取消)";
+        actionBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition-all bg-brand-50 text-brand-700 hover:bg-brand-100 border border-brand-200 tap-btn";
+      } else {
+        actionBtn.textContent = "已关注，标记互关";
+        actionBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition-all bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/25 tap-btn";
+      }
+
+      document.getElementById("qrModal").classList.remove("hidden");
+    }
+
+    function closeQrModal() {
+      document.getElementById("qrModal").classList.add("hidden");
+      activeModalAccount = null;
+    }
+
+    function toggleFollowFromModal() {
+      if (!activeModalAccount) return;
+      toggleFollowStatus(activeModalAccount.id);
+      openQrModal(activeModalAccount.id);
+    }
+
+    function copyModalName() {
+      if (activeModalAccount) copyText(activeModalAccount.name);
+    }
+
+    // 发布弹窗
+    function openPublishModal() {
+      document.getElementById("publishModal").classList.remove("hidden");
+    }
+    function closePublishModal() {
+      document.getElementById("publishModal").classList.add("hidden");
+    }
+
+    function handleQrFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      selectedQrFile = file;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        uploadedQrBase64 = evt.target.result;
+        document.getElementById("dropzonePrompt").classList.add("hidden");
+        document.getElementById("dropzonePreview").classList.remove("hidden");
+        document.getElementById("previewImg").src = uploadedQrBase64;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // 提交发布：支持云端存储与本地回退
+    async function submitPublish(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById("submitPublishBtn");
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span>处理上传中...</span>`;
+
+      const name = document.getElementById("formName").value.trim();
+      const category = document.getElementById("formCategory").value;
+      const wechat = document.getElementById("formWechat").value.trim() || "未公开";
+      const bio = document.getElementById("formBio").value.trim();
+
+      const catMap = {
+        ai: "🤖 AI/科技大模型",
+        growth: "💡 个人成长/认知",
+        sidehustle: "💼 副业搞钱/商业",
+        reading: "☕ 读书/人文思考",
+        design: "🎨 设计/美学/视觉",
+        life: "🌿 摄影/生活日常"
+      };
+
+      let finalQrUrl = uploadedQrBase64 || "";
+
+      // 如果已连接 Supabase，优先上传图片到 Supabase Storage Bucket
+      if (isCloudMode && supabaseClient && selectedQrFile) {
+        try {
+          const fileExt = selectedQrFile.name.split('.').pop() || 'png';
+          const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+          
+          const { data: uploadData, error: uploadErr } = await supabaseClient.storage
+            .from("qr-codes")
+            .upload(fileName, selectedQrFile);
+
+          if (!uploadErr) {
+            const { data: publicUrlData } = supabaseClient.storage
+              .from("qr-codes")
+              .getPublicUrl(fileName);
+            if (publicUrlData && publicUrlData.publicUrl) {
+              finalQrUrl = publicUrlData.publicUrl;
+            }
+          }
+        } catch (err) {
+          console.warn("上传云存储失败，降级为Base64保存", err);
+        }
+      }
+
+      const newRecord = {
+        name: name,
+        category: category,
+        category_label: catMap[category],
+        bio: bio,
+        wechat: wechat,
+        qr_url: finalQrUrl,
+        avatar_letter: name.slice(0, 1).toUpperCase(),
+        followers_count: 1
+      };
+
+      // 保存至 Supabase 或本地
+      if (isCloudMode && supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from("wechat_accounts")
+            .insert([newRecord]);
+          
+          if (!error) {
+            showToast(`🚀 公众号「${name}」已成功发布至全网云端！`, "🎉");
+            await fetchAccounts();
+            finishPublish();
+            return;
+          }
+        } catch (err) {
+          console.error("写入云端数据库失败", err);
+        }
+      }
+
+      // 降级为本地存储
+      newRecord.id = Date.now();
+      accounts.unshift(newRecord);
+      localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
+      showToast(`🚀 公众号「${name}」已成功上墙发布！`, "🎉");
+      render();
+      finishPublish();
+    }
+
+    function finishPublish() {
+      const submitBtn = document.getElementById("submitPublishBtn");
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<span>立即发布上墙</span>`;
+      closePublishModal();
+      document.getElementById("publishForm").reset();
+      document.getElementById("dropzonePrompt").classList.remove("hidden");
+      document.getElementById("dropzonePreview").classList.add("hidden");
+      uploadedQrBase64 = null;
+      selectedQrFile = null;
+    }
+
+    // Supabase 配置弹窗
+    function openCloudConfigModal() {
+      const stored = localStorage.getItem(SB_CONFIG_KEY);
+      if (stored) {
+        try {
+          const cfg = JSON.parse(stored);
+          document.getElementById("sbUrlInput").value = cfg.url || "";
+          document.getElementById("sbKeyInput").value = cfg.key || "";
+        } catch (e) {}
+      }
+      document.getElementById("cloudConfigModal").classList.remove("hidden");
+    }
+
+    function closeCloudConfigModal() {
+      document.getElementById("cloudConfigModal").classList.add("hidden");
+    }
+
+    async function testAndSaveSupabaseConfig() {
+      const url = document.getElementById("sbUrlInput").value.trim();
+      const key = document.getElementById("sbKeyInput").value.trim();
+
+      if (!url || !key) {
+        showToast("请输入完整的 URL 与 Key", "⚠️");
+        return;
+      }
+
+      try {
+        const testClient = window.supabase.createClient(url, key);
+        const { data, error } = await testClient.from("wechat_accounts").select("id").limit(1);
+        if (error) throw error;
+
+        localStorage.setItem(SB_CONFIG_KEY, JSON.stringify({ url, key }));
+        initSupabase();
+        closeCloudConfigModal();
+        showToast("✅ Supabase 云端数据库连接成功！", "🎉");
+        fetchAccounts();
+      } catch (err) {
+        alert("连接失败：" + (err.message || "请检查 URL 与 Key，并确保已在 SQL Editor 运行建表脚本"));
+      }
+    }
+
+    function clearSupabaseConfig() {
+      localStorage.removeItem(SB_CONFIG_KEY);
+      initSupabase();
+      closeCloudConfigModal();
+      showToast("已切换回本地模式", "🔄");
+      fetchAccounts();
+    }
+
+    function copyText(str) {
+      navigator.clipboard.writeText(str).then(() => {
+        showToast(`已复制「${str}」`, '📋');
+      }).catch(() => {
+        showToast(`已复制: ${str}`, '📋');
+      });
+    }
+
+    function showToast(msg, icon = '✨') {
+      const toast = document.getElementById("toast");
+      document.getElementById("toastMsg").textContent = msg;
+      document.getElementById("toastIcon").textContent = icon;
+      toast.classList.remove("translate-y-20", "opacity-0");
+      setTimeout(() => {
+        toast.classList.add("translate-y-20", "opacity-0");
+      }, 2600);
+    }
+
+    // 启动初始化
+    initSupabase();
+    fetchAccounts();
+  </script>
+</body>
+</html>
