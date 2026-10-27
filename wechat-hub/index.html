@@ -83,15 +83,11 @@
             <h1 class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight leading-none">
               公众号新人互助平台
             </h1>
-            <!-- 云端存储连接状态指示器 (点击可配置) -->
-            <button 
-              onclick="openCloudConfigModal()" 
-              id="cloudStatusPill" 
-              class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80 hover:bg-emerald-100 transition-colors"
-            >
-              <span id="cloudStatusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span id="cloudStatusText">云端数据库</span>
-            </button>
+            <!-- 云端连接状态徽章 -->
+            <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>全网实时互助中</span>
+            </span>
           </div>
           <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
             <span>linkai.codes 旗下实验室项目</span>
@@ -104,15 +100,7 @@
       <!-- 顶部操作区 -->
       <div class="flex items-center gap-2.5">
         
-        <!-- 数据库配置按钮 -->
-        <button 
-          onclick="openCloudConfigModal()" 
-          title="配置 Supabase 云端数据库与图片存储" 
-          class="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-colors tap-btn shadow-xs"
-        >
-          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          <span class="hidden md:inline">云存储配置</span>
-        </button>
+        
 
         <!-- 发布按钮 -->
         <button 
@@ -288,7 +276,7 @@
         <span>云端数据库驱动</span>
       </div>
       <div class="flex items-center gap-4 text-[11px]">
-        <button onclick="openCloudConfigModal()" class="text-slate-500 hover:text-slate-800 underline">云存储/数据库配置</button>
+        <span class="text-slate-400">已开启全网实时同步</span>
         <span>·</span>
         <button onclick="openPublishModal()" class="text-brand-600 font-bold hover:underline">+ 发布我的公众号</button>
       </div>
@@ -446,67 +434,7 @@
     </div>
   </div>
 
-  <!-- 3. 云端存储 / Supabase 数据库配置弹窗 -->
-  <div id="cloudConfigModal" class="fixed inset-0 z-50 modal-backdrop hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-slate-800 relative shadow-2xl border border-slate-100">
-      <button onclick="closeCloudConfigModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center text-xs font-bold">✕</button>
-
-      <div class="flex items-center gap-2.5 mb-4">
-        <div class="w-9 h-9 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-base">
-          ⚡
-        </div>
-        <div>
-          <h3 class="text-base font-extrabold text-slate-900 tracking-tight">Supabase 云端配置</h3>
-          <p class="text-xs text-slate-400">连接免费云端数据库，实现全网号主互通</p>
-        </div>
-      </div>
-
-      <div class="space-y-3.5 text-xs">
-        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 leading-relaxed text-[11px]">
-          💡 <strong>免服务器原理</strong>：GitHub Pages 配合免费的 <strong>Supabase (PostgreSQL + S3 Storage)</strong>，无需租服务器即可实现全球任何人上传二维码实时可见。
-        </div>
-
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Supabase Project URL</label>
-          <input 
-            type="url" 
-            id="sbUrlInput" 
-            value="https://yfklqbmjqfmcothfffdr.supabase.co" 
-            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-mono text-xs focus:bg-white focus:outline-none focus:border-brand-500"
-          >
-        </div>
-
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Supabase Anon Public Key (公开密钥)</label>
-          <input 
-            type="text" 
-            id="sbKeyInput" 
-            placeholder="eyJh..." 
-            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-mono text-xs focus:bg-white focus:outline-none focus:border-brand-500"
-          >
-        </div>
-
-        <div class="flex items-center gap-2 pt-2">
-          <button 
-            onclick="testAndSaveSupabaseConfig()" 
-            class="flex-1 py-2.5 rounded-xl font-bold bg-brand-500 hover:bg-brand-600 text-white tap-btn shadow-md shadow-brand-500/25"
-          >
-            保存并测试连接
-          </button>
-          <button 
-            onclick="clearSupabaseConfig()" 
-            class="px-3 py-2.5 rounded-xl font-semibold bg-slate-100 hover:bg-slate-200 text-slate-600 tap-btn"
-          >
-            清除恢复本地
-          </button>
-        </div>
-
-        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-          <span>建表 SQL: 查看同目录下的 <code class="text-brand-600 font-bold">schema.sql</code></span>
-        </div>
-      </div>
-
-    </div>
+  
   </div>
 
   <!-- 全局 Toast 提示 -->
@@ -1094,54 +1022,7 @@
       selectedQrFile = null;
     }
 
-    // Supabase 配置弹窗
-    function openCloudConfigModal() {
-      const stored = localStorage.getItem(SB_CONFIG_KEY);
-      if (stored) {
-        try {
-          const cfg = JSON.parse(stored);
-          document.getElementById("sbUrlInput").value = cfg.url || "";
-          document.getElementById("sbKeyInput").value = cfg.key || "";
-        } catch (e) {}
-      }
-      document.getElementById("cloudConfigModal").classList.remove("hidden");
-    }
-
-    function closeCloudConfigModal() {
-      document.getElementById("cloudConfigModal").classList.add("hidden");
-    }
-
-    async function testAndSaveSupabaseConfig() {
-      const url = document.getElementById("sbUrlInput").value.trim();
-      const key = document.getElementById("sbKeyInput").value.trim();
-
-      if (!url || !key) {
-        showToast("请输入完整的 URL 与 Key", "⚠️");
-        return;
-      }
-
-      try {
-        const testClient = window.supabase.createClient(url, key);
-        const { data, error } = await testClient.from("wechat_accounts").select("id").limit(1);
-        if (error) throw error;
-
-        localStorage.setItem(SB_CONFIG_KEY, JSON.stringify({ url, key }));
-        initSupabase();
-        closeCloudConfigModal();
-        showToast("✅ Supabase 云端数据库连接成功！", "🎉");
-        fetchAccounts();
-      } catch (err) {
-        alert("连接失败：" + (err.message || "请检查 URL 与 Key，并确保已在 SQL Editor 运行建表脚本"));
-      }
-    }
-
-    function clearSupabaseConfig() {
-      localStorage.removeItem(SB_CONFIG_KEY);
-      initSupabase();
-      closeCloudConfigModal();
-      showToast("已切换回本地模式", "🔄");
-      fetchAccounts();
-    }
+    
 
     function copyText(str) {
       navigator.clipboard.writeText(str).then(() => {
