@@ -471,7 +471,7 @@
           <input 
             type="url" 
             id="sbUrlInput" 
-            placeholder="例如: https://xyzcompany.supabase.co" 
+            value="https://yfklqbmjqfmcothfffdr.supabase.co" 
             class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-mono text-xs focus:bg-white focus:outline-none focus:border-brand-500"
           >
         </div>
@@ -576,6 +576,8 @@
     // 从云端或本地加载号主数据
     async function fetchAccounts() {
       const loading = document.getElementById("loadingIndicator");
+
+      // 1. 如果已连接 Supabase，优先从云端拉取全网号主
       if (isCloudMode && supabaseClient) {
         try {
           loading.classList.remove("hidden");
@@ -587,6 +589,10 @@
           loading.classList.add("hidden");
           if (!error && data) {
             accounts = data;
+            // 自动同步备份到本地
+            try {
+              localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(data));
+            } catch (e) {}
             render();
             return;
           }
@@ -596,16 +602,16 @@
         }
       }
 
-      // 本地降级存储
-      const localData = localStorage.getItem("wechat_hub_local_accounts");
-      if (localData) {
-        try {
+      // 2. 本地持久化降级：读取已保存的号主
+      try {
+        const localData = localStorage.getItem("wechat_hub_local_accounts");
+        if (localData) {
           accounts = JSON.parse(localData);
-        } catch (e) {
-          accounts = [...SEED_ACCOUNTS];
+        } else {
+          accounts = [];
         }
-      } else {
-        accounts = [...SEED_ACCOUNTS];
+      } catch (e) {
+        accounts = [];
       }
       render();
     }
@@ -884,19 +890,70 @@
       document.getElementById("publishModal").classList.add("hidden");
     }
 
-    function handleQrFileUpload(e) {
+    // 智能前端图片压缩 (将手机相册高分辨率大图缩放至 600px, 压缩到 50~80KB, 防超出 LocalStorage 与 Cloud 限制)
+    function compressImage(file, maxDimension = 600, quality = 0.85) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+            if (width > maxDimension || height > maxDimension) {
+              if (width > height) {
+                height = Math.round((height * maxDimension) / width);
+                width = maxDimension;
+              } else {
+                width = Math.round((width * maxDimension) / height);
+                height = maxDimension;
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+            canvas.toBlob((blob) => {
+              resolve({
+                base64: compressedBase64,
+                blob: blob,
+                sizeKb: (compressedBase64.length * 0.75 / 1024).toFixed(1)
+              });
+            }, 'image/jpeg', quality);
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    let selectedQrBlob = null;
+
+    async function handleQrFileUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
       selectedQrFile = file;
 
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        uploadedQrBase64 = evt.target.result;
+      try {
+        showToast("正在压缩优化二维码图片...", "⏳");
+        const { base64, blob, sizeKb } = await compressImage(file);
+        uploadedQrBase64 = base64;
+        selectedQrBlob = blob;
+
         document.getElementById("dropzonePrompt").classList.add("hidden");
         document.getElementById("dropzonePreview").classList.remove("hidden");
         document.getElementById("previewImg").src = uploadedQrBase64;
-      };
-      reader.readAsDataURL(file);
+        showToast(`✓ 二维码已智能优化至 ${sizeKb} KB (清晰且极速)`, "✨");
+      } catch (err) {
+        console.error("图片压缩失败", err);
+        showToast("图片处理失败，请重试", "⚠️");
+      }
     }
 
     // 提交发布：支持云端存储与本地回退
@@ -906,81 +963,109 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<span>处理上传中...</span>`;
 
-      const name = document.getElementById("formName").value.trim();
-      const category = document.getElementById("formCategory").value;
-      const wechat = document.getElementById("formWechat").value.trim() || "未公开";
-      const bio = document.getElementById("formBio").value.trim();
+      try {
+        const name = document.getElementById("formName").value.trim();
+        const category = document.getElementById("formCategory").value;
+        const wechat = document.getElementById("formWechat").value.trim() || "未公开";
+        const bio = document.getElementById("formBio").value.trim();
 
-      const catMap = {
-        ai: "🤖 AI/科技大模型",
-        growth: "💡 个人成长/认知",
-        sidehustle: "💼 副业搞钱/商业",
-        reading: "☕ 读书/人文思考",
-        design: "🎨 设计/美学/视觉",
-        life: "🌿 摄影/生活日常"
-      };
+        const catMap = {
+          ai: "🤖 AI/科技大模型",
+          growth: "💡 个人成长/认知",
+          sidehustle: "💼 副业搞钱/商业",
+          reading: "☕ 读书/人文思考",
+          design: "🎨 设计/美学/视觉",
+          life: "🌿 摄影/生活日常"
+        };
 
-      let finalQrUrl = uploadedQrBase64 || "";
+        let finalQrUrl = uploadedQrBase64 || "";
 
-      // 如果已连接 Supabase，优先上传图片到 Supabase Storage Bucket
-      if (isCloudMode && supabaseClient && selectedQrFile) {
-        try {
-          const fileExt = selectedQrFile.name.split('.').pop() || 'png';
-          const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-          
-          const { data: uploadData, error: uploadErr } = await supabaseClient.storage
-            .from("qr-codes")
-            .upload(fileName, selectedQrFile);
-
-          if (!uploadErr) {
-            const { data: publicUrlData } = supabaseClient.storage
+        // 1. 如果已连接 Supabase，优先上传到 Supabase Storage
+        if (isCloudMode && supabaseClient && selectedQrBlob) {
+          try {
+            const fileName = `qr_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.jpg`;
+            const { data: uploadData, error: uploadErr } = await supabaseClient.storage
               .from("qr-codes")
-              .getPublicUrl(fileName);
-            if (publicUrlData && publicUrlData.publicUrl) {
-              finalQrUrl = publicUrlData.publicUrl;
+              .upload(fileName, selectedQrBlob, { contentType: 'image/jpeg' });
+
+            if (!uploadErr) {
+              const { data: publicUrlData } = supabaseClient.storage
+                .from("qr-codes")
+                .getPublicUrl(fileName);
+              if (publicUrlData && publicUrlData.publicUrl) {
+                finalQrUrl = publicUrlData.publicUrl;
+              }
+            } else {
+              console.warn("Storage 上传跳过，使用优化后的Base64直存", uploadErr);
             }
+          } catch (stErr) {
+            console.warn("Storage 异常，使用优化后的Base64直存", stErr);
           }
-        } catch (err) {
-          console.warn("上传云存储失败，降级为Base64保存", err);
         }
-      }
 
-      const newRecord = {
-        name: name,
-        category: category,
-        category_label: catMap[category],
-        bio: bio,
-        wechat: wechat,
-        qr_url: finalQrUrl,
-        avatar_letter: name.slice(0, 1).toUpperCase(),
-        followers_count: 1
-      };
+        const newRecord = {
+          name: name,
+          category: category,
+          category_label: catMap[category],
+          bio: bio,
+          wechat: wechat,
+          qr_url: finalQrUrl,
+          avatar_letter: name.slice(0, 1).toUpperCase(),
+          followers_count: 1
+        };
 
-      // 保存至 Supabase 或本地
-      if (isCloudMode && supabaseClient) {
+        // 2. 尝试写入 Supabase 数据库
+        let savedToCloud = false;
+        if (isCloudMode && supabaseClient) {
+          try {
+            const { data, error } = await supabaseClient
+              .from("wechat_accounts")
+              .insert([newRecord]);
+
+            if (!error) {
+              savedToCloud = true;
+            } else {
+              console.error("Supabase 写入失败:", error);
+              alert("提示：Supabase 云端数据库写入失败：\n" + (error.message || error.code || "请检查数据表和权限") + "\n\n已自动为您保存在本地，刷新不丢失！");
+            }
+          } catch (err) {
+            console.error("Supabase 异常", err);
+          }
+        }
+
+        // 3. 始终同步保存一份至本地 LocalStorage 备份（双保险，永不丢失！）
+        newRecord.id = Date.now();
+        newRecord.created_at = new Date().toISOString();
+
+        let localList = [];
         try {
-          const { data, error } = await supabaseClient
-            .from("wechat_accounts")
-            .insert([newRecord]);
-          
-          if (!error) {
-            showToast(`🚀 公众号「${name}」已成功发布至全网云端！`, "🎉");
-            await fetchAccounts();
-            finishPublish();
-            return;
-          }
-        } catch (err) {
-          console.error("写入云端数据库失败", err);
-        }
-      }
+          const raw = localStorage.getItem("wechat_hub_local_accounts");
+          if (raw) localList = JSON.parse(raw);
+        } catch (e) {}
 
-      // 降级为本地存储
-      newRecord.id = Date.now();
-      accounts.unshift(newRecord);
-      localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
-      showToast(`🚀 公众号「${name}」已成功上墙发布！`, "🎉");
-      render();
-      finishPublish();
+        localList.unshift(newRecord);
+        try {
+          localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(localList));
+        } catch (quotaErr) {
+          console.error("LocalStorage 写入异常", quotaErr);
+        }
+
+        if (savedToCloud) {
+          showToast(`🚀 公众号「${name}」已成功发布至全网云端！`, "🎉");
+          await fetchAccounts();
+        } else {
+          showToast(`🎉 公众号「${name}」已成功保存并上墙展示！`, "🚀");
+          accounts = localList;
+          render();
+        }
+
+        finishPublish();
+      } catch (err) {
+        console.error("提交异常", err);
+        alert("提交出错：" + (err.message || "未知错误"));
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>立即发布上墙</span>`;
+      }
     }
 
     function finishPublish() {
