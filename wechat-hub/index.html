@@ -970,10 +970,11 @@
       const loading = document.getElementById("loadingIndicator");
       if (loading) loading.classList.remove("hidden");
 
-      // 1. 尝试从 Supabase 删除
+      // 1. 同步从 Supabase 云端数据库彻底删除
       if (supabaseClient) {
         try {
           await supabaseClient.from("wechat_accounts").delete().eq("id", accountId);
+          await supabaseClient.from("wechat_accounts").delete().eq("name", accountName);
           await supabaseClient.from("follow_relations").delete().or(`follower_name.eq.${accountName},target_name.eq.${accountName}`);
         } catch (e) {
           console.warn("Supabase delete failed:", e);
