@@ -362,7 +362,8 @@
           </div>
           <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 text-[11px] text-slate-500 mt-2 space-y-0.5">
             <p class="font-bold text-slate-700">💡 认领验证说明：</p>
-            <p>• 输入发布时设置的微信号或口令，汉字/英文均可直接输入。</p>
+            <p>• 输入发布时设置的微信号或口令（支持中文、英文、数字）。</p>
+            <p>• <b>发布时微信号留空/未公开的号主</b>：在第 2 栏直接输入你想设的口令（如 8888），即可认领并永久锁定号主身份！</p>
             <p>• 你的主号「复杂讲两句」直接输入 <code class="bg-white px-1 py-0.5 rounded border text-brand-700 font-bold">旺旺同学</code> 或 <code class="bg-white px-1 py-0.5 rounded border text-brand-700 font-bold">linkai</code> 即可秒通过！</p>
           </div>
         </div>
@@ -1179,6 +1180,47 @@
       // 检查该号是否已经在系统入驻
       const targetAcc = accounts.find(a => a.name.trim().toLowerCase() === input.toLowerCase());
       if (targetAcc) {
+        // 🌟 解决痛点：如果该号入驻时微信号留空（未公开），允许号主首次认领时补设管理口令并自动锁定
+        const cleanWechat = (targetAcc.wechat || "").replace(/^\[private\]/, "").trim();
+        const isUnprotected = (!cleanWechat || cleanWechat === "未公开");
+
+        if (isUnprotected) {
+          if (!passcode) {
+            showToast(`「${targetAcc.name}」未留微信号，请在第二栏直接输入你想设置的口令（如8888）即可认领！`, "💡");
+            const passEl = document.getElementById("manualIdentityPasscode");
+            passEl.placeholder = "请直接设置4-6位管理口令（如8888）并点击认领";
+            passEl.focus();
+            return;
+          }
+
+          // 自动同步补齐云端口令，锁定该号所有权
+          if (supabaseClient) {
+            try {
+              supabaseClient
+                .from("wechat_accounts")
+                .update({ wechat: `[private]${passcode}` })
+                .eq("id", targetAcc.id)
+                .then(() => {});
+              targetAcc.wechat = `[private]${passcode}`;
+            } catch (e) {
+              console.warn("Update passcode failed:", e);
+            }
+          }
+
+          if (!myOwnedAccounts.includes(targetAcc.name)) {
+            myOwnedAccounts.push(targetAcc.name);
+            localStorage.setItem(OWNED_STORAGE_KEY, JSON.stringify(myOwnedAccounts));
+          }
+          currentIdentity = targetAcc.name;
+          localStorage.setItem(IDENTITY_STORAGE_KEY, currentIdentity);
+          closeIdentityModal();
+          syncIdentity();
+          showToast(`🎉 认领成功！已为「${currentIdentity}」设置管理口令：${passcode}`, "🎊");
+          render();
+          return;
+        }
+
+        // 已有口令或微信号的正常验证流程
         if (!passcode) {
           showToast(`请输入认领「${targetAcc.name}」的微信号或管理口令`, "🔐");
           document.getElementById("manualIdentityPasscode").focus();
@@ -1187,8 +1229,7 @@
 
         // 验证口令/微信号（完全支持中文、拼音、数字、英文）
         const isAuthor = (targetAcc.name === "复杂讲两句" && ["linkai", "旺旺同学", "523", "8888"].includes(passcode.toLowerCase()));
-        const cleanWechat = (targetAcc.wechat || "").replace(/^\[private\]/, "").trim().toLowerCase();
-        const isMatchedWechat = (cleanWechat && cleanWechat !== "未公开" && cleanWechat === passcode.toLowerCase());
+        const isMatchedWechat = (cleanWechat.toLowerCase() === passcode.toLowerCase());
 
         if (isAuthor || isMatchedWechat) {
           if (!myOwnedAccounts.includes(targetAcc.name)) {
