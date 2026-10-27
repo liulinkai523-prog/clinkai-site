@@ -525,6 +525,10 @@
     let myFollowedIds = new Set(JSON.parse(localStorage.getItem(MY_FOLLOWED_KEY) || "[]"));
 
     // Supabase 配置项
+    // Supabase 全局免配置云端连接 (全网所有访客打开即连)
+    const DEFAULT_SUPABASE_URL = "https://yfklqbmjqfmcothfffdr.supabase.co";
+    const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlma2xxYm1qcWZtY290aGZmZmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNjI1OTgsImV4cCI6MjEwODYzODU5OH0.kfS1ww5kpZw_B3hMdIlNJkQD7IfBD-oPmb8E-KiEdB0";
+
     const SB_CONFIG_KEY = "linkai_supabase_credentials";
     let supabaseClient = null;
     let isCloudMode = false;
@@ -540,16 +544,26 @@
 
     // 初始化 Supabase
     function initSupabase() {
+      let url = DEFAULT_SUPABASE_URL;
+      let key = DEFAULT_SUPABASE_KEY;
+
       const stored = localStorage.getItem(SB_CONFIG_KEY);
       if (stored) {
         try {
           const cfg = JSON.parse(stored);
-          if (cfg.url && cfg.key && window.supabase) {
-            supabaseClient = window.supabase.createClient(cfg.url, cfg.key);
-            isCloudMode = true;
-            updateCloudBadge(true);
-            return;
+          if (cfg.url && cfg.key) {
+            url = cfg.url;
+            key = cfg.key;
           }
+        } catch (e) {}
+      }
+
+      if (url && key && window.supabase) {
+        try {
+          supabaseClient = window.supabase.createClient(url, key);
+          isCloudMode = true;
+          updateCloudBadge(true);
+          return;
         } catch (e) {
           console.error("Supabase 初始化失败", e);
         }
@@ -588,10 +602,10 @@
 
           loading.classList.add("hidden");
           if (!error && data) {
-            accounts = data;
-            // 自动同步备份到本地
+            // 过滤掉旧的无二维码测试占位卡片 (彻底下掉测试号)
+            accounts = data.filter(item => item.qr_url && item.qr_url.trim().length > 0 && !["Linkai 的思考实验", "AI极客先锋"].includes(item.name));
             try {
-              localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(data));
+              localStorage.setItem("wechat_hub_local_accounts", JSON.stringify(accounts));
             } catch (e) {}
             render();
             return;
